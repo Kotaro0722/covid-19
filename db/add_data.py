@@ -108,7 +108,7 @@ print(f"symptom_table テーブル{i} レコード追加しました")
 
 
 
-############# テーブルsuspention_tableの新規作成
+############# テーブルsuspension_tableの新規作成
 sqlstring = """
     CREATE TABLE suspension_table (
         suspensionID INT NOT NULL AUTO_INCREMENT,     -- 出席停止ID
@@ -127,21 +127,32 @@ my_query( sqlstring )
 
 i=0  #レコード件数カウント
 #ファイルオープン
-df = pd.read_csv("./data/suspention_table.csv",header=0)
-#suspention_table.csvを1行ずつ処理
+df = pd.read_csv("./data/suspension_table.csv",header=0)
+#suspension_table.csvを1行ずつ処理
 for ind,rowdata in df.iterrows():
     #data.Month は， data['Month'] とおなじ
-    sqlstring = f"""
-        INSERT INTO suspention_table
-        (suspention_school,suspention_start,suspention_end,acceptance,medical,doctor,lastupdate)
-        VALUES
-        ({rowdata.suspention_school}, '{rowdata.suspention_start}' , '{rowdata.suspention_end}', {rowdata.acceptance}, '{rowdata.medical}','{rowdata.doctor}','{dt_now}')
-    """
-    #print( sqlstring )  #for debug
-    my_query( sqlstring )   #1レコード挿入
-    i += 1
+    if rowdata.suspension_school==True:
+        sqlstring = f"""
+            INSERT INTO suspension_table
+            (suspension_school,suspension_start,suspension_end,acceptance,medical,doctor,lastupdate)
+            VALUES
+            ({rowdata.suspension_school}, '{rowdata.suspension_start}' , '{rowdata.suspension_end}', {rowdata.acceptance}, '{rowdata.medical}','{rowdata.doctor}','{dt_now}')
+        """
+        #print( sqlstring )  #for debug
+        my_query( sqlstring )   #1レコード挿入
+        i += 1
+    else:
+        sqlstring = f"""
+            INSERT INTO suspension_table
+            (suspension_school,lastupdate)
+            VALUES
+            ({rowdata.suspension_school},'{dt_now}')
+        """
+        #print( sqlstring )  #for debug
+        my_query( sqlstring )   #1レコード挿入
+        i += 1
 
-print(f"suspention_table テーブル{i} レコード追加しました")
+print(f"suspension_table テーブル{i} レコード追加しました")
 
 
 ############# テーブルuser_tableの新規作成
@@ -170,7 +181,7 @@ for ind,rowdata in df.iterrows():
     #data.Month は， data['Month'] とおなじ
     sqlstring = f"""
         INSERT INTO user_table
-        (user_num,_class,affiliation,tel,user_name,suspentionID,action_tableID,lastupdate)
+        (user_num,_class,affiliation,tel,user_name,suspensionID,action_tableID,lastupdate)
         VALUES
         ('{rowdata.user_num}', '{rowdata._class}' , '{rowdata.affiliation}' , {rowdata.tel} , {rowdata.user_name} , 
         {rowdata.suspensionID} , {rowdata.action_tableID} , '{dt_now}' )
