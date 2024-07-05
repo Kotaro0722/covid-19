@@ -198,20 +198,19 @@ sqlstring = """
         action_tableID INT NOT NULL AUTO_INCREMENT,   -- アクションID
         user_num VARCHAR(16),                         -- 個人番号
         action_number INT,                            -- 番号
-        action_date VARCHAR(50),                      -- 日付
-        action_time VARCHAR(50),                      -- 時間
+        action_date_time DATETIME,                    -- 日付と時間
         movement_method VARCHAR(50),                  -- 移動方法
-        place_of_departure VARCHAR(50),               -- 出発地
-        place_of_arrival VARCHAR(50),                 -- 到着地
+        place_of_departure INT,                       -- 出発地
+        place_of_arrival INT,                         -- 到着地
         companion BOOLEAN,                            -- 同行者有無
         companion_person VARCHAR(50),                 -- 同行者名
-        mask BOOLEAN,                                 -- マスクの有無
+        _mask BOOLEAN,                                 -- マスクの有無
         lastupdate DATETIME DEFAULT NOW(),            -- 最終更新日時
         delflag BOOLEAN DEFAULT FALSE,                -- 削除フラグ
         PRIMARY KEY (action_tableID),                 -- 主キーの設定
-        FOREIGN KEY (user_num) REFERENCES personal(user_num),  -- 外部キー制約
-        FOREIGN KEY (place_of_departure) REFERENCES places(place_name),  -- 外部キー制約（仮想の場所テーブル）
-        FOREIGN KEY (place_of_arrival) REFERENCES places(place_name)     -- 外部キー制約（仮想の場所テーブル）
+        FOREIGN KEY (user_num) REFERENCES user_table(user_num),  -- 外部キー制約
+        FOREIGN KEY (place_of_departure) REFERENCES place_table(placeID),  -- 外部キー制約（仮想の場所テーブル）
+        FOREIGN KEY (place_of_arrival) REFERENCES place_table(placeID)     -- 外部キー制約（仮想の場所テーブル）
 );
 """
 my_query( sqlstring )
@@ -224,10 +223,10 @@ for ind,rowdata in df.iterrows():
     #data.Month は， data['Month'] とおなじ
     sqlstring = f"""
         INSERT INTO action_table
-        (user_num,action_number,action_date,action_time,movement_method,place_of_departure,place_of_arrival,companion,companion_person,mask,lastupdate)
+        (user_num,action_number,action_date_time,movement_method,place_of_departure,place_of_arrival,companion,companion_person,_mask,lastupdate)
         VALUES
-        ('{rowdata.user_num}', {rowdata.action_number} , '{rowdata.action_date}' , {rowdata.action_time} ,' {rowdata.movement_method}' , 
-        '{rowdata.place_of_departure}' , '{rowdata.place_of_arrival}' , {rowdata.companion}, '{rowdata.companion_person}',{rowdata.mask},{dt_now})
+        ('{rowdata.user_num}', {rowdata.action_number} , '{rowdata.action_date_time}' ,' {rowdata.movement_method}' , 
+        {rowdata.place_of_departure} , {rowdata.place_of_arrival} , {rowdata.companion}, '{rowdata.companion_person}',{rowdata._mask},'{dt_now}')
     """
     #print( sqlstring )  #for debug
     my_query( sqlstring )   #1レコード挿入
