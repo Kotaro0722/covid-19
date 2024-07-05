@@ -65,9 +65,9 @@ for ind,rowdata in df.iterrows():
     #data.Month は， data['Month'] とおなじ
     sqlstring = f"""
         INSERT INTO place_table
-        (place,crowd_level,lastupdate)
+        (place,crowd_level)
         VALUES
-        ('{rowdata.place}', {rowdata.crowd_level} , '{dt_now}')
+        ('{rowdata.place}', {rowdata.crowd_level})
     """
     #print( sqlstring )  #for debug
     my_query( sqlstring )   #1レコード挿入
@@ -96,9 +96,9 @@ for ind,rowdata in df.iterrows():
     #data.Month は， data['Month'] とおなじ
     sqlstring = f"""
         INSERT INTO symptom_table
-        (symptom_details,lastupdate)
+        (symptom_details)
         VALUES
-        ('{rowdata.symptom_details}','{dt_now}')
+        ('{rowdata.symptom_details}')
     """
     #print( sqlstring )  #for debug
     my_query( sqlstring )   #1レコード挿入
@@ -134,9 +134,9 @@ for ind,rowdata in df.iterrows():
     if rowdata.suspension_school==True:
         sqlstring = f"""
             INSERT INTO suspension_table
-            (suspension_school,suspension_start,suspension_end,acceptance,medical,doctor,lastupdate)
+            (suspension_school,suspension_start,suspension_end,acceptance,medical,doctor)
             VALUES
-            ({rowdata.suspension_school}, '{rowdata.suspension_start}' , '{rowdata.suspension_end}', {rowdata.acceptance}, '{rowdata.medical}','{rowdata.doctor}','{dt_now}')
+            ({rowdata.suspension_school}, '{rowdata.suspension_start}' , '{rowdata.suspension_end}', {rowdata.acceptance}, '{rowdata.medical}','{rowdata.doctor}')
         """
         #print( sqlstring )  #for debug
         my_query( sqlstring )   #1レコード挿入
@@ -144,9 +144,9 @@ for ind,rowdata in df.iterrows():
     else:
         sqlstring = f"""
             INSERT INTO suspension_table
-            (suspension_school,lastupdate)
+            (suspension_school)
             VALUES
-            ({rowdata.suspension_school},'{dt_now}')
+            ({rowdata.suspension_school})
         """
         #print( sqlstring )  #for debug
         my_query( sqlstring )   #1レコード挿入
@@ -158,7 +158,7 @@ print(f"suspension_table テーブル{i} レコード追加しました")
 ############# テーブルuser_tableの新規作成
 sqlstring = """
     CREATE TABLE user_table (
-        userID INT NOT NULL AUTO_INCREMENT,         -- 個人のID
+        user_tableID INT NOT NULL AUTO_INCREMENT,         -- 個人のID
         user_num VARCHAR(16) NOT NULL UNIQUE,       -- 個人番号
         _class VARCHAR(16),                          -- 役職
         affiliation VARCHAR(16),                    -- 所属
@@ -167,7 +167,7 @@ sqlstring = """
         suspensionID INT,                           -- 出席停止ID
         lastupdate DATETIME DEFAULT NOW(),          -- 最終更新日時
         delflag BOOLEAN DEFAULT FALSE,              -- 削除フラグ
-        PRIMARY KEY (userID)                        -- 主キーの設定
+        PRIMARY KEY (user_tableID)                        -- 主キーの設定
 );
 """
 my_query( sqlstring )
@@ -180,10 +180,10 @@ for ind,rowdata in df.iterrows():
     #data.Month は， data['Month'] とおなじ
     sqlstring = f"""
         INSERT INTO user_table
-        (user_num,_class,affiliation,tel,user_name,suspensionID,lastupdate)
+        (user_num,_class,affiliation,tel,user_name,suspensionID)
         VALUES
         ('{rowdata.user_num}', '{rowdata._class}' , '{rowdata.affiliation}' , '{rowdata.tel}' , '{rowdata.user_name}' , 
-        {rowdata.suspensionID} , '{dt_now}' )
+        {rowdata.suspensionID}  )
     """
     #print( sqlstring )  #for debug
     my_query( sqlstring )   #1レコード挿入
@@ -223,10 +223,10 @@ for ind,rowdata in df.iterrows():
     #data.Month は， data['Month'] とおなじ
     sqlstring = f"""
         INSERT INTO action_table
-        (user_num,action_number,action_date_time,movement_method,place_of_departure,place_of_arrival,companion,companion_person,_mask,lastupdate)
+        (user_num,action_number,action_date_time,movement_method,place_of_departure,place_of_arrival,companion,companion_person,_mask)
         VALUES
         ('{rowdata.user_num}', {rowdata.action_number} , '{rowdata.action_date_time}' ,' {rowdata.movement_method}' , 
-        {rowdata.place_of_departure} , {rowdata.place_of_arrival} , {rowdata.companion}, '{rowdata.companion_person}',{rowdata._mask},'{dt_now}')
+        {rowdata.place_of_departure} , {rowdata.place_of_arrival} , {rowdata.companion}, '{rowdata.companion_person}',{rowdata._mask})
     """
     #print( sqlstring )  #for debug
     my_query( sqlstring )   #1レコード挿入
@@ -239,15 +239,15 @@ print(f"action_table テーブル {i} レコード追加しました")
 sqlstring = """
     CREATE TABLE condition_table(
         conditionID INT NOT NULL AUTO_INCREMENT,     -- 体調ID
-        user_num VARCHAR(16),                        -- 個人番号
+        user_tableID INT,                            -- 個人番号
         condition_date DATE,                         -- 日付
         body_temp FLOAT,                             -- 体温
         symptomID INT,                               -- 症状ID
         lastupdate DATETIME DEFAULT NOW(),           -- 最終更新日時
         delflag BOOLEAN DEFAULT FALSE,               -- 削除フラグ
         PRIMARY KEY (conditionID),                   -- 主キーの設定
-        FOREIGN KEY (user_num) REFERENCES personal(user_num),  -- 外部キー制約
-        FOREIGN KEY (symptomID) REFERENCES symptoms(symptomID) -- 外部キー制約（仮想の症状テーブル）
+        FOREIGN KEY (user_tableID) REFERENCES user_table(user_tableID),  -- 外部キー制約
+        FOREIGN KEY (symptomID) REFERENCES symptom_table(symptomID) -- 外部キー制約（仮想の症状テーブル）
     )
 """
 my_query( sqlstring )
@@ -260,9 +260,9 @@ for ind,rowdata in df.iterrows():
     #data.Month は， data['Month'] とおなじ
     sqlstring = f"""
         INSERT INTO condition_table
-        (user_num,condition_date,body_temp,symptomID,lastupdate)
+        (user_tableID,condition_date,body_temp,symptomID)
         VALUES
-        ('{rowdata.user_num}', '{rowdata.condition_date}' , {rowdata.body_temp}, {rowdata.symptomID},{dt_now})
+        ('{rowdata.user_tableID}', '{rowdata.condition_date}' , {rowdata.body_temp}, {rowdata.symptomID})
     """
     #print( sqlstring )  #for debug
     my_query( sqlstring )   #1レコード挿入
