@@ -1,21 +1,11 @@
-action_tableID,user_num,action_number,action_date,action_time,movement_method,place_of_departure,place_of_arrival,companion,companion_person,mask
-1,T274235,1,6月1日,10:19,車,自宅,茅野駅,FALSE,,FALSE
-2,T839642,2,7月30日,10:30,徒歩,自宅,大学,FALSE,,FALSE
-3,T927346,3,8月19日,14:20,電車,茅野駅,大学,TRUE,斎藤飛鳥,TRUE
-4,T193023,4,9月10日,18:20,電車,茅野駅,大学,TRUE,石原さとみ,TRUE
-5,T391034,5,2月2日,17:50,バス,茅野駅,大学,TRUE,矢吹奈子,TRUE
-6,T103827,6,4月9日,20:56,電車,自宅,バイト先,FALSE,,TRUE
-7,T289374,7,6月28日,12:39,車,自宅,大学,FALSE,,FALSE
-8,T857764,8,5月1日,18:20,車,自宅,病院,FALSE,,TRUE
-9,T294833,9,6月29日,21:30,バス,自宅,バイト先,FALSE,,FALSE
-10,T103847,10,3月12日,19:40,バス,自宅,病院,FALSE,,TRUE
-11,T957231,11,8月30日,23:45,電車,自宅,病院,FALSE,,TRUE
-12,T974382,12,1月2日,16:40,電車,自宅,大学,TRUE,今田美桜,FALSE
-13,T746590,13,1月2日,19:50,徒歩,自宅,コンビニ,TRUE,遠藤さくら,FALSE
-14,T198372,14,8月13日,17:55,徒歩,自宅,スーパー,TRUE,鈴木愛理,FALSE
-15,T829469,15,12月20日,10:30,車,自宅,病院,FALSE,,TRUE
-16,T108372,16,12月20日,19:15,車,自宅,バイト先,FALSE,,TRUE
-17,T539457,17,11月7日,18:20,バス,大学,バイト先,FALSE,,TRUE
-18,E000001,18,7月12日,9:00,車,自宅,バイト先,FALSE,,TRUE
-19,T488290,19,7月12日,13:40,車,バイト先,大学,TRUE,山下美月,FALSE
-20,T100384,20,7月12日,20:30,車,大学,コンビニ,FALSE,,FALSE
+action_tableID,user_num,action_number,action_date_time,movement_method,place_of_departure,place_of_arrival,companion,companion_person,_mask
+1,T274235,1,2024/6/1 10:19,車,1,2,FALSE,,FALSE
+2,T839642,2,2024/7/30 10:30,徒歩,3,4,FALSE,,FALSE
+3,T927346,3,2024/8/19 14:20,電車,5,6,TRUE,斎藤飛鳥,TRUE
+4,T193023,4,2024/9/10 18:20,電車,7,8,TRUE,石原さとみ,TRUE
+5,T391034,5,2024/2/2 17:50,バス,9,10,TRUE,矢吹奈子,TRUE
+6,T103827,6,2024/4/9 20:56,電車,11,12,FALSE,,TRUE
+7,T289374,7,2024/6/28 12:39,車,13,14,FALSE,,FALSE
+8,T857764,8,2024/5/1 18:20,車,15,16,FALSE,,TRUE
+9,T294833,9,2024/6/29 21:30,バス,17,18,FALSE,,FALSE
+10,T103847,10,2024/3/12 19:40,バス,19,20,FALSE,,TRUE
