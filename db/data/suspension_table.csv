@@ -1,0 +1,5 @@
+suspensionID,suspension_school,suspension_start,suspension_end,acceptance,medical,doctor
+1,FALSE,,,,,
+6,TRUE,2024/5/15,2024/5/22,TRUE,総合病院,田中太郎
+13,TRUE,2024/5/7,2024/5/14,TRUE,総合病院,田中太郎
+15,TRUE,2024/5/3,2024/5/10,TRUE,総合病院,田中太郎
