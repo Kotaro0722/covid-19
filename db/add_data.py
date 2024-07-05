@@ -165,7 +165,6 @@ sqlstring = """
         tel VARCHAR(16),                            -- 電話番号
         user_name VARCHAR(16),                      -- 氏名
         suspensionID INT,                           -- 出席停止ID
-        action_tableID INT,                         -- アクションID
         lastupdate DATETIME DEFAULT NOW(),          -- 最終更新日時
         delflag BOOLEAN DEFAULT FALSE,              -- 削除フラグ
         PRIMARY KEY (userID)                        -- 主キーの設定
@@ -181,10 +180,10 @@ for ind,rowdata in df.iterrows():
     #data.Month は， data['Month'] とおなじ
     sqlstring = f"""
         INSERT INTO user_table
-        (user_num,_class,affiliation,tel,user_name,suspensionID,action_tableID,lastupdate)
+        (user_num,_class,affiliation,tel,user_name,suspensionID,lastupdate)
         VALUES
-        ('{rowdata.user_num}', '{rowdata._class}' , '{rowdata.affiliation}' , {rowdata.tel} , {rowdata.user_name} , 
-        {rowdata.suspensionID} , {rowdata.action_tableID} , '{dt_now}' )
+        ('{rowdata.user_num}', '{rowdata._class}' , '{rowdata.affiliation}' , '{rowdata.tel}' , '{rowdata.user_name}' , 
+        {rowdata.suspensionID} , '{dt_now}' )
     """
     #print( sqlstring )  #for debug
     my_query( sqlstring )   #1レコード挿入
