@@ -65,9 +65,9 @@ for ind,rowdata in df.iterrows():
     #data.Month は， data['Month'] とおなじ
     sqlstring = f"""
         INSERT INTO place_table
-        (placeID,place,crowd_label,lastupdate,delflag)
+        (place,crowd_level,lastupdate)
         VALUES
-        ('{rowdata.place}', '{rowdata.crowd_label}' , '{dt_now}')
+        ('{rowdata.place}', {rowdata.crowd_level} , '{dt_now}')
     """
     #print( sqlstring )  #for debug
     my_query( sqlstring )   #1レコード挿入
@@ -96,9 +96,9 @@ for ind,rowdata in df.iterrows():
     #data.Month は， data['Month'] とおなじ
     sqlstring = f"""
         INSERT INTO symptom_table
-        (symptomID,symptom_details)
+        (symptom_details,lastupdate)
         VALUES
-        ('{rowdata.symptom_details}')
+        ('{rowdata.symptom_details}','{dt_now}')
     """
     #print( sqlstring )  #for debug
     my_query( sqlstring )   #1レコード挿入
@@ -133,9 +133,9 @@ for ind,rowdata in df.iterrows():
     #data.Month は， data['Month'] とおなじ
     sqlstring = f"""
         INSERT INTO suspention_table
-        (S_Number, Croom, Math, Eng, Jpn)
+        (suspention_school,suspention_start,suspention_end,acceptance,medical,doctor,lastupdate)
         VALUES
-        ('{rowdata.S_Number}', '{rowdata.Croom}' , {rowdata.Math}, {rowdata.Eng}, {rowdata.Jpn})
+        ({rowdata.suspention_school}, '{rowdata.suspention_start}' , '{rowdata.suspention_end}', {rowdata.acceptance}, '{rowdata.medical}','{rowdata.doctor}','{dt_now}')
     """
     #print( sqlstring )  #for debug
     my_query( sqlstring )   #1レコード挿入
@@ -146,32 +146,34 @@ print(f"suspention_table テーブル{i} レコード追加しました")
 
 ############# テーブルuser_tableの新規作成
 sqlstring = """
-    CREATE TABLE user_table(
-        Weather_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        Month INT ,
-        Year INT,
-        Area VARCHAR(20),
-        Temp_max float,
-        Temp_mean float,
-        Temp_min float,
-        Precipitation float,
-        Sunshine float
-    )
+    CREATE TABLE user_table (
+        userID INT NOT NULL AUTO_INCREMENT,         -- 個人のID
+        user_num VARCHAR(16) NOT NULL UNIQUE,       -- 個人番号
+        _class VARCHAR(16),                          -- 役職
+        affiliation VARCHAR(16),                    -- 所属
+        tel VARCHAR(16),                            -- 電話番号
+        user_name VARCHAR(16),                      -- 氏名
+        suspensionID INT,                           -- 出席停止ID
+        action_tableID INT,                         -- アクションID
+        lastupdate DATETIME DEFAULT NOW(),          -- 最終更新日時
+        delflag BOOLEAN DEFAULT FALSE,              -- 削除フラグ
+        PRIMARY KEY (userID)                        -- 主キーの設定
+);
 """
 my_query( sqlstring )
 
 i=0  #レコード件数カウント
 #ファイルオープン
-df = pd.read_csv("./user_table.csv",header=0)
+df = pd.read_csv("./data/user_table.csv",header=0)
 #user_table.csvを1行ずつ処理
 for ind,rowdata in df.iterrows():
     #data.Month は， data['Month'] とおなじ
     sqlstring = f"""
         INSERT INTO user_table
-        (month,year,area,temp_max,temp_mean,temp_min,precipitation,sunshine)
+        (user_num,_class,affiliation,tel,user_name,suspentionID,action_tableID,lastupdate)
         VALUES
-        ({rowdata.Month}, {rowdata.Year} , '{rowdata.Area}' , {rowdata.Temp_max} , {rowdata.Temp_mean} , 
-        {rowdata.Temp_min} , {rowdata.Precipitation} , {rowdata.Sunshine} )
+        ('{rowdata.user_num}', '{rowdata._class}' , '{rowdata.affiliation}' , {rowdata.tel} , {rowdata.user_name} , 
+        {rowdata.suspensionID} , {rowdata.action_tableID} , '{dt_now}' )
     """
     #print( sqlstring )  #for debug
     my_query( sqlstring )   #1レコード挿入
@@ -182,32 +184,40 @@ print(f"user_table テーブル {i} レコード追加しました")
 
 ############# テーブルaction_tableの新規作成
 sqlstring = """
-    CREATE TABLE action_table(
-        Weather_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        Month INT ,
-        Year INT,
-        Area VARCHAR(20),
-        Temp_max float,
-        Temp_mean float,
-        Temp_min float,
-        Precipitation float,
-        Sunshine float
-    )
+    CREATE TABLE action_table (
+        action_tableID INT NOT NULL AUTO_INCREMENT,   -- アクションID
+        user_num VARCHAR(16),                         -- 個人番号
+        action_number INT,                            -- 番号
+        action_date VARCHAR(50),                      -- 日付
+        action_time VARCHAR(50),                      -- 時間
+        movement_method VARCHAR(50),                  -- 移動方法
+        place_of_departure VARCHAR(50),               -- 出発地
+        place_of_arrival VARCHAR(50),                 -- 到着地
+        companion BOOLEAN,                            -- 同行者有無
+        companion_person VARCHAR(50),                 -- 同行者名
+        mask BOOLEAN,                                 -- マスクの有無
+        lastupdate DATETIME DEFAULT NOW(),            -- 最終更新日時
+        delflag BOOLEAN DEFAULT FALSE,                -- 削除フラグ
+        PRIMARY KEY (action_tableID),                 -- 主キーの設定
+        FOREIGN KEY (user_num) REFERENCES personal(user_num),  -- 外部キー制約
+        FOREIGN KEY (place_of_departure) REFERENCES places(place_name),  -- 外部キー制約（仮想の場所テーブル）
+        FOREIGN KEY (place_of_arrival) REFERENCES places(place_name)     -- 外部キー制約（仮想の場所テーブル）
+);
 """
 my_query( sqlstring )
 
 i=0  #レコード件数カウント
 #ファイルオープン
-df = pd.read_csv("./action_table.csv",header=0)
+df = pd.read_csv("./data/action_table.csv",header=0)
 #action.csvを1行ずつ処理
 for ind,rowdata in df.iterrows():
     #data.Month は， data['Month'] とおなじ
     sqlstring = f"""
         INSERT INTO action_table
-        (month,year,area,temp_max,temp_mean,temp_min,precipitation,sunshine)
+        (user_num,action_number,action_date,action_time,movement_method,place_of_departure,place_of_arrival,companion,companion_person,mask,lastupdate)
         VALUES
-        ({rowdata.Month}, {rowdata.Year} , '{rowdata.Area}' , {rowdata.Temp_max} , {rowdata.Temp_mean} , 
-        {rowdata.Temp_min} , {rowdata.Precipitation} , {rowdata.Sunshine} )
+        ('{rowdata.user_num}', {rowdata.action_number} , '{rowdata.action_date}' , {rowdata.action_time} ,' {rowdata.movement_method}' , 
+        '{rowdata.place_of_departure}' , '{rowdata.place_of_arrival}' , {rowdata.companion}, '{rowdata.companion_person}',{rowdata.mask},{dt_now})
     """
     #print( sqlstring )  #for debug
     my_query( sqlstring )   #1レコード挿入
@@ -219,25 +229,31 @@ print(f"action_table テーブル {i} レコード追加しました")
 ############# テーブルcondition_taleの新規作成
 sqlstring = """
     CREATE TABLE condition_table(
-        siken1_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        cram VARCHAR(20),
-        club VARCHAR(20),
-        score int
+        conditionID INT NOT NULL AUTO_INCREMENT,     -- 体調ID
+        user_num VARCHAR(16),                        -- 個人番号
+        condition_date DATE,                         -- 日付
+        body_temp FLOAT,                             -- 体温
+        symptomID INT,                               -- 症状ID
+        lastupdate DATETIME DEFAULT NOW(),           -- 最終更新日時
+        delflag BOOLEAN DEFAULT FALSE,               -- 削除フラグ
+        PRIMARY KEY (conditionID),                   -- 主キーの設定
+        FOREIGN KEY (user_num) REFERENCES personal(user_num),  -- 外部キー制約
+        FOREIGN KEY (symptomID) REFERENCES symptoms(symptomID) -- 外部キー制約（仮想の症状テーブル）
     )
 """
 my_query( sqlstring )
 
 i=0  #レコード件数カウント
 #ファイルオープン
-df = pd.read_csv("./condition_table.csv",header=0)
+df = pd.read_csv("./data/condition_table.csv",header=0)
 #condition_table.csvを1行ずつ処理
 for ind,rowdata in df.iterrows():
     #data.Month は， data['Month'] とおなじ
     sqlstring = f"""
         INSERT INTO condition_table
-        (cram, club, score)
+        (user_num,condition_date,body_temp,symptomID,lastupdate)
         VALUES
-        ('{rowdata.cram}', '{rowdata.club}' , {rowdata.score})
+        ('{rowdata.user_num}', '{rowdata.condition_date}' , {rowdata.body_temp}, {rowdata.symptomID},{dt_now})
     """
     #print( sqlstring )  #for debug
     my_query( sqlstring )   #1レコード挿入
