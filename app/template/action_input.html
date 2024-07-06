@@ -1,0 +1,35 @@
+<!-- fuku0501-top.html -->
+<!doctype html>
+<html lang="ja">
+
+<head>
+    <title>{{title}}</title>
+    <meta charset="utf-8">
+</head>
+
+<body>
+    <h2>{{title}}</h2>
+    <form action="/action_input" method="POST">
+        日付<input type="text" name="date"><br>
+        時間<input type="text" name="time">
+        移動方法<input type="text" name="method"><br>
+        出発地<input type="text" name="departure">
+        中継地<input type="text" name="mid">
+        到着地<input type="text" name="arrival"><br>
+        同行者
+        <input type="radio" id="yes" name="companion" value="yes">
+        <label for="yes">Yes</label>
+        <input type="radio" id="no" name="companion" value="no">
+        <label for="no">No</label><br>
+        同行者名<input type="text" name="companion_person"><br>
+        マスク
+        <input type="radio" id="yes_mask" name="mask" value="yes">
+        <label for="yes_mask">Yes</label>
+        <input type="radio" id="no_mask" name="mask" value="no">
+        <label for="no_mask">No</label><br>
+        <input type="submit" value="レコード挿入">
+        <input type="reset" value="Reset">
+    </form>
+</body>
+
+</html>
