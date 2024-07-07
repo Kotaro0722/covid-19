@@ -5,41 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ログイン画面</title>
     <link rel="stylesheet" href="../static/style.css" />
-    <script>
-      function showLogin(type) {
-        document.getElementById("admin-login").style.display = "none";
-        document.getElementById("user-login").style.display = "none";
-
-        if (type === "admin") {
-          document.getElementById("admin-login").style.display = "block";
-        } else if (type === "user") {
-          document.getElementById("user-login").style.display = "block";
-        }
-      }
-    </script>
   </head>
   <body>
     <header>
       <h1>COVID-19状況管理システム</h1>
     </header>
 
-    <main class="container">
-      <div class="login-selection">
-        <button onclick="showLogin('admin')">管理者ログイン</button>
-        <button onclick="showLogin('user')">一般ユーザログイン</button>
-      </div>
-
-      <div id="admin-login" class="login-form">
-        <h2>管理者ログイン</h2>
-        <form action="/admin-login" method="post">
-          <label for="admin-password">パスワード</label>
-          <input type="password" id="admin-password" name="password" required />
-          <button type="submit">ログイン</button>
-        </form>
-      </div>
-
-      <div id="user-login" class="login-form">
-        <h2>一般ユーザログイン</h2>
+    <main>
+      <div class="login-form">
+        <h2>ログイン</h2>
         <form action="/user-login" method="post">
           <label for="username">ユーザー名</label>
           <input type="text" id="username" name="username" required />
