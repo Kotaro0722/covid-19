@@ -1,7 +1,6 @@
 from flask import Blueprint
 
-main = Blueprint('main', __name__)
-
-login = Blueprint('login', __name__)
+login = Blueprint("login", __name__)
+login_config=Blueprint("login-config",__name__)
 
 from . import routes
