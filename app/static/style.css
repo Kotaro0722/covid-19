@@ -13,7 +13,7 @@ header {
   background-color: #333;
   color: #fff;
   text-align: center;
-  padding: 1rem;
+  padding: 1rem 0rem;
 }
 
 header h1 {
@@ -80,11 +80,16 @@ h1 {
   background-color: #0056b3;
 }
 
+#main_admin_main {
+  width: 100%;
+}
+
 #main_admin {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  width: 300px;
+  width: 100vw;
+  height: calc(100vh - 80px - 56px);
   gap: 10px;
 }
 
