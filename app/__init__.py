@@ -40,4 +40,8 @@ def create_app():
     # from .calculate import calculate as calculate_blueprint
     # app.register_blueprint(calculate_blueprint, url_prefix='/calculate')
 
+    
+    from .main import main as main_blueprint
+    app.register_blueprint(main_blueprint)
+    
     return app
