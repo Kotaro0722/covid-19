@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ログイン画面</title>
+    <link rel="stylesheet" href="../static/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>COVID-19状況管理システム</h1>
+    </header>
+
+    <main>
+      <div class="login-form">
+        <h2>ログイン</h2>
+        <form action="/login_config" method="post">
+          <label for="username">ユーザー名</label>
+          <input type="text" id="username" name="username" required />
+          <label for="password">パスワード</label>
+          <input type="password" id="password" name="password" required />
+          <button type="submit">ログイン</button>
+        </form>
+      </div>
+    </main>
+
+    <footer>
+      <p>2024 DB論 第4班 rights reserved.</p>
+    </footer>
+  </body>
+</html>
