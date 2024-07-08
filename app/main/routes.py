@@ -7,7 +7,7 @@ dsn = {
     'port' : '3306',        #mysqlの接続ポート番号
     'user' : 'root',      #dbアクセスするためのユーザid
     'password' : '1234',    #ユーザidに対応するパスワード
-    'database' : 'dbron04' #オープンするデータベース名
+    'database' : 'covid-19' #オープンするデータベース名
 }
 
 @main.route("/",methods=["POST"])
@@ -35,10 +35,6 @@ def login_config():
             
     
     if is_admin:
-        dbcon,cur=my_open(**dsn)
-        sqlstring_related=f"""
-            SELECT * 
-        """
         return render_template("main_admin.html")
     elif is_user:
         return render_template("main_user.html")
