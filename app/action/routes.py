@@ -12,7 +12,7 @@ dsn = {
     'port' : '3306',        #mysqlの接続ポート番号
     'user' : 'root',      #dbアクセスするためのユーザid
     'password' : '1234',    #ユーザidに対応するパスワード
-    'database' : 'db' #オープンするデータベース名
+    'database' : 'covid19' #オープンするデータベース名
 }
 
 from flask import Flask,render_template ,request
