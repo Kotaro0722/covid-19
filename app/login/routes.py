@@ -7,7 +7,7 @@ def login():
     return render_template("login.html")    
 
 
-@login_config.route("/login_config",methods=["POST"])
+@login_config.route("/",methods=["POST"])
 def login_config():
     username=request.form["username"]
     password=request.form["password"]
@@ -32,9 +32,9 @@ def login_config():
             
     
     if is_admin:
-        return render_template("")
+        return render_template("main_admin.html")
     elif is_user:
-        return render_template("")
+        return render_template("main_user.html")
     else:
         return render_template("login.html")
     
