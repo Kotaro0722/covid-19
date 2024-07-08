@@ -9,11 +9,9 @@
 <body>
     <h2>{{title}}</h2>
     <form action="/action_input" method="POST">
-        日付<input type="text" name="date"><br>
-        時間<input type="text" name="time">
+        日付と日時<input type="datetime-local" name="date_time"><br>
         移動方法<input type="text" name="method"><br>
         出発地<input type="text" name="departure">
-        中継地<input type="text" name="mid">
         到着地<input type="text" name="arrival"><br>
         同行者
         <input type="radio" id="yes" name="companion" value="yes">
