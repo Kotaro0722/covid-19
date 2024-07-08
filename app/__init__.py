@@ -8,5 +8,11 @@ def create_app():
     
     from .login import login_config as login_config_blueprint
     app.register_blueprint(login_config_blueprint)
+
+    from .action import action as action_blueprint
+    app.register_blueprint(action_blueprint)
+
+    from .action import action_config as action_config_blueprint
+    app.register_blueprint(action_config_blueprint)
     
     return app
