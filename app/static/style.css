@@ -114,3 +114,44 @@ h1 {
   grid-column: 2/3;
   grid-row: 2/3;
 }
+
+#main_user_main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 40px;
+}
+
+#main_user_main section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+#main_user_main section h2 {
+  margin-bottom: 0px;
+}
+
+#main_user_main button {
+  padding: 10px;
+  border-radius: 20px;
+  background-color: gray;
+  border-color: black;
+  cursor: pointer;
+}
+
+#main_user_main section button:first-of-type {
+  background-color: black;
+  border-color: black;
+  color: white;
+}
+
+#main_user_main section button:first-of-type::after {
+  border: 1px solid white;
+}
+
+#main_user_main section button:last-of-type {
+  background-color: white;
+  border-color: black;
+}
