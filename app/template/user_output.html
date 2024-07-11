@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>体調観察表・行動管理出力</title>
+    <title>体調観察表・行動管理表出力</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>体調観察表・行動管理出力</h1>
-
-    <!-- 体調観察表出力 -->
-    <section>
-        <h2>体調観察表出力</h2>
+    <h1>体調観察表・行動管理表出力</h1>
+    
+    <!-- 体調観察表セクション -->
+    <section id="condition-section">
+        <h2>体調観察表</h2>
         <table>
             <thead>
                 <tr>
@@ -26,27 +26,28 @@
                     <td>{{ condition.date }}</td>
                     <td>{{ condition.temperature }}</td>
                     <td>
-                        {% if condition.symptoms.joint_pain %}関節、筋肉痛{% endif %}
-                        {% if condition.symptoms.fatigue %}だるさ{% endif %}
-                        {% if condition.symptoms.headache %}頭痛{% endif %}
-                        {% if condition.symptoms.sore_throat %}咽頭痛{% endif %}
-                        {% if condition.symptoms.shortness_of_breath %}息苦しさ{% endif %}
-                        {% if condition.symptoms.cough_sneeze %}咳、くしゃみ{% endif %}
-                        {% if condition.symptoms.nausea_vomiting %}吐気、嘔吐{% endif %}
-                        {% if condition.symptoms.stomach_ache_diarrhea %}腹痛、下痢{% endif %}
-                        {% if condition.symptoms.taste_disorder %}味覚障害{% endif %}
-                        {% if condition.symptoms.smell_disorder %}嗅覚障害{% endif %}
-                        {% if not any(condition.symptoms.values()) %}健康{% endif %}
+                        {% set symptoms = condition.symptoms %}
+                        {% if symptoms.joint_pain %}関節、筋肉痛{% endif %}
+                        {% if symptoms.fatigue %}だるさ{% endif %}
+                        {% if symptoms.headache %}頭痛{% endif %}
+                        {% if symptoms.sore_throat %}咽頭痛{% endif %}
+                        {% if symptoms.shortness_of_breath %}息苦しさ{% endif %}
+                        {% if symptoms.cough_sneeze %}咳、くしゃみ{% endif %}
+                        {% if symptoms.nausea_vomiting %}吐気、嘔吐{% endif %}
+                        {% if symptoms.stomach_ache_diarrhea %}腹痛、下痢{% endif %}
+                        {% if symptoms.taste_disorder %}味覚障害{% endif %}
+                        {% if symptoms.smell_disorder %}嗅覚障害{% endif %}
+                        {% if not any(symptoms.values()) %}健康{% endif %}
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </section>
-
-    <!-- 行動管理出力 -->
-    <section>
-        <h2>行動管理出力</h2>
+    
+    <!-- 行動管理表セクション -->
+    <section id="action-section">
+        <h2>行動管理表</h2>
         <table>
             <thead>
                 <tr>

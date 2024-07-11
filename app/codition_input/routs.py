@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from your_app.models import Condition  # Assuming you have a model for Condition
+from your_app.models import Condition, Action  # Assuming you have models for Condition and Action
 from your_app import db
 
 condition_bp = Blueprint('condition', __name__)
@@ -22,9 +22,9 @@ def condition_input():
             'smell_disorder': request.form.get('smell_disorder') == 'on'
         }
 
-        # Check if at least one symptom is filled
+        # 少なくとも1つの症状が入力されているか確認
         if not any(symptoms.values()):
-            flash('At least one symptom must be checked!', 'danger')
+            flash('少なくとも1つの症状をチェックしてください！', 'danger')
             return redirect(url_for('condition.condition_input'))
 
         new_condition = Condition(
@@ -41,4 +41,6 @@ def condition_input():
 @condition_bp.route('/condition_output', methods=['GET'])
 def condition_output():
     conditions = Condition.query.all()
-    return render_template('user_output.html', conditions=conditions)
+    actions = Action.query.all()  # Assuming you have an Action model and data
+    return render_template('user_output.html', conditions=conditions, actions=actions)
+
