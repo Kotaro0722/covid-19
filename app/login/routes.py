@@ -1,6 +1,9 @@
-from flask import render_template
+from flask import render_template,request
 from . import login
 
-@login.route('/')
-def home():
-    return render_template('index.html')
+@login.route("/login")
+def login():
+    return render_template("login.html")    
+
+    
+    
