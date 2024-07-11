@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>体調観察表・行動管理出力</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>体調観察表・行動管理出力</h1>
+
+    <!-- 体調観察表出力 -->
+    <section>
+        <h2>体調観察表出力</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>日付</th>
+                    <th>体温</th>
+                    <th>症状</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for condition in conditions %}
+                <tr>
+                    <td>{{ condition.date }}</td>
+                    <td>{{ condition.temperature }}</td>
+                    <td>
+                        {% if condition.symptoms.joint_pain %}関節、筋肉痛{% endif %}
+                        {% if condition.symptoms.fatigue %}だるさ{% endif %}
+                        {% if condition.symptoms.headache %}頭痛{% endif %}
+                        {% if condition.symptoms.sore_throat %}咽頭痛{% endif %}
+                        {% if condition.symptoms.shortness_of_breath %}息苦しさ{% endif %}
+                        {% if condition.symptoms.cough_sneeze %}咳、くしゃみ{% endif %}
+                        {% if condition.symptoms.nausea_vomiting %}吐気、嘔吐{% endif %}
+                        {% if condition.symptoms.stomach_ache_diarrhea %}腹痛、下痢{% endif %}
+                        {% if condition.symptoms.taste_disorder %}味覚障害{% endif %}
+                        {% if condition.symptoms.smell_disorder %}嗅覚障害{% endif %}
+                        {% if not any(condition.symptoms.values()) %}健康{% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <!-- 行動管理出力 -->
+    <section>
+        <h2>行動管理出力</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>日付</th>
+                    <th>時間</th>
+                    <th>移動方法</th>
+                    <th>出発地</th>
+                    <th>中継地</th>
+                    <th>到着地</th>
+                    <th>混み具合</th>
+                    <th>同行者</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for action in actions %}
+                <tr>
+                    <td>{{ action.date }}</td>
+                    <td>{{ action.time }}</td>
+                    <td>{{ action.transportation }}</td>
+                    <td>{{ action.departure }}</td>
+                    <td>
+                        {% for intermediate in action.intermediates %}
+                        {{ intermediate }}<br>
+                        {% endfor %}
+                    </td>
+                    <td>{{ action.arrival }}</td>
+                    <td>
+                        出発地: {{ action.congestion_departure }}<br>
+                        {% for congestion in action.congestion_intermediate %}
+                        中継地: {{ congestion }}<br>
+                        {% endfor %}
+                        到着地: {{ action.congestion_arrival }}
+                    </td>
+                    <td>
+                        {% if action.companion == 'yes' %}
+                        {% for detail in action.companion_details %}
+                        名前: {{ detail.name }}<br>
+                        間柄: {{ detail.relationship }}<br>
+                        マスク使用: {{ detail.mask }}<br>
+                        {% endfor %}
+                        {% else %}
+                        無
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</body>
+</html>
