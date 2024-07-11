@@ -6,7 +6,7 @@ def create_app():
     from .login import login as login_blueprint
     app.register_blueprint(login_blueprint)
     
-    from .main import main as main_blueprint
-    app.register_blueprint(main_blueprint)
+    from .login import login_config as login_config_blueprint
+    app.register_blueprint(login_config_blueprint)
     
     return app
