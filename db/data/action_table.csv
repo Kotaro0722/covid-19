@@ -1,11 +1,5 @@
-action_tableID,user_num,action_number,action_date_time,movement_method,place_of_departure,place_of_arrival,companion,companion_person,_mask
-1,T274235,1,2024/6/1 10:19,車,1,2,FALSE,,FALSE
-2,T839642,2,2024/7/30 10:30,徒歩,3,4,FALSE,,FALSE
-3,T927346,3,2024/8/19 14:20,電車,5,6,TRUE,斎藤飛鳥,TRUE
-4,T193023,4,2024/9/10 18:20,電車,7,8,TRUE,石原さとみ,TRUE
-5,T391034,5,2024/2/2 17:50,バス,9,10,TRUE,矢吹奈子,TRUE
-6,T103827,6,2024/4/9 20:56,電車,11,12,FALSE,,TRUE
-7,T289374,7,2024/6/28 12:39,車,13,14,FALSE,,FALSE
-8,T857764,8,2024/5/1 18:20,車,15,16,FALSE,,TRUE
-9,T294833,9,2024/6/29 21:30,バス,17,18,FALSE,,FALSE
-10,T103847,10,2024/3/12 19:40,バス,19,20,FALSE,,TRUE
+action tableID,userID,action_date_start,action_date_end
+1,1,2024/07/11 9:00,2024/7/11 16:00
+2,2,2024/07/11 17:00,2024/7/11 19:00:00
+3,4,2024/07/11 10:00:00,2024/7/11 20:00:00
+4,5,2024/07/11 12:00:00,2024/7/11 14:00
