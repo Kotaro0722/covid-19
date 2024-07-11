@@ -201,6 +201,9 @@ sqlstring = """
         action_date_time DATETIME,                    -- 日付と時間
         movement_method VARCHAR(50),                  -- 移動方法
         place_of_departure INT,                       -- 出発地
+        waypoint1 INT,                                -- 中継地点1
+        waypoint2 INT,                                -- 中継地点2
+        waypoint3 INT,                                -- 中継地点3
         place_of_arrival INT,                         -- 到着地
         companion BOOLEAN,                            -- 同行者有無
         companion_person VARCHAR(50),                 -- 同行者名
