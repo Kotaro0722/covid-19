@@ -17,10 +17,153 @@
                 inputElement.required = false;
             }
         }
+
+        // 新しい同行者名の入力フィールドを追加する関数
+        function addCompanionInput() {
+            var container = document.getElementById("companionInputs");
+            var inputCount = container.children.length + 1;
+
+            // 新しい入力フィールドのHTML要素を作成
+            var newInput = document.createElement("input");
+            newInput.type = "text";
+            newInput.name = "companion_person_" + inputCount; // フォームデータ送信時に使用する名前
+            newInput.placeholder = "同行者名";
+
+            // 改行を追加してから新しい入力フィールドをコンテナに追加
+            container.appendChild(document.createElement("br"));
+            container.appendChild(newInput);
+        }
+
     </script>
+    <style>
+        /* Resetting default margins and paddings */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 5px;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        h2 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        form {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="datetime-local"],
+        input[type="text"],
+        select {
+            width: calc(100% - 12px);
+            padding: 8px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        input[type="submit"],
+        input[type="reset"],
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 6px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover,
+        input[type="reset"]:hover,
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+            /* ボタン間のスペースを追加 */
+        }
+
+        #companionInputs {
+            margin-top: 10px;
+        }
+
+        #companionInputs input[type="text"] {
+            width: calc(100% - 12px);
+            padding: 8px;
+            margin-bottom: 8px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        /* Styling for mask options*/
+        .mask-options {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .mask-options label {
+            margin-bottom: 0;
+        }
+    </style>
+    <link rel="stylesheet" href="../static/style.css">
 </head>
 
 <body>
+    <header>
+        <h1>COVID-19状況管理システム</h1>
+    </header>
+
     <h2>{{title}}</h2>
     <form action="/action_input" method="POST">
         日付と日時<input type="datetime-local" name="date_time"><br>
@@ -41,7 +184,6 @@
         </select><br>
         <input type="text" id="departure_input" name="place_of_departure2" style="display: none;"
             placeholder="その他の中継地点を入力してください"><br>
-        <br>
         中継地点1<select id="waypoint_select1" name="waypoint1"
             onchange="checkWaypointSelection('waypoint_select1', 'waypoint_input1')">
             <option value="1">茅野駅</option>
@@ -51,7 +193,7 @@
             <option value="no">なし</option>
         </select>
         <input type="text" id="waypoint_input1" name="waypoint_other" style="display: none;"
-            placeholder="その他の中継地点を入力してください"><br>
+            placeholder="その他の中継地点を入力してください">
         中継地点1の混み具合<select name="waypoint1_crowd">
             <option value="1">1 - 空いている</option>
             <option value="2">2 - 少し混んでいる</option>
@@ -59,7 +201,6 @@
             <option value="4">4 - 混んでいる</option>
             <option value="5">5 - 非常に混んでいる</option>
         </select><br>
-        <br>
         中継地点2<select id="waypoint_select2" name="waypoint2"
             onchange="checkWaypointSelection('waypoint_select2', 'waypoint_input2')">
             <option value="1">茅野駅</option>
@@ -69,7 +210,7 @@
             <option value="no">なし</option>
         </select>
         <input type="text" id="waypoint_input2" name="waypoint_other" style="display: none;"
-            placeholder="その他の中継地点を入力してください"><br>
+            placeholder="その他の中継地点を入力してください">
         中継地点2の混み具合<select name="waypoint2_crowd">
             <option value="1">1 - 空いている</option>
             <option value="2">2 - 少し混んでいる</option>
@@ -87,7 +228,7 @@
             <option value="no">なし</option>
         </select>
         <input type="text" id="waypoint_input3" name="waypoint_other" style="display: none;"
-            placeholder="その他の中継地点を入力してください"><br>
+            placeholder="その他の中継地点を入力してください">
         中継地点3の混み具合<select name="waypoint3_crowd">
             <option value="1">1 - 空いている</option>
             <option value="2">2 - 少し混んでいる</option>
@@ -112,20 +253,44 @@
         </select><br>
         <input type="text" id="arrival_input" name="place_of_arrival2" style="display: none;"
             placeholder="その他の中継地点を入力してください"><br>
-        同行者
+        マスク
+        <div class="mask-options">
+            <label for="yes_mask"><input type="radio" id="yes_mask" name="mask" value="yes"> Yes</label>
+            <label for="no_mask"><input type="radio" id="no_mask" name="mask" value="no"> No</label>
+        </div>
+        <p>同行者名入力フォーム</p>
+        <button type="button" onclick="addCompanionInput()">同行者名を入力するテキストボックスを追加</button>
+        <form action="/submit" method="POST">
+            <div id="companionInputs">
+                <!-- 動的に追加される同行者名入力フィールドのコンテナ -->
+            </div>
+
+            <!--<input type="submit" value="送信">-->
+        </form>
+        <!-- 動的に追加される入力フィールドのコンテナ -->
+        </div>
+        <div class="button-container">
+            <input type="submit" value="登録">
+            <input type="reset" value="リセット">
+        </div>
+        <!--同行者
         <input type="radio" id="yes" name="companion" value="yes">
         <label for="yes">Yes</label>
         <input type="radio" id="no" name="companion" value="no">
         <label for="no">No</label><br>
-        同行者名<input type="text" name="companion_person"><br>
-        マスク
-        <input type="radio" id="yes_mask" name="mask" value="yes">
-        <label for="yes_mask">Yes</label>
+        同行者名<input type="text" name="companion_person"><br>-->
+
+
+
+        <!--<label for="yes_mask">Yes</label>
         <input type="radio" id="no_mask" name="mask" value="no">
-        <label for="no_mask">No</label><br>
+        <label for="no_mask">No</label>
         <input type="submit" value="登録">
-        <input type="reset" value="リセット">
+        <input type="reset" value="リセット">-->
     </form>
+    <footer>
+        <p>2024 DB論 第4班 rights reserved.</p>
+    </footer>
 </body>
 
 </html>
