@@ -142,14 +142,14 @@ h1 {
   cursor: pointer;
 }
 
-#main_user_main section button:first-of-type {
+#main_user_main section form:first-of-type button {
   background-color: black;
   border-color: black;
   color: white;
   position: relative;
 }
 
-#main_user_main section button:first-of-type::after {
+#main_user_main form:first-of-type::after button {
   position: absolute;
   border: 2px solid white;
   border-radius: 20px;
@@ -160,7 +160,7 @@ h1 {
   content: "";
 }
 
-#main_user_main section button:last-of-type {
+#main_user_main section form button:last-of-type {
   background-color: white;
   border-color: black;
   color: black;

@@ -10,6 +10,6 @@ dsn = {
     'database' : 'covid-19' #オープンするデータベース名
 }
 
-@vaccine.route("/vaccine",methods=["GET"])
+@vaccine.route("/vaccine_input",methods=["POST"])
 def vaccine():
     return render_template()
