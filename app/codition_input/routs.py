@@ -1,46 +1,27 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
-from your_app.models import Condition, Action  # Assuming you have models for Condition and Action
-from your_app import db
+#ex0701.py 
+#FlaskモジュールでDBの操作
+from ssl import MemoryBIO
+from MyDatabase import my_open , my_query , my_close
+import pandas as pd
 
-condition_bp = Blueprint('condition', __name__)
+#Data Source Nameのパラメータを辞書型変数で定義
+dsn = {
+    'host' : '172.30.0.10',  #ホスト名(IPアドレス)
+    'port' : '3306',        #mysqlの接続ポート番号
+    'user' : 'root',      #dbアクセスするためのユーザid
+    'password' : '1234',    #ユーザidに対応するパスワード
+    'database' : 'db' #オープンするデータベース名
+}
 
-@condition_bp.route('/condition_input', methods=['GET', 'POST'])
-def condition_input():
-    if request.method == 'POST':
-        date = request.form['date']
-        temperature = request.form.get('temperature')
-        symptoms = {
-            'joint_pain': request.form.get('joint_pain') == 'on',
-            'fatigue': request.form.get('fatigue') == 'on',
-            'headache': request.form.get('headache') == 'on',
-            'sore_throat': request.form.get('sore_throat') == 'on',
-            'shortness_of_breath': request.form.get('shortness_of_breath') == 'on',
-            'cough_sneeze': request.form.get('cough_sneeze') == 'on',
-            'nausea_vomiting': request.form.get('nausea_vomiting') == 'on',
-            'stomach_ache_diarrhea': request.form.get('stomach_ache_diarrhea') == 'on',
-            'taste_disorder': request.form.get('taste_disorder') == 'on',
-            'smell_disorder': request.form.get('smell_disorder') == 'on'
-        }
+from flask import Flask,render_template ,request
+#Flaskのコンストラクタ
+app = Flask(__name__ ,static_folder="static")
 
-        # 少なくとも1つの症状が入力されているか確認
-        if not any(symptoms.values()):
-            flash('少なくとも1つの症状をチェックしてください！', 'danger')
-            return redirect(url_for('condition.condition_input'))
+#ルーティング定義
+@condition_input.route("/condition")
+def top():
+    return render_template( "ex0701-top.html",
+        title = "体調観察表" 
+    )
 
-        new_condition = Condition(
-            date=date,
-            temperature=temperature,
-            symptoms=symptoms
-        )
-        db.session.add(new_condition)
-        db.session.commit()
-        return redirect(url_for('condition.condition_output'))
-
-    return render_template('condition_input.html')
-
-@condition_bp.route('/condition_output', methods=['GET'])
-def condition_output():
-    conditions = Condition.query.all()
-    actions = Action.query.all()  # Assuming you have an Action model and data
-    return render_template('user_output.html', conditions=conditions, actions=actions)
 
