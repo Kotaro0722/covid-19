@@ -1,0 +1,6 @@
+move_method_table,action_tableID,move_method
+1,1,電車
+2,1,徒歩
+3,2,自転車
+4,3,徒歩
+5,4,自転車

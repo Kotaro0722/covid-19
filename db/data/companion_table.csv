@@ -1,0 +1,7 @@
+companion_tableID,action_tableID,companion_name,_mask
+1,1,佐藤太郎,FALSE
+2,1,鈴木花子,TRUE
+3,1,田中次郎,FALSE
+4,2,伊藤佳代子,TRUE
+5,2,加藤三郎,FALSE
+6,3,望月幸代,TRUE
