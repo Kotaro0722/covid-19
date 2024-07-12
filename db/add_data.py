@@ -201,6 +201,42 @@ for ind,rowdata in df.iterrows():
 print(f"action_table テーブル {i} レコード追加しました")
 
 
+############# テーブルmove_method_tableの新規作成
+sqlstring = """
+    CREATE TABLE move_method_table (
+        move_method_tableID INT NOT NULL AUTO_INCREMENT,   -- 移動方法ID
+        action_tableID INT,                                -- アクションテーブルID
+        move_method VARCHAR(50),                            -- 番号
+        lastupdate DATETIME DEFAULT NOW(),            -- 最終更新日時
+        delflag BOOLEAN DEFAULT FALSE,                -- 削除フラグ
+        PRIMARY KEY (move_method_tableID),                 -- 主キーの設定
+        FOREIGN KEY (action_tableID)                          -- 外部キー制約
+            REFERENCES action_table(action_tableID)
+            ON DELETE cascade
+            ON UPDATE cascade
+);
+"""
+my_query( sqlstring )
+
+i=0  #レコード件数カウント
+#ファイルオープン
+df = pd.read_csv("./data/move_method_table.csv",header=0)
+#action.csvを1行ずつ処理
+for ind,rowdata in df.iterrows():
+    #data.Month は， data['Month'] とおなじ
+    sqlstring = f"""
+        INSERT INTO move_method_table
+        (action_tableID,move_method)
+        VALUES
+        ({rowdata.action_tableID}, '{rowdata.move_method}' )
+    """
+    #print( sqlstring )  #for debug
+    my_query( sqlstring )   #1レコード挿入
+    i += 1
+
+print(f"move_method_table テーブル {i} レコード追加しました")
+
+
 ############# テーブルcrowd_tableの新規作成
 sqlstring = """
     CREATE TABLE crowd_table (
