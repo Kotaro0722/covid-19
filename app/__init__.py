@@ -1,13 +1,12 @@
 from flask import Flask
 
 def create_app():
-    app = Flask(__name__)
-
-    # 設定を追加する場合
-    # app.config.from_object('config.Config')
-
-    # ブループリントの登録
-    from .login import main as main_blueprint
+    app=Flask(__name__)
+    
+    from .login import login as login_blueprint
+    app.register_blueprint(login_blueprint)
+    
+    from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
     from .action import action as action_blueprint
