@@ -1,68 +1,16 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 
 <head>
-    <meta charset="UTF-8">
-    <title>アクションテーブルの表示</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table,
-        th,
-        td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
+    <title>{{title}}</title>
+    <meta charset="utf-8">
 </head>
 
 <body>
-    <title>{{title}}</title>
-    <h2>アクションテーブルの内容</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>アクションID</th>
-                <th>個人番号</th>
-                <th>番号</th>
-                <th>日付時間</th>
-                <th>移動方法</th>
-                <th>出発地</th>
-                <th>到着地</th>
-                <th>同行者有無</th>
-                <th>同行者名</th>
-                <th>マスクの有無</th>
-                <th>最終更新日時</th>
-                <th>削除フラグ</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for record in records %}
-            <tr>
-                <td>{{ record.action_tableID }}</td>
-                <td>{{ record.user_num }}</td>
-                <td>{{ record.action_number }}</td>
-                <td>{{ record.action_date_time }}</td>
-                <td>{{ record.movement_method }}</td>
-                <td>{{ record.place_of_departure }}</td>
-                <td>{{ record.place_of_arrival }}</td>
-                <td>{{ "あり" if record.companion else "なし" }}</td>
-                <td>{{ record.companion_person }}</td>
-                <td>{{ "あり" if record.mask else "なし" }}</td>
-                <td>{{ record.lastupdate }}</td>
-                <td>{{ "削除" if record.delflag else "" }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <h2>{{title}}</h2>
+    <pre>{{message}}</pre>
+
+    トップに<a href="/">戻る</a>
 </body>
 
 </html>
