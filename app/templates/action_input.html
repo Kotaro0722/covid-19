@@ -32,12 +32,38 @@
             // 改行を追加してから新しい入力フィールドをコンテナに追加
             container.appendChild(document.createElement("br"));
             container.appendChild(newInput);
-        }
 
+            // 新しいマスクのラジオボタンを作成
+            var newRadioYes = document.createElement("input");
+            newRadioYes.type = "radio";
+            newRadioYes.id = "yes_mask_" + inputCount;
+            newRadioYes.name = "mask_" + inputCount;
+            newRadioYes.value = "yes";
+            var labelYes = document.createElement("label");
+            labelYes.setAttribute("for", "yes_mask_" + inputCount);
+            labelYes.textContent = "マスクあり";
+
+            var newRadioNo = document.createElement("input");
+            newRadioNo.type = "radio";
+            newRadioNo.id = "no_mask_" + inputCount;
+            newRadioNo.name = "mask_" + inputCount;
+            newRadioNo.value = "no";
+            var labelNo = document.createElement("label");
+            labelNo.setAttribute("for", "no_mask_" + inputCount);
+            labelNo.textContent = "マスクなし";
+
+            // 改行を追加してから新しい入力フィールドとラジオボタンをコンテナに追加
+            container.appendChild(document.createElement("br"));
+            container.appendChild(newInput);
+            container.appendChild(newRadioYes);
+            container.appendChild(labelYes);
+            container.appendChild(newRadioNo);
+            container.appendChild(labelNo);
+        }
     </script>
     <style>
         /* Resetting default margins and paddings */
-        * {
+        /* {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -128,7 +154,7 @@
         .button-container {
             text-align: center;
             margin-top: 20px;
-            /* ボタン間のスペースを追加 */
+            /* ボタン間のスペースを追加 
         }
 
         #companionInputs {
@@ -144,7 +170,7 @@
             border-radius: 4px;
         }
 
-        /* Styling for mask options*/
+        /* Styling for mask options
         .mask-options {
             display: flex;
             align-items: center;
@@ -155,7 +181,7 @@
         .mask-options label {
             margin-bottom: 0;
         }
-    </style>
+    </style>*/
     <link rel="stylesheet" href="../static/style.css">
 </head>
 
@@ -166,13 +192,16 @@
 
     <h2>{{title}}</h2>
     <form action="/action_input" method="POST">
-        日付と日時<input type="datetime-local" name="date_time"><br>
+        開始日時<input type="datetime-local" name="start_date_time"><br>
+        終了日時<input type="datetime-local" name="end_date_time"><br>
         移動方法<input type="text" name="method"><br>
         出発地<select id="departure_select" name="place_of_departure1"
             onchange="checkWaypointSelection('departure_select', 'departure_input')">
             <option value="1">茅野駅</option>
-            <option value="2">自宅</option>
-            <option value="3">諏訪東京理科大学</option>
+            <option value="2">大学</option>
+            <option value="3">ファミレス</option>
+            <option value="4">自宅</option>
+            <option value="5">コンビニ</option>
             <option value="other">その他</option>
         </select>
         出発地の混み具合<select name="departure_crowd">
@@ -181,14 +210,16 @@
             <option value="3">3 - 普通</option>
             <option value="4">4 - 混んでいる</option>
             <option value="5">5 - 非常に混んでいる</option>
-        </select><br>
+        </select>
         <input type="text" id="departure_input" name="place_of_departure2" style="display: none;"
-            placeholder="その他の中継地点を入力してください"><br>
+            placeholder="出発地点を入力してください"><br>
         中継地点1<select id="waypoint_select1" name="waypoint1"
             onchange="checkWaypointSelection('waypoint_select1', 'waypoint_input1')">
             <option value="1">茅野駅</option>
-            <option value="2">自宅</option>
-            <option value="3">諏訪東京理科大学</option>
+            <option value="2">大学</option>
+            <option value="3">ファミレス</option>
+            <option value="4">自宅</option>
+            <option value="5">コンビニ</option>
             <option value="other">その他</option>
             <option value="no">なし</option>
         </select>
@@ -200,12 +231,15 @@
             <option value="3">3 - 普通</option>
             <option value="4">4 - 混んでいる</option>
             <option value="5">5 - 非常に混んでいる</option>
+            <option value="6">6 - なし</option>
         </select><br>
         中継地点2<select id="waypoint_select2" name="waypoint2"
             onchange="checkWaypointSelection('waypoint_select2', 'waypoint_input2')">
             <option value="1">茅野駅</option>
-            <option value="2">自宅</option>
-            <option value="3">諏訪東京理科大学</option>
+            <option value="2">大学</option>
+            <option value="3">ファミレス</option>
+            <option value="4">自宅</option>
+            <option value="5">コンビニ</option>
             <option value="other">その他</option>
             <option value="no">なし</option>
         </select>
@@ -217,13 +251,15 @@
             <option value="3">3 - 普通</option>
             <option value="4">4 - 混んでいる</option>
             <option value="5">5 - 非常に混んでいる</option>
+            <option value="6">6 - なし</option>
         </select><br>
-        <br>
         中継地点3<select id="waypoint_select3" name="waypoint3"
             onchange="checkWaypointSelection('waypoint_select3', 'waypoint_input3')">
             <option value="1">茅野駅</option>
-            <option value="2">自宅</option>
-            <option value="3">諏訪東京理科大学</option>
+            <option value="2">大学</option>
+            <option value="3">ファミレス</option>
+            <option value="4">自宅</option>
+            <option value="5">コンビニ</option>
             <option value="other">その他</option>
             <option value="no">なし</option>
         </select>
@@ -235,13 +271,15 @@
             <option value="3">3 - 普通</option>
             <option value="4">4 - 混んでいる</option>
             <option value="5">5 - 非常に混んでいる</option>
+            <option value="6">6 - なし</option>
         </select><br>
-        <br>
         到着地<select id="arrival_select" name="place_of_arrival1"
             onchange="checkWaypointSelection('arrival_select', 'arrival_input')">
             <option value="1">茅野駅</option>
-            <option value="2">自宅</option>
-            <option value="3">諏訪東京理科大学</option>
+            <option value="2">大学</option>
+            <option value="3">ファミレス</option>
+            <option value="4">自宅</option>
+            <option value="5">コンビニ</option>
             <option value="other">その他</option>
         </select>
         到着地の混み具合<select name="arrival_crowd">
@@ -252,41 +290,16 @@
             <option value="5">5 - 非常に混んでいる</option>
         </select><br>
         <input type="text" id="arrival_input" name="place_of_arrival2" style="display: none;"
-            placeholder="その他の中継地点を入力してください"><br>
-        マスク
-        <div class="mask-options">
-            <label for="yes_mask"><input type="radio" id="yes_mask" name="mask" value="yes"> Yes</label>
-            <label for="no_mask"><input type="radio" id="no_mask" name="mask" value="no"> No</label>
-        </div>
+            placeholder="その他の到着地点を入力してください"><br>
         <p>同行者名入力フォーム</p>
         <button type="button" onclick="addCompanionInput()">同行者名を入力するテキストボックスを追加</button>
-        <form action="/submit" method="POST">
-            <div id="companionInputs">
-                <!-- 動的に追加される同行者名入力フィールドのコンテナ -->
-            </div>
-
-            <!--<input type="submit" value="送信">-->
-        </form>
-        <!-- 動的に追加される入力フィールドのコンテナ -->
+        <div id="companionInputs">
+            <!-- 動的に追加される同行者名入力フィールドとマスクのラジオボタンのコンテナ -->
         </div>
         <div class="button-container">
             <input type="submit" value="登録">
             <input type="reset" value="リセット">
         </div>
-        <!--同行者
-        <input type="radio" id="yes" name="companion" value="yes">
-        <label for="yes">Yes</label>
-        <input type="radio" id="no" name="companion" value="no">
-        <label for="no">No</label><br>
-        同行者名<input type="text" name="companion_person"><br>-->
-
-
-
-        <!--<label for="yes_mask">Yes</label>
-        <input type="radio" id="no_mask" name="mask" value="no">
-        <label for="no_mask">No</label>
-        <input type="submit" value="登録">
-        <input type="reset" value="リセット">-->
     </form>
     <footer>
         <p>2024 DB論 第4班 rights reserved.</p>
