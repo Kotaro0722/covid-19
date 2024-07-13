@@ -9,4 +9,7 @@ def create_app():
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
     
+    from .vaccine import vaccine as vaccine_blueprint
+    app.register_blueprint(vaccine_blueprint)
+    
     return app
