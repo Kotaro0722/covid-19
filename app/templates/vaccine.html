@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ワクチン接種履歴入力</title>
+    <link rel="stylesheet" href="../static/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>COVID-19状況管理システム</h1>
+    </header>
+
+    <main>
+      <div class="login-form">
+        <h2>ワクチン接種履歴</h2>
+        <form action="/vaccine_process" method="post">
+          <label for="vaccineNumber">何回目の接種か</label>
+          <input
+            type="number"
+            id="vaccineNumber"
+            name="vaccineNumber"
+            required
+          />
+
+          <label for="vaccineDate">接種した日付</label>
+          <input type="date" id="vaccineDate" name="vaccineDate" required />
+
+          <button type="submit">送信</button>
+        </form>
+      </div>
+    </main>
+
+    <footer>
+      <p>2024 DB論 第4班 rights reserved.</p>
+    </footer>
+  </body>
+</html>
