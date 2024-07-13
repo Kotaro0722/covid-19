@@ -1,4 +1,4 @@
-from flask import render_template,request
+from flask import render_template,request,redirect,url_for
 from . import vaccine
 from ..MyDatabase import my_open,my_query,my_close
 
@@ -31,4 +31,4 @@ def vaccine_process():
     dbcon.commit()
     
     my_close(dbcon,cur)
-    return render_template("main_user.html")
+    return render_template("result.html")
