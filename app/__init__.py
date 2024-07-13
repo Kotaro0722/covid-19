@@ -13,5 +13,7 @@ def create_app():
     
     from .vaccine import vaccine as vaccine_blueprint
     app.register_blueprint(vaccine_blueprint)
+    from .condition import condition as condition_blueprint
+    app.register_blueprint(condition_blueprint)
     
     return app
