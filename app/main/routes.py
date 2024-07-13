@@ -1,4 +1,4 @@
-from flask import render_template,request
+from flask import render_template,request,redirect,url_for
 from . import main
 from ..MyDatabase import my_open , my_query , my_close
 
@@ -37,8 +37,10 @@ def login_config():
     if is_admin:
         return render_template("main_admin.html")
     elif is_user:
-        return render_template("main_user.html")
+        return redirect(url_for("main.main_user"))
     else:
-        return render_template("login.html")
+        return redirect(url_for("login.login"))
     
-    
+@main.route("/main_user",methods=["POST"])
+def main_user():
+    return render_template("main_user.html")
