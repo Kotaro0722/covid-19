@@ -137,7 +137,6 @@ sqlstring = """
         affiliation VARCHAR(16),                    -- 所属
         tel VARCHAR(16),                            -- 電話番号
         user_name VARCHAR(16),                      -- 氏名
-        suspensionID INT,                           -- 出席停止ID
         lastupdate DATETIME DEFAULT NOW(),          -- 最終更新日時
         delflag BOOLEAN DEFAULT FALSE,              -- 削除フラグ
         PRIMARY KEY (userID)                        -- 主キーの設定
@@ -152,10 +151,9 @@ df = pd.read_csv("./data/user_table.csv",header=0)
 for ind,rowdata in df.iterrows():
     sqlstring = f"""
         INSERT INTO user_table
-        (user_num,user_pw,_class,affiliation,tel,user_name,suspensionID)
+        (user_num,user_pw,_class,affiliation,tel,user_name)
         VALUES
-        ('{rowdata.user_num}','{rowdata.user_pw}', '{rowdata._class}' , '{rowdata.affiliation}' , '{rowdata.tel}' , '{rowdata.user_name}' , 
-        {rowdata.suspensionID}  )
+        ('{rowdata.user_num}','{rowdata.user_pw}', '{rowdata._class}' , '{rowdata.affiliation}' , '{rowdata.tel}' , '{rowdata.user_name}' )
     """
     my_query( sqlstring )   #1レコード挿入
     i += 1

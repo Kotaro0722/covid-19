@@ -46,6 +46,10 @@ h1 {
   margin-bottom: 1rem;
 }
 
+h2 {
+  text-align: center;
+}
+
 .login-form h2 {
   margin-bottom: 1rem;
 }
@@ -56,7 +60,8 @@ h1 {
   font-weight: bold;
 }
 
-.login-form input {
+.login-form input,
+select {
   width: calc(100% - 18px);
   padding: 0.5rem;
   margin-bottom: 1rem;

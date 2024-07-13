@@ -39,8 +39,9 @@ def login_config():
     elif is_user:
         return redirect(url_for("main.main_user"))
     else:
-        return redirect(url_for("login.login"))
+        return redirect(url_for("login.login_"))
     
 @main.route("/main_user",methods=["POST"])
 def main_user():
     return render_template("main_user.html")
+
