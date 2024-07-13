@@ -55,6 +55,18 @@ def login_config():
 @main.route("/main_user",methods=["POST","GET"])
 def main_user():
     if "username" in session:
-        return render_template("main_user.html")
+        dbcon,cur=my_open(**dsn)
+        
+        sql_string=f"""
+            SELECT user_name FROM user_table
+            WHERE user_num='{session["username"]}'
+            ;
+        """
+        my_query(sql_string,cur)
+        recset=pd.DataFrame(cur.fetchall())
+        user_name=recset["user_name"][0]
+        
+        my_close(dbcon,cur)
+        return render_template("main_user.html",userName=user_name)
     else:
         return redirect(url_for("login.login_"))

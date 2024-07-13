@@ -1,4 +1,4 @@
-from flask import render_template,request,redirect,url_for
+from flask import render_template,request,redirect,url_for,session
 from . import login
 from ..MyDatabase import my_open , my_query , my_close
 
@@ -39,4 +39,9 @@ def signUp():
     dbcon.commit()
     
     my_close(dbcon,cur)
+    return render_template("result.html")
+
+@login.route("/logout",methods=["POST"])
+def logout():
+    session.pop("username", None)
     return redirect(url_for("login.login_"))
