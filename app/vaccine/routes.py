@@ -1,6 +1,7 @@
-from flask import render_template,request,redirect,url_for
+from flask import render_template,request,session,redirect,url_for
 from . import vaccine
 from ..MyDatabase import my_open,my_query,my_close
+import pandas as pd
 
 dsn = {
     'host' : '172.30.0.10',  #ホスト名(IPアドレス)
@@ -10,22 +11,34 @@ dsn = {
     'database' : 'covid19' #オープンするデータベース名
 }
 
-@vaccine.route("/vaccine_input",methods=["POST"])
+@vaccine.route("/vaccine_input",methods=["POST","GET"])
 def vaccine_input():
-    return render_template("vaccine.html")
+    if "username" in session:
+        return render_template("vaccine.html")
+    else:
+        return redirect(url_for("login.login_"))
 
-@vaccine.route("/vaccine_process",methods=["POST"])
+@vaccine.route("/vaccine_process",methods=["POST","GET"])
 def vaccine_process():
+  
     vaccine_cnt=request.form["vaccineNumber"]
     vaccine_date=request.form["vaccineDate"]
     
     dbcon,cur=my_open(**dsn)
     
     sql_string=f"""
+        SELECT userID FROM user_table
+        WHERE user_num='{session["username"]}'
+    """
+    my_query(sql_string,cur)
+    recset=pd.DataFrame(cur.fetchall())
+    userID=recset["userID"][0]
+    
+    sql_string=f"""
         INSERT INTO vaccination_table
             (userID,vaccination_num,vaccination_date)
         VALUES
-            (1,{vaccine_cnt},'{vaccine_date}')
+            ({userID},{vaccine_cnt},'{vaccine_date}')
     """
     my_query(sqlstring=sql_string,cur=cur)
     dbcon.commit()

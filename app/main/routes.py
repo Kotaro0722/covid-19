@@ -1,47 +1,60 @@
-from flask import render_template,request,redirect,url_for
+from flask import render_template,request,redirect,url_for,session
 from . import main
 from ..MyDatabase import my_open , my_query , my_close
+import pandas as pd
 
 dsn = {
     'host' : '172.30.0.10',  #ホスト名(IPアドレス)
     'port' : '3306',        #mysqlの接続ポート番号
     'user' : 'root',      #dbアクセスするためのユーザid
     'password' : '1234',    #ユーザidに対応するパスワード
-    'database' : 'covid-19' #オープンするデータベース名
+    'database' : 'covid19' #オープンするデータベース名
 }
 
-@main.route("/",methods=["POST"])
+@main.route("/",methods=["POST","GET"])
 def login_config():
-    username=request.form["username"]
-    password=request.form["password"]
-    
-    is_admin=False
-    is_user=False
-    
-    admin_list=[
-        {"username":"admin","password":"admin1234"},
-    ]    
-    user_list=[
-        {"username":"user1234","password":"pass1234"},
-        {"username":"user5678","password":"pass5678"}, 
-    ]
-    
-    for user in admin_list:
-        if user["username"] == username and user["password"] == password:
-            is_admin=True
-    for user in user_list:
-        if user["username"] == username and user["password"] == password:
+    if request.method=="POST":
+        username=request.form["username"]
+        password=request.form["password"]
+        
+        is_admin=False
+        is_user=False
+        
+        dbcon,cur=my_open(**dsn)
+        
+        admin_list=[
+            {"username":"admin","password":"admin1234"},
+        ]
+        sql_string=f"""
+            SELECT user_num,user_pw
+            FROM user_table
+            WHERE user_num='{username}' AND user_pw='{password}'
+            ;
+        """
+        my_query(sql_string,cur)
+        recset=pd.DataFrame(cur.fetchall())
+        print(recset)
+        
+        
+        for user in admin_list:
+            if user["username"] == username and user["password"] == password:
+                is_admin=True
+        if not recset.empty:
             is_user=True
-            
-    
-    if is_admin:
-        return render_template("main_admin.html")
-    elif is_user:
-        return redirect(url_for("main.main_user"))
+
+        my_close(dbcon,cur)
+        if is_admin:
+            return render_template("main_admin.html")
+        elif is_user:
+            session["username"]=username
+            return redirect(url_for("main.main_user"))
+        else:
+            return redirect(url_for("login.login_"))
     else:
         return redirect(url_for("login.login_"))
-    
-@main.route("/main_user",methods=["POST"])
+@main.route("/main_user",methods=["POST","GET"])
 def main_user():
-    return render_template("main_user.html")
-
+    if "username" in session:
+        return render_template("main_user.html")
+    else:
+        return redirect(url_for("login.login_"))
