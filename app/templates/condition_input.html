@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>体調観察表入力</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="../static/style.css">
 </head>
 <body>
     <h1>体調観察表入力</h1>
-    <!-- <form method="POST" action="{{ url_for('condition.condition_input') }}">
+    <form method="POST" action="{{ url_for('condition.condition_input') }}">
         <label for="date">日付:</label>
         <input type="date" id="date" name="date" required><br>
 
@@ -38,6 +38,6 @@
         <label for="smell_disorder">嗅覚障害</label><br>
 
         <button type="submit">送信</button>
-    </form> -->
+    </form>
 </body>
 </html>
