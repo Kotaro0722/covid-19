@@ -1,4 +1,4 @@
-from flask import render_template,request
+from flask import render_template,request,session,redirect,url_for
 from . import action
 from . import action_config
 
@@ -14,12 +14,10 @@ dsn = {
     'database' : 'covid19' #オープンするデータベース名
 }
 
-from flask import Flask,render_template ,request
-
 #ルーティング定義
 # ログインページ
 
-@action.route("/action")
+@action.route("/action",methods=["POST"])
 def action():
     return render_template( "action_input.html",
          
@@ -29,8 +27,16 @@ def action_input():
     dbcon,cur = my_open( **dsn )
     
     new_place=0
+
+    #userID = 3
+    sql_string=f"""
+        SELECT userID FROM user_table
+        WHERE user_num='{session["username"]}'
+    """
+    my_query(sql_string,cur)
+    recset=pd.DataFrame(cur.fetchall())
+    userID=recset["userID"][0]
     
-    userID = 3
     start_date_time = request.form["start_date_time"]
     end_date_time = request.form["end_date_time"]
     method = request.form["method"]
@@ -364,26 +370,63 @@ def action_input():
     place_of_arrival = cur.fetchone()[0]   
     '''
     return render_template(
-        "action_output.html",
-        title="レコード更新完了",
-        message="行動記録を登録しました。",
-        start_date_time=start_date_time,
-        end_date_time=end_date_time,
-        method=method,
-        place_of_departure=place_of_departure,
-        departure_crowd=departure_crowd,
-        waypoint1=waypoint1,
-        waypoint1_crowd=waypoint1_crowd,
-        waypoint2=waypoint2,
-        waypoint2_crowd=waypoint2_crowd,
-        waypoint3=waypoint3,
-        waypoint3_crowd=waypoint3_crowd,
-        place_of_arrival=place_of_arrival,
-        arrival_crowd=arrival_crowd,
-        companion_data=companion_data
+        "result.html"
         )
     my_close( dbcon,cur )  
+
+@action_config.route("/action_output", methods=["POST"])
+def action_output():
+
+    dbcon,cur = my_open( **dsn )
+    sqlstring = f"""
+        SELECT 
+        action_table.action_tableID ,
+        action_table.action_date_start ,
+        action_table.action_date_end ,
+        move_method_table.move_method
+        FROM 
+            action_table
+        INNER JOIN 
+            move_method_table
+        ON 
+            action_table.action_tableID = move_method_table.action_tableID
+        WHERE 
+            action_table.userID = 3;
+    """
+        
    
+    
+    #sqlstring = "SELECT * FROM action_table WHERE userID = 3;"
+    cur.execute(sqlstring)
+    
+    # 結果を取得して表示
+    results = cur.fetchall()
+    my_close(dbcon, cur)
+
+    # レコードを表示
+    actions = []
+    for row in results:
+        action = {
+        'actionID': row['action_tableID'],
+        #'userID': row['userID'],
+        'action_date_start': row['action_date_start'],
+        'action_date_end': row['action_date_end'],
+        'move_method': row['move_method'],
+        #'lastupdate': row['lastupdate']
+
+    }
+    actions.append(action)
+    
+    return render_template("action_output.html", actions=actions)
+    
+    # データベース接続を閉じる
+    
+    '''
+    return render_template( "action_output.html",
+         
+    )
+    '''
+    my_close( dbcon,cur )
 
     
 #if __name__ == "__main__":

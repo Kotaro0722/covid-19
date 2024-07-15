@@ -1,98 +1,101 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="../static/style.css" />
-    <style>
-      main {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 40px;
-      }
 
-      section {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 10px;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link rel="stylesheet" href="../static/style.css" />
+  <style>
+    main {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 40px;
+    }
 
-      section h2 {
-        text-align: center;
-        margin-bottom: 0px;
-      }
+    section {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+    }
 
-      section div {
-        display: flex;
-        gap: 10px;
-      }
+    section h2 {
+      text-align: center;
+      margin-bottom: 0px;
+    }
 
-      button {
-        width: 130px;
-        padding: 10px;
-        border-radius: 20px;
-        background-color: gray;
-        border-color: black;
-        color: white;
-        cursor: pointer;
-      }
+    section div {
+      display: flex;
+      gap: 10px;
+    }
 
-      .input button {
-        background-color: black;
-        border-color: black;
-        color: white;
-        position: relative;
-      }
+    button {
+      width: 130px;
+      padding: 10px;
+      border-radius: 20px;
+      background-color: gray;
+      border-color: black;
+      color: white;
+      cursor: pointer;
+    }
 
-      .show button {
-        background-color: white;
-        border-color: black;
-        color: black;
-      }
-    </style>
-  </head>
-  <body>
-    <header>
-      <p>{{userName}}</p>
-      <h1>COVID-19状況管理システム</h1>
-      <form action="/logout" method="post" id="logout">
-        <button type="submit">ログアウト</button>
-      </form>
-    </header>
+    .input button {
+      background-color: black;
+      border-color: black;
+      color: white;
+      position: relative;
+    }
 
-    <main>
-      <section>
-        <h2>体調観察表</h2>
-        <div>
-          <form action="" method="post" class="input">
-            <button type="submit">入力</button>
-          </form>
-          <form action="" method="post" class="show">
-            <button type="submit">表示</button>
-          </form>
-        </div>
-      </section>
-      <section>
-        <h2>行動記録表</h2>
-        <div>
-          <form action="" method="post" class="input">
-            <button type="submit">入力</button>
-          </form>
-          <form action="" method="post" class="show">
-            <button type="submit">表示</button>
-          </form>
-        </div>
-      </section>
-      <form action="/vaccine_input" method="post">
-        <button type="submit">ワクチン接種履歴</button>
-      </form>
-    </main>
+    .show button {
+      background-color: white;
+      border-color: black;
+      color: black;
+    }
+  </style>
+</head>
 
-    <footer>
-      <p>2024 DB論 第4班 rights reserved.</p>
-    </footer>
-  </body>
+<body>
+  <header>
+    <p>{{userName}}</p>
+    <h1>COVID-19状況管理システム</h1>
+    <form action="/logout" method="post" id="logout">
+      <button type="submit">ログアウト</button>
+    </form>
+  </header>
+
+  <main>
+    <section>
+      <h2>体調観察表</h2>
+      <div>
+        <form action="" method="post" class="input">
+          <button type="submit">入力</button>
+        </form>
+        <form action="" method="post" class="show">
+          <button type="submit">表示</button>
+        </form>
+      </div>
+    </section>
+    <section>
+      <h2>行動記録表</h2>
+      <div>
+        <form action="/action" method="post" class="input">
+          <button type="submit">入力</button>
+        </form>
+        <form action="/action_output" method="post" class="show">
+          <button type="submit">表示</button>
+        </form>
+      </div>
+    </section>
+    <form action="/vaccine_input" method="post">
+      <button type="submit">ワクチン接種履歴</button>
+    </form>
+  </main>
+
+  <footer>
+    <p>2024 DB論 第4班 rights reserved.</p>
+  </footer>
+</body>
+
 </html>
