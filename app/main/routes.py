@@ -7,7 +7,7 @@ dsn = {
     'port' : '3306',        #mysqlの接続ポート番号
     'user' : 'root',      #dbアクセスするためのユーザid
     'password' : '1234',    #ユーザidに対応するパスワード
-    'database' : 'covid-19' #オープンするデータベース名
+    'database' : 'covid19' #オープンするデータベース名
 }
 
 @main.route("/",methods=["POST"])
@@ -35,7 +35,24 @@ def login_config():
             
     
     if is_admin:
-        return render_template("main_admin.html")
+         # データベース接続
+        dbcon,cur = my_open( **dsn )
+        
+        # 管理者用データ取得クエリ
+        sqlstring = """
+        SELECT student_id, name, status, latest_temp, latest_record_time
+        FROM student_conditions
+        ;
+        """
+        
+        data = my_query(sqlstring,cur)
+        
+        # データベース接続を閉じる
+        my_close(dbcon,cur)
+        
+        # 管理者メインページを表示
+        return render_template("main_admin.html", data=data)
+
     elif is_user:
         return render_template("main_user.html")
     else:
