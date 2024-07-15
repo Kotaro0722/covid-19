@@ -116,8 +116,8 @@ def action_input():
             ('{new_place}','{dt_now}')
         ;
         """
-    my_query(sqlstring,cur)
-    dbcon.commit()
+        my_query(sqlstring,cur)
+        dbcon.commit()
 
     # 最後に挿入したplace_tableのplace_tableIDを取得
     departureID = cur.lastrowid
@@ -171,16 +171,17 @@ def action_input():
     
     waypoint1_type = "中継地1"
     #crowd_tableの出発地への挿入
-    if waypoint1 == "other":
-        sqlstring = f"""
-        INSERT INTO crowd_table
-            (action_tableID,place_tableID,crowd_level,place_type_tableID,lastupdate)
-            VALUES
-            ({actionID},{waypoint1ID},{waypoint1_crowd},'{waypoint1_type}','{dt_now}')
-            ;
-        """
-        my_query(sqlstring,cur)
-        dbcon.commit()
+    #if waypoint1 == "other":
+    sqlstring = f"""
+    INSERT INTO crowd_table
+        (action_tableID,place_tableID,crowd_level,place_type_tableID,lastupdate)
+        VALUES
+        ({actionID},{waypoint1ID},{waypoint1_crowd},'{waypoint1_type}','{dt_now}')
+        ;
+    """
+    my_query(sqlstring,cur)
+    dbcon.commit()
+    '''
     if waypoint1 == 1 or waypoint1 == 2 or waypoint1 == 3 or waypoint1 == 4 or waypoint1 == 5:
         sqlstring = f"""
         INSERT INTO crowd_table
@@ -189,8 +190,10 @@ def action_input():
             ({actionID},{waypoint1ID},{waypoint1_crowd},'{waypoint1_type}','{dt_now}')
             ;
         """
-        my_query(sqlstring,cur)
-        dbcon.commit()
+    
+    my_query(sqlstring,cur)
+    dbcon.commit()
+    '''
     #変更点
     if waypoint1_crowd == 6:
         waypoint1_crowd = "なし"
@@ -220,16 +223,17 @@ def action_input():
         waypoint2 = cur.fetchone()#[0] 
     waypoint2_type = "中継地2"
     #crowd_tableの中継地2への挿入
-    if waypoint1 == "other":
-        sqlstring = f"""
-        INSERT INTO crowd_table
-            (action_tableID,place_tableID,crowd_level,place_type_tableID,lastupdate)
-            VALUES
-            ({actionID},{waypoint2ID},{waypoint2_crowd},'{waypoint2_type}','{dt_now}')
-            ;
-        """
-        my_query(sqlstring,cur)
-        dbcon.commit()
+    #if waypoint1 == "other":
+    sqlstring = f"""
+    INSERT INTO crowd_table
+        (action_tableID,place_tableID,crowd_level,place_type_tableID,lastupdate)
+        VALUES
+        ({actionID},{waypoint2ID},{waypoint2_crowd},'{waypoint2_type}','{dt_now}')
+        ;
+    """
+    my_query(sqlstring,cur)
+    dbcon.commit()
+    '''
     if waypoint2 == 1 or waypoint2 == 2 or waypoint2 == 3 or waypoint2 == 4 or waypoint2 == 5:
         sqlstring = f"""
         INSERT INTO crowd_table
@@ -240,6 +244,7 @@ def action_input():
         """
         my_query(sqlstring,cur)
         dbcon.commit()
+    '''
     if waypoint2 == "no"  :
         waypoint2 = "なし" 
     if waypoint2_crowd == 6:
@@ -272,16 +277,17 @@ def action_input():
         waypoint3 = "なし"
     waypoint3_type = "中継地3"
     #crowd_tableの中継地2への挿入
-    if waypoint3 == "other":
-        sqlstring = f"""
-        INSERT INTO crowd_table
-            (action_tableID,place_tableID,crowd_level,place_type_tableID,lastupdate)
-            VALUES
-            ({actionID},{waypoint3ID},{waypoint3_crowd},'{waypoint3_type}','{dt_now}')
-            ;
-        """
-        my_query(sqlstring,cur)
-        dbcon.commit()
+    #if waypoint3 == "other":
+    sqlstring = f"""
+    INSERT INTO crowd_table
+        (action_tableID,place_tableID,crowd_level,place_type_tableID,lastupdate)
+        VALUES
+        ({actionID},{waypoint3ID},{waypoint3_crowd},'{waypoint3_type}','{dt_now}')
+        ;
+    """
+    my_query(sqlstring,cur)
+    dbcon.commit()
+    '''
     if waypoint3 == 1 or waypoint3 == 2 or waypoint3 == 3 or waypoint3 == 4 or waypoint3 == 5:
         sqlstring = f"""
         INSERT INTO crowd_table
@@ -292,6 +298,7 @@ def action_input():
         """
         my_query(sqlstring,cur)
         dbcon.commit()
+    '''
     if waypoint3_crowd == 6:
         waypoint3_crowd = "なし"
     # 到着地の処理
