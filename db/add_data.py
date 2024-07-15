@@ -166,7 +166,6 @@ sqlstring = """
     CREATE TABLE action_table (
         action_tableID INT NOT NULL AUTO_INCREMENT,   -- アクションID
         userID INT,                                   -- 個人番号
-        action_number INT,                            -- 番号
         action_date_start DATETIME,                   -- 日付と時間
         action_date_end DATETIME,                     -- 日付と時間
         lastupdate DATETIME DEFAULT NOW(),            -- 最終更新日時
