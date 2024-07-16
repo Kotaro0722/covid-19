@@ -143,6 +143,7 @@ def action_input():
     dbcon.commit()
     
     #中継地1の処理
+    waypoint1_type = "中継地1"
     if waypoint1 == "other":
         new_place = waypoint1_2
         waypoint1 = waypoint1_2
@@ -158,7 +159,7 @@ def action_input():
         dbcon.commit()
          # 最後に挿入したplace_tableのplace_tableIDを取得
         waypoint1ID = cur.lastrowid
-
+        
     if waypoint1 in ["1", "2", "3", "4", "5"]:  #中継地1が1から5の場合
         waypoint1ID = waypoint1
         sqlstring = f"""
@@ -166,21 +167,27 @@ def action_input():
         """
         cur.execute(sqlstring)
         waypoint1 = cur.fetchone()#[0]
+       
     if waypoint1 == "no"  :
-        waypoint1 = "なし" 
-    
-    waypoint1_type = "中継地1"
-    #crowd_tableの出発地への挿入
+        waypoint1 = "なし"
+        waypoint1ID = 0 
+        #print(f"中継地1なしです")
+    #print(f"中継地1:{waypoint1ID}")
+    #crowd_tableの中継地1への挿入
     #if waypoint1 == "other":
-    sqlstring = f"""
-    INSERT INTO crowd_table
-        (action_tableID,place_tableID,crowd_level,place_type_tableID,lastupdate)
-        VALUES
-        ({actionID},{waypoint1ID},{waypoint1_crowd},'{waypoint1_type}','{dt_now}')
-        ;
-    """
-    my_query(sqlstring,cur)
-    dbcon.commit()
+    else:
+    #if waypoint1 != "no":
+        #print(f"中継地1なしです")
+        sqlstring = f"""
+        INSERT INTO crowd_table
+            (action_tableID,place_tableID,crowd_level,place_type_tableID,lastupdate)
+            VALUES
+            ({actionID},{waypoint1ID},{waypoint1_crowd},'{waypoint1_type}','{dt_now}')
+            ;
+        """
+        my_query(sqlstring,cur)
+        dbcon.commit()
+        
     '''
     if waypoint1 == 1 or waypoint1 == 2 or waypoint1 == 3 or waypoint1 == 4 or waypoint1 == 5:
         sqlstring = f"""
@@ -191,13 +198,15 @@ def action_input():
             ;
         """
     
-    my_query(sqlstring,cur)
-    dbcon.commit()
+        my_query(sqlstring,cur)
+        dbcon.commit()
     '''
     #変更点
     if waypoint1_crowd == 6:
         waypoint1_crowd = "なし"
+        
     #中継地2の処理
+    waypoint2_type = "中継地2"
     if waypoint2 == "other":
         new_place = waypoint2_2
         waypoint2 = waypoint2_2
@@ -221,18 +230,22 @@ def action_input():
         """
         cur.execute(sqlstring)
         waypoint2 = cur.fetchone()#[0] 
-    waypoint2_type = "中継地2"
+
     #crowd_tableの中継地2への挿入
-    #if waypoint1 == "other":
-    sqlstring = f"""
-    INSERT INTO crowd_table
-        (action_tableID,place_tableID,crowd_level,place_type_tableID,lastupdate)
-        VALUES
-        ({actionID},{waypoint2ID},{waypoint2_crowd},'{waypoint2_type}','{dt_now}')
-        ;
-    """
-    my_query(sqlstring,cur)
-    dbcon.commit()
+    if waypoint2 == "no"  :
+        waypoint2 = "なし" 
+        waypoint2ID = 0
+    #if waypoint1 != "no":
+    else:
+        sqlstring = f"""
+        INSERT INTO crowd_table
+            (action_tableID,place_tableID,crowd_level,place_type_tableID,lastupdate)
+            VALUES
+            ({actionID},{waypoint2ID},{waypoint2_crowd},'{waypoint2_type}','{dt_now}')
+            ;
+        """
+        my_query(sqlstring,cur)
+        dbcon.commit()
     '''
     if waypoint2 == 1 or waypoint2 == 2 or waypoint2 == 3 or waypoint2 == 4 or waypoint2 == 5:
         sqlstring = f"""
@@ -245,11 +258,11 @@ def action_input():
         my_query(sqlstring,cur)
         dbcon.commit()
     '''
-    if waypoint2 == "no"  :
-        waypoint2 = "なし" 
+    
     if waypoint2_crowd == 6:
         waypoint2_crowd = "なし"
     #中継地3の処理
+    waypoint3_type = "中継地3"
     if waypoint3 == "other":
         new_place = waypoint3_2
         waypoint3 = waypoint3_2
@@ -275,18 +288,20 @@ def action_input():
         waypoint3 = cur.fetchone()#[0] 
     if waypoint3 == "no"  :
         waypoint3 = "なし"
-    waypoint3_type = "中継地3"
-    #crowd_tableの中継地2への挿入
-    #if waypoint3 == "other":
-    sqlstring = f"""
-    INSERT INTO crowd_table
-        (action_tableID,place_tableID,crowd_level,place_type_tableID,lastupdate)
-        VALUES
-        ({actionID},{waypoint3ID},{waypoint3_crowd},'{waypoint3_type}','{dt_now}')
-        ;
-    """
-    my_query(sqlstring,cur)
-    dbcon.commit()
+        waypoint3ID = 0
+    
+    #crowd_tableの中継地3への挿入
+    #if waypoint3 != "no":
+    else:
+        sqlstring = f"""
+        INSERT INTO crowd_table
+            (action_tableID,place_tableID,crowd_level,place_type_tableID,lastupdate)
+            VALUES
+            ({actionID},{waypoint3ID},{waypoint3_crowd},'{waypoint3_type}','{dt_now}')
+            ;
+        """
+        my_query(sqlstring,cur)
+        dbcon.commit()
     '''
     if waypoint3 == 1 or waypoint3 == 2 or waypoint3 == 3 or waypoint3 == 4 or waypoint3 == 5:
         sqlstring = f"""
@@ -383,56 +398,45 @@ def action_input():
 
 @action_config.route("/action_output", methods=["POST"])
 def action_output():
-
+    #外部キーであるuserIDを取得
     dbcon,cur = my_open( **dsn )
-    sqlstring = f"""
-        SELECT 
-        action_table.action_tableID ,
-        action_table.action_date_start ,
-        action_table.action_date_end ,
-        move_method_table.move_method
-        FROM 
-            action_table
-        INNER JOIN 
-            move_method_table
-        ON 
-            action_table.action_tableID = move_method_table.action_tableID
-        WHERE 
-            action_table.userID = 3;
+    sql_string=f"""
+        SELECT userID FROM user_table
+        WHERE user_num='{session["username"]}'
     """
-        
-   
-    
-    #sqlstring = "SELECT * FROM action_table WHERE userID = 3;"
-    cur.execute(sqlstring)
-    
-    # 結果を取得して表示
-    results = cur.fetchall()
-    my_close(dbcon, cur)
+    my_query(sql_string,cur)
+    recset=pd.DataFrame(cur.fetchall())
+    userID=recset["userID"][0]
+    #入力されたuserIDのフィールドを表示
+    #入力されたuserIDのactionIDを参照し，インナージョインで表示
+    sql_string=f"""
+        SELECT 
+            action_table.action_tableID AS actionID,
+            action_table.action_date_start AS action_date_start,
+            action_table.action_date_end AS action_date_end,
+            move_method_table.move_method AS move_method,
+            crowd_table.place_type_tableID AS place_type_tableID,
+            crowd_table.crowd_level AS crowd_level,
+            action_table.lastupdate AS lastupdate
+        FROM action_table
+        INNER JOIN 
+            move_method_table ON action_table.action_tableID = move_method_table.action_tableID
+        INNER JOIN 
+            crowd_table ON move_method_table.action_tableID = crowd_table.action_tableID  
+        WHERE 
+            action_table.userID = {userID};
+    """
+    my_query(sql_string,cur)
+    recset=pd.DataFrame(cur.fetchall())
 
-    # レコードを表示
-    actions = []
-    for row in results:
-        action = {
-        'actionID': row['action_tableID'],
-        #'userID': row['userID'],
-        'action_date_start': row['action_date_start'],
-        'action_date_end': row['action_date_end'],
-        'move_method': row['move_method'],
-        #'lastupdate': row['lastupdate']
-
-    }
-    actions.append(action)
-    
-    return render_template("action_output.html", actions=actions)
     
     # データベース接続を閉じる
     
-    '''
-    return render_template( "action_output.html",
+    
+    return render_template( "action_output.html",data=recset.to_dict(orient='records')
          
     )
-    '''
+    
     my_close( dbcon,cur )
 
     

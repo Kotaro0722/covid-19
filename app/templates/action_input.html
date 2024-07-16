@@ -61,127 +61,8 @@
             container.appendChild(labelNo);
         }
     </script>
-    <style>
-        /* Resetting default margins and paddings */
-        /* {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1;
-            padding: 20px;
-            background-color: #f0f0f0;
-        }
 
-        header {
-            background-color: #333;
-            color: white;
-            padding: 10px 20px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 5px;
-            padding: 10px;
-            background-color: #333;
-            color: white;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-
-        h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-
-        h2 {
-            font-size: 20px;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        form {
-            max-width: 600px;
-            margin: auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-
-        input[type="datetime-local"],
-        input[type="text"],
-        select {
-            width: calc(100% - 12px);
-            padding: 8px;
-            margin-bottom: 10px;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        input[type="submit"],
-        input[type="reset"],
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 6px 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 10px;
-            font-size: 16px;
-        }
-
-        input[type="submit"]:hover,
-        input[type="reset"]:hover,
-        button:hover {
-            background-color: #45a049;
-        }
-
-        .button-container {
-            text-align: center;
-            margin-top: 20px;
-            /* ボタン間のスペースを追加 
-        }
-
-        #companionInputs {
-            margin-top: 10px;
-        }
-
-        #companionInputs input[type="text"] {
-            width: calc(100% - 12px);
-            padding: 8px;
-            margin-bottom: 8px;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        /* Styling for mask options
-        .mask-options {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .mask-options label {
-            margin-bottom: 0;
-        }
-    </style>*/
     <link rel="stylesheet" href="../static/style.css">
 </head>
 
@@ -281,16 +162,15 @@
             <option value="4">自宅</option>
             <option value="5">コンビニ</option>
             <option value="other">その他</option>
-        </select>
+        </select><input type="text" id="arrival_input" name="place_of_arrival2" style="display: none;"
+            placeholder="その他の到着地点を入力してください">
         到着地の混み具合<select name="arrival_crowd">
             <option value="1">1 - 空いている</option>
             <option value="2">2 - 少し混んでいる</option>
             <option value="3">3 - 普通</option>
             <option value="4">4 - 混んでいる</option>
             <option value="5">5 - 非常に混んでいる</option>
-        </select><br>
-        <input type="text" id="arrival_input" name="place_of_arrival2" style="display: none;"
-            placeholder="その他の到着地点を入力してください"><br>
+        </select>
         <p>同行者名入力フォーム</p>
         <button type="button" onclick="addCompanionInput()">同行者名を入力するテキストボックスを追加</button>
         <div id="companionInputs">

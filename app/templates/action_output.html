@@ -3,11 +3,15 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>アクション一覧</title>
+    <title>行動記録表</title>
+    <link rel="stylesheet" href="../static/style.css">
 </head>
 
 <body>
-    <h1>アクション一覧</h1>
+    <header>
+        <h1>COVID-19状況管理システム</h1>
+    </header>
+    <h1>行動記録表</h1>
     <table border="1">
         <thead>
             <tr>
@@ -16,33 +20,31 @@
                 <th>開始日時</th>
                 <th>終了日時</th>
                 <th>移動手段</th>
-                <th>出発地</th>
-                <th>出発地の混み具合</th>
-                <th>中継地1</th>
-                <th>中継地1の混み具合</th>
-                <th>中継地2</th>
-                <th>中継地2の混み具合</th>
-                <th>中継地3</th>
-                <th>中継地3の混み具合</th>
-                <th>到着地</th>
-                <th>到着地の混み具合</th>
-                <th>移動手段</th>
-                <!--<th>最終更新日時</th>-->
+                <!--<th>出発地</th>-->
+                <th>場所の種類</th>
+                <!--<th>中継地1</th>-->
+                <th>混み具合</th>
+                <!--<th>中継地2</th>-->
+                <th>最終更新日時</th>
             </tr>
         </thead>
         <tbody>
-            {% for action in actions %}
+            {% for row in data %}
             <tr>
-                <td>{{ action.actionID }}</td>
-                <!--<td>{{ action.userID }}</td>-->
-                <td>{{ action.action_date_start }}</td>
-                <td>{{ action.action_date_end }}</td>
-                <td>{{ action.move_method }}</td>
-                <!--<td>{{ action.lastupdate }}</td>-->
+                <td>{{ row.actionID }}</td>
+                <td>{{ row.action_date_start }}</td>
+                <td>{{ row.action_date_end }}</td>
+                <td>{{ row.move_method }}</td>
+                <td>{{ row.place_type_tableID }}</td>
+                <td>{{ row.crowd_level }}</td>
+                <td>{{ row.lastupdate}}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    <footer>
+        <p>2024 DB論 第4班 rights reserved.</p>
+    </footer>
 </body>
 
 </html>
