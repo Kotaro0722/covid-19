@@ -10,7 +10,10 @@ dsn = {
     'database' : 'covid-19' #オープンするデータベース名
 }
 
-@condition.route("/condition",methods=["GET","POST"])
+@condition.route("/condition_input",methods=["GET","POST"])
 def condition():
     return render_template("condition_input.html")  
-    
+
+@condition.route("/user_output",methods=["GET","POST"])
+def condition():
+    return render_template("user_output.html")  
