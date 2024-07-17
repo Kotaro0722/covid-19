@@ -32,10 +32,9 @@ def infected():
         ON user_table.userID = suspension_table.userID
         LEFT JOIN vaccination_table v1
         INNER JOIN(
-                SELECT userID, MAX(vaccination_date) AS last_vaccination_date
-                FROM vaccination_table
-                GROUP BY userID
-            ) v2
+            SELECT userID, MAX(vaccination_date) AS last_vaccination_date
+            FROM vaccination_table
+            GROUP BY userID) v2
             ON v1.userID = v2.userID AND v1.vaccination_date = v2.last_vaccination_date
         ON user_table.userID = v1.userID
         WHERE suspension_school = 1;
