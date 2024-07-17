@@ -42,14 +42,14 @@ def login_config():
         if not recset.empty:
             is_user=True
     
-    if is_admin:
-        dbcon,cur=my_open(**dsn)
-        sqlstring_related=f"""
-            SELECT * 
-        """
-        return render_template("main_admin.html")
-    elif is_user:
-        return render_template("main_user.html")
+        if is_admin:
+            dbcon,cur=my_open(**dsn)
+            sqlstring_related=f"""
+                SELECT * 
+            """
+            return render_template("main_admin.html")
+        elif is_user:
+            return render_template("main_user.html")
     else:
         return redirect(url_for("login.login_"))
 @main.route("/main_user",methods=["POST","GET"])
