@@ -5,17 +5,106 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="../static/style.css" />
+    <style>
+      main {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+      }
+      #main_admin {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+      }
+
+      section {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        text-align: center;
+      }
+
+      section h2 {
+        margin-bottom: 0px;
+      }
+
+      section div {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      button {
+        width: 130px;
+        padding: 10px;
+        border-radius: 20px;
+        background-color: gray;
+        border-color: black;
+        color: white;
+        cursor: pointer;
+      }
+
+      .input button {
+        background-color: black;
+        border-color: black;
+        color: white;
+        position: relative;
+      }
+
+      .show button {
+        background-color: white;
+        border-color: black;
+        color: black;
+      }
+
+      .related, .infected, .contact {
+        padding-top: 5px;
+        padding-bottom: 5px;
+      }
+    </style>
   </head>
   <body>
     <header>
+      <p>{{userName}}</p>
       <h1>COVID-19状況管理システム</h1>
+      <form action="/logout" method="post" id="logout">
+        <button type="submit">ログアウト</button>
+      </form>
     </header>
 
     <main id="main_admin_main">
       <div id="main_admin">
-        <section id="related">related</section>
-        <section id="infected">infected</section>
-        <section id="contact">contact</section>
+        <section id="related">
+          <h2>関係者リスト</h2>
+        <div>
+          <form action="" method="post" class="show">
+            <button type="submit">表示</button>
+          </form>
+        </div>
+        </section>
+        <section id="infected">
+          <h2>感染者リスト</h2>
+        <div>
+          <form action="" method="post" class="show">
+            <button type="submit">表示</button>
+          </form>
+        </div>
+        </section>
+        <section id="contact">
+          <h2>濃厚接触者リスト</h2>
+        <div>
+          <form action="" method="post" class="show">
+            <button type="submit">表示</button>
+          </form>
+        </div>
+        </section>
       </div>
     </main>
 
