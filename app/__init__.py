@@ -29,6 +29,9 @@ def create_app():
     from .related import related_search_table as related_search_table_blueprint
     app.register_blueprint(related_search_table_blueprint)
 
+    from .related import admin_condition as admin_condition_blueprint
+    app.register_blueprint(admin_condition_blueprint)
+
     from .related import admin_action as admin_action_blueprint
     app.register_blueprint(admin_action_blueprint)
 
