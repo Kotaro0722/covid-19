@@ -19,8 +19,38 @@ def create_app():
         
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
+
+    from .action import action as action_blueprint
+    app.register_blueprint(action_blueprint)
+
+    from .action import action_config as action_config_blueprint
+    app.register_blueprint(action_config_blueprint)
+
+    # from .greet import greet as greet_blueprint
+    # app.register_blueprint(greet_blueprint, url_prefix='/greet')
+
+    # from .calculate import calculate as calculate_blueprint
+    # app.register_blueprint(calculate_blueprint, url_prefix='/calculate')
+
     
     from .vaccine import vaccine as vaccine_blueprint
     app.register_blueprint(vaccine_blueprint)
+    
+
+    # from .action import action as action_blueprint
+    # app.register_blueprint(action_blueprint)
+
+    # from .action import action_config as action_config_blueprint
+    # app.register_blueprint(action_config_blueprint)
+
+    # from .greet import greet as greet_blueprint
+    # app.register_blueprint(greet_blueprint, url_prefix='/greet')
+
+    # from .calculate import calculate as calculate_blueprint
+    # app.register_blueprint(calculate_blueprint, url_prefix='/calculate')
+
+    
+    from .main import main as main_blueprint
+    app.register_blueprint(main_blueprint)
     
     return app
