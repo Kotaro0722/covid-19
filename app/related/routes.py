@@ -28,26 +28,22 @@ def related_table():
     #レコード新規挿入のSQL文
     sqlstring = f"""
         SELECT user_table.userID, user_num, user_name, suspension_school, c.body_temp, c.condition_date, v1.vaccination_num, v1.vaccination_date
-        FROM	condition_details_table c
-		        INNER JOIN(SELECT userID,
-								MAX(condition_date) AS last_input_date
-						    FROM condition_details_table
-						    GROUP BY userID) s
-					    ON c.userID = s.userID 
-						    AND c.condition_date = DATE(s.last_input_date)
+        FROM condition_details_table c
+		INNER JOIN(
+            SELECT userID,MAX(condition_date) AS last_input_date
+		    FROM condition_details_table
+			GROUP BY userID) s
+		ON c.userID = s.userID AND c.condition_date = DATE(s.last_input_date)
         INNER JOIN user_table
         ON c.userID = user_table.userID
-        -- INNER JOIN condition_table
-        -- ON c.condition_details_tableID = condition_table.condition_details_tableID
         LEFT JOIN suspension_table
         ON user_table.userID = suspension_table.userID
         LEFT JOIN vaccination_table v1
-            INNER JOIN(
-                SELECT userID, MAX(vaccination_date) AS last_vaccination_date
-                FROM vaccination_table
-                GROUP BY userID
-            ) v2
-            ON v1.userID = v2.userID AND v1.vaccination_date = v2.last_vaccination_date
+        INNER JOIN(
+            SELECT userID, MAX(vaccination_date) AS last_vaccination_date
+            FROM vaccination_table
+            GROUP BY userID) v2
+        ON v1.userID = v2.userID AND v1.vaccination_date = v2.last_vaccination_date
         ON user_table.userID = v1.userID
         ORDER BY c.condition_date DESC, user_num
         ;
@@ -75,24 +71,22 @@ def related_search_table():
     #sql
     sqlstring = f"""
         SELECT user_table.userID, user_num, user_name, suspension_school, c.body_temp, c.condition_date, v1.vaccination_num, v1.vaccination_date
-        FROM	condition_details_table c
-		        INNER JOIN(SELECT userID,
-								MAX(condition_date) AS last_input_date
-						    FROM condition_details_table
-						    GROUP BY userID) s
-					    ON c.userID = s.userID 
-						    AND c.condition_date = DATE(s.last_input_date)
+        FROM condition_details_table c
+	    INNER JOIN(
+            SELECT userID,MAX(condition_date) AS last_input_date
+			FROM condition_details_table
+		    GROUP BY userID) s
+	    ON c.userID = s.userID AND c.condition_date = DATE(s.last_input_date)
         INNER JOIN user_table
         ON c.userID = user_table.userID
         LEFT JOIN suspension_table
         ON user_table.userID = suspension_table.userID
         LEFT JOIN vaccination_table v1
-            INNER JOIN(
-                SELECT userID, MAX(vaccination_date) AS last_vaccination_date
-                FROM vaccination_table
-                GROUP BY userID
-            ) v2
-            ON v1.userID = v2.userID AND v1.vaccination_date = v2.last_vaccination_date
+        INNER JOIN(
+            SELECT userID, MAX(vaccination_date) AS last_vaccination_date
+            FROM vaccination_table
+            GROUP BY userID) v2
+        ON v1.userID = v2.userID AND v1.vaccination_date = v2.last_vaccination_date
         ON user_table.userID = v1.userID
         WHERE user_num = '{name_userNum}' OR user_name = '{name_userNum}'
         ORDER BY c.condition_date DESC, user_num
@@ -147,52 +141,3 @@ def admin_action():
     return render_template( "action_output.html",data=recset.to_dict(orient='records')
          
     )
-    
-    
-
-    # #レコード新規挿入のSQL文
-    # sqlstring = f"""
-    #     SELECT user_num, user_name, suspension_school, condition_date, body_temp, symptomID as symptom, condition_table.delflag
-    #     FROM condition_table
-    #     INNER JOIN user_table
-    #     ON condition_table.user_tableID = user_table.user_tableID
-    #     INNER JOIN suspension_table
-    #     ON user_table.suspensionID = suspension_table.suspensionID
-    #     WHERE user_num = '{user_num}'
-    #     ;
-    # """
-    # my_query(sqlstring,cur)
-    # recset_c = pd.DataFrame( cur.fetchall() )
-    # print(recset_c)
-    # #DataFrame形式(2次元)をSeries形式(1次元ベクトルデータ)に変換する
-    # rowdata_c = pd.Series( recset_c.iloc[0] )
-
-    # #レコード新規挿入のSQL文
-    # sqlstring = f"""
-    #     SELECT action_table.user_num, user_name, suspension_school, action_number, action_date_time, movement_method, place, companion, companion_person, _mask, action_table.delflag
-    #     FROM place_table
-    #     INNER JOIN action_table
-    #     ON place_table.placeID = action_table.place_of_departure
-    #     INNER JOIN user_table
-    #     ON action_table.user_num = user_table.user_num
-    #     INNER JOIN suspension_table
-    #     ON user_table.suspensionID = suspension_table.suspensionID
-    #     WHERE action_table.user_num = '{user_num}'
-    #     ;
-    # """
-    # my_query(sqlstring,cur)
-    # recset_a = pd.DataFrame( cur.fetchall() )
-    # #DataFrame形式(2次元)をSeries形式(1次元ベクトルデータ)に変換する
-    # rowdata_a = pd.Series( recset_a.iloc[0] )
-
-    # #DBクローズ
-    # my_close( dbcon,cur )
-
-    # print(rowdata_c)
-    # print(rowdata_a)
-
-    # return render_template("condition_action_table.html",
-    #     title=f"個人番号={user_num} の体調管理表と行動記録表",
-    #     table_data_c = rowdata_c,
-    #     # table_data_a = rowdata_a
-    # )

@@ -171,13 +171,8 @@ def action_input():
     if waypoint1 == "no"  :
         waypoint1 = "なし"
         waypoint1ID = 0 
-        #print(f"中継地1なしです")
-    #print(f"中継地1:{waypoint1ID}")
-    #crowd_tableの中継地1への挿入
-    #if waypoint1 == "other":
+
     else:
-    #if waypoint1 != "no":
-        #print(f"中継地1なしです")
         sqlstring = f"""
         INSERT INTO crowd_table
             (action_tableID,place_tableID,crowd_level,place_type_tableID,lastupdate)
@@ -188,19 +183,6 @@ def action_input():
         my_query(sqlstring,cur)
         dbcon.commit()
         
-    '''
-    if waypoint1 == 1 or waypoint1 == 2 or waypoint1 == 3 or waypoint1 == 4 or waypoint1 == 5:
-        sqlstring = f"""
-        INSERT INTO crowd_table
-            (action_tableID,place_tableID,crowd_level,place_type_tableID,lastupdate)
-            VALUES
-            ({actionID},{waypoint1ID},{waypoint1_crowd},'{waypoint1_type}','{dt_now}')
-            ;
-        """
-    
-        my_query(sqlstring,cur)
-        dbcon.commit()
-    '''
     #変更点
     if waypoint1_crowd == 6:
         waypoint1_crowd = "なし"
@@ -235,7 +217,6 @@ def action_input():
     if waypoint2 == "no"  :
         waypoint2 = "なし" 
         waypoint2ID = 0
-    #if waypoint1 != "no":
     else:
         sqlstring = f"""
         INSERT INTO crowd_table
@@ -246,18 +227,7 @@ def action_input():
         """
         my_query(sqlstring,cur)
         dbcon.commit()
-    '''
-    if waypoint2 == 1 or waypoint2 == 2 or waypoint2 == 3 or waypoint2 == 4 or waypoint2 == 5:
-        sqlstring = f"""
-        INSERT INTO crowd_table
-            (action_tableID,place_tableID,crowd_level,place_type_tableID,lastupdate)
-            VALUES
-            ({actionID},{waypoint2ID},{waypoint2_crowd},'{waypoint2_type}','{dt_now}')
-            ;
-        """
-        my_query(sqlstring,cur)
-        dbcon.commit()
-    '''
+    
     
     if waypoint2_crowd == 6:
         waypoint2_crowd = "なし"
@@ -291,7 +261,6 @@ def action_input():
         waypoint3ID = 0
     
     #crowd_tableの中継地3への挿入
-    #if waypoint3 != "no":
     else:
         sqlstring = f"""
         INSERT INTO crowd_table
@@ -302,18 +271,7 @@ def action_input():
         """
         my_query(sqlstring,cur)
         dbcon.commit()
-    '''
-    if waypoint3 == 1 or waypoint3 == 2 or waypoint3 == 3 or waypoint3 == 4 or waypoint3 == 5:
-        sqlstring = f"""
-        INSERT INTO crowd_table
-            (action_tableID,place_tableID,crowd_level,place_type_tableID,lastupdate)
-            VALUES
-            ({actionID},{waypoint3ID},{waypoint3_crowd},'{waypoint3_type}','{dt_now}')
-            ;
-        """
-        my_query(sqlstring,cur)
-        dbcon.commit()
-    '''
+    
     if waypoint3_crowd == 6:
         waypoint3_crowd = "なし"
     # 到着地の処理
@@ -352,45 +310,6 @@ def action_input():
         """
     my_query(sqlstring,cur)
     dbcon.commit()
-    '''
-    #出発地を文字列に変換
-    sqlstring = f"""
-    SELECT place FROM place_table WHERE placeID = {departureID};
-    """
-    cur.execute(sqlstring)
-    place_of_departure = cur.fetchone()[0]
-   
-    #中継地1を文字列に変換
-    if waypoint1 in ["1", "2", "3", "4", "5"]:
-        sqlstring = f"""
-        SELECT place FROM place_table WHERE placeID = {waypoint1ID};
-        """
-        cur.execute(sqlstring)
-        waypoint1 = cur.fetchone()[0]
-
-    #中継地2を文字列に変換
-    if waypoint2 in ["1", "2", "3", "4", "5"]:    
-        sqlstring = f"""
-        SELECT place FROM place_table WHERE placeID = {waypoint2ID};
-        """
-        cur.execute(sqlstring)
-        waypoint2 = cur.fetchone()[0]            
-
-    #中継地3を文字列に変換
-    if waypoint3 in ["1", "2", "3", "4", "5"]:     
-        sqlstring = f"""
-        SELECT place FROM place_table WHERE placeID = {waypoint3ID};
-        """
-        cur.execute(sqlstring)
-        waypoint3 = cur.fetchone()[0]  
-
-    #到着地を文字列に変換
-    sqlstring = f"""
-    SELECT place FROM place_table WHERE placeID = {arrivalID};
-    """
-    cur.execute(sqlstring)
-    place_of_arrival = cur.fetchone()[0]   
-    '''
     return render_template(
         "result.html"
         )
@@ -431,16 +350,9 @@ def action_output():
 
     
     # データベース接続を閉じる
-    
+    my_close( dbcon,cur )
     
     return render_template( "action_output.html",data=recset.to_dict(orient='records')
          
     )
     
-    my_close( dbcon,cur )
-
-    
-#if __name__ == "__main__":
-#    app.run(host="localhost", port=5000, debug=True)
-    
-#プログラム起動
