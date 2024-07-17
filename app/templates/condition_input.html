@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>体調観察表入力</h1>
-    <form method="POST" action="condition_output.html">
+    <form method="POST" action="/condition_output">
         <label for="date">日付:</label>
         <input type="date" id="date" name="date" required><br>
 
@@ -16,26 +16,33 @@
         <input type="text" id="temperature" name="temperature"><br>
 
         <label>症状:</label><br>
-        <input type="checkbox" id="joint_pain" name="joint_pain">
+        <input type="checkbox" id="joint_pain" name="symptoms" value="1">
         <label for="joint_pain">関節、筋肉痛</label><br>
-        <input type="checkbox" id="fatigue" name="fatigue">
+        <input type="checkbox" id="fatigue" name="symptoms" value="2">
         <label for="fatigue">だるさ</label><br>
-        <input type="checkbox" id="headache" name="headache">
+        <input type="checkbox" id="headache" name="symptoms" value="3">
         <label for="headache">頭痛</label><br>
-        <input type="checkbox" id="sore_throat" name="sore_throat">
+        <input type="checkbox" id="sore_throat" name="symptoms" value="4">
         <label for="sore_throat">咽頭痛</label><br>
-        <input type="checkbox" id="shortness_of_breath" name="shortness_of_breath">
+        <input type="checkbox" id="shortness_of_breath" name="symptoms" value="5">
         <label for="shortness_of_breath">息苦しさ</label><br>
-        <input type="checkbox" id="cough_sneeze" name="cough_sneeze">
+        <input type="checkbox" id="cough_sneeze" name="symptoms" value="6">
         <label for="cough_sneeze">咳、くしゃみ</label><br>
-        <input type="checkbox" id="nausea_vomiting" name="nausea_vomiting">
+        <input type="checkbox" id="nausea_vomiting" name="symptoms" value="7">
         <label for="nausea_vomiting">吐気、嘔吐</label><br>
-        <input type="checkbox" id="stomach_ache_diarrhea" name="stomach_ache_diarrhea">
+        <input type="checkbox" id="stomach_ache_diarrhea" name="symptoms" value="8">
         <label for="stomach_ache_diarrhea">腹痛、下痢</label><br>
-        <input type="checkbox" id="taste_disorder" name="taste_disorder">
+        <input type="checkbox" id="taste_disorder" name="symptoms" value="9">
         <label for="taste_disorder">味覚障害</label><br>
-        <input type="checkbox" id="smell_disorder" name="smell_disorder">
+        <input type="checkbox" id="smell_disorder" name="symptoms" value="10">
         <label for="smell_disorder">嗅覚障害</label><br>
+
+        <label for="status">出席停止:</label>
+        <select id="status" name="status" required>
+            <option value="0">健康</option>
+            <option value="1">濃厚接触者</option>
+            <option value="2">感染者</option>
+        </select><br>
 
         <button type="submit">送信</button>
     </form>
