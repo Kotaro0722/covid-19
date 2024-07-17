@@ -360,8 +360,10 @@ def action_output():
     # データベース接続を閉じる
     my_close( dbcon,cur )
     
-    return render_template( "action_output.html",data=recset.to_dict(orient='records')
-         
+    return render_template( 
+        "action_output.html",
+        data=recset.to_dict(orient='records'),
+        main_link = "/main_user"         
     )
     
 @action_config.route("/action_output_details", methods=["POST"])

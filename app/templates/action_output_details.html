@@ -33,8 +33,6 @@
             <table border="1">
                 <thead>
                     <tr>
-                        <!--<th>action_tableID</th>-->
-                        <!--<th>User ID</th>-->
                         <th>開始日時</th>
                         <th>終了日時</th>
                         <th>移動手段</th>
@@ -42,8 +40,6 @@
                         <th>場所の種類</th>
                         <!--<th>中継地1</th>-->
                         <th>混み具合</th>
-                        <!--<th>中継地2</th>-->
-                        <!--<th>最終更新日時</th>-->
                     </tr>
                 </thead>
                 <tbody>
@@ -60,7 +56,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <form action={{ main_link }} method="post">
+            <form action="{{ main_link }}" method="post">
                 <button type="submit">メイン画面に戻る</button>
         </div>
 

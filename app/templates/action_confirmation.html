@@ -1,94 +1,92 @@
 <!DOCTYPE html>
 <html lang="ja">
-
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>{{ title }}</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <h1>{{ message }}</h1>
     <h2>アクションの詳細</h2>
     <table border="1">
-        <thead>
-            <tr>
-                <th>項目</th>
-                <th>内容</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>開始日時</td>
-                <td>{{ start_date_time }}</td>
-            </tr>
-            <tr>
-                <td>終了日時</td>
-                <td>{{ end_date_time }}</td>
-            </tr>
-            <tr>
-                <td>移動方法</td>
-                <td>{{ method }}</td>
-            </tr>
-            <tr>
-                <td>出発地</td>
-                <td>{{ place_of_departure }}</td>
-            </tr>
-            <tr>
-                <td>出発地の混み具合</td>
-                <td>{{ departure_crowd }}</td>
-            </tr>
-            <tr>
-                <td>中継地1</td>
-                <td>{{ waypoint1 }}</td>
-            </tr>
-            <tr>
-                <td>中継地1の混み具合</td>
-                <td>{{ waypoint1_crowd }}</td>
-            </tr>
-            <tr>
-                <td>中継地2</td>
-                <td>{{ waypoint2 }}</td>
-            </tr>
-            <tr>
-                <td>中継地2の混み具合</td>
-                <td>{{ waypoint2_crowd }}</td>
-            </tr>
-            <tr>
-                <td>中継地3</td>
-                <td>{{ waypoint3 }}</td>
-            </tr>
-            <tr>
-                <td>中継地3の混み具合</td>
-                <td>{{ waypoint3_crowd }}</td>
-            </tr>
-            <tr>
-                <td>到着地</td>
-                <td>{{ place_of_arrival }}</td>
-            </tr>
-            <tr>
-                <td>到着地の混み具合</td>
-                <td>{{ arrival_crowd }}</td>
-            </tr>
-        </tbody>
+      <thead>
+        <tr>
+          <th>項目</th>
+          <th>内容</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>開始日時</td>
+          <td>{{ start_date_time }}</td>
+        </tr>
+        <tr>
+          <td>終了日時</td>
+          <td>{{ end_date_time }}</td>
+        </tr>
+        <tr>
+          <td>移動方法</td>
+          <td>{{ method }}</td>
+        </tr>
+        <tr>
+          <td>出発地</td>
+          <td>{{ place_of_departure }}</td>
+        </tr>
+        <tr>
+          <td>出発地の混み具合</td>
+          <td>{{ departure_crowd }}</td>
+        </tr>
+        <tr>
+          <td>中継地1</td>
+          <td>{{ waypoint1 }}</td>
+        </tr>
+        <tr>
+          <td>中継地1の混み具合</td>
+          <td>{{ waypoint1_crowd }}</td>
+        </tr>
+        <tr>
+          <td>中継地2</td>
+          <td>{{ waypoint2 }}</td>
+        </tr>
+        <tr>
+          <td>中継地2の混み具合</td>
+          <td>{{ waypoint2_crowd }}</td>
+        </tr>
+        <tr>
+          <td>中継地3</td>
+          <td>{{ waypoint3 }}</td>
+        </tr>
+        <tr>
+          <td>中継地3の混み具合</td>
+          <td>{{ waypoint3_crowd }}</td>
+        </tr>
+        <tr>
+          <td>到着地</td>
+          <td>{{ place_of_arrival }}</td>
+        </tr>
+        <tr>
+          <td>到着地の混み具合</td>
+          <td>{{ arrival_crowd }}</td>
+        </tr>
+      </tbody>
     </table>
 
     <h2>同行者の詳細</h2>
     <table border="1">
-        <thead>
-            <tr>
-                <th>名前</th>
-                <th>マスク</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for companion_name, mask in companion_data %}
-            <tr>
-                <td>{{ companion_name }}</td>
-                <td>{{ 'あり' if mask else 'なし' }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
+      <thead>
+        <tr>
+          <th>名前</th>
+          <th>マスク</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for companion_name, mask in companion_data %}
+        <tr>
+          <td>{{ companion_name }}</td>
+          <td>{{ 'あり' if mask else 'なし' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
-</body>
-
+  </body>
 </html>

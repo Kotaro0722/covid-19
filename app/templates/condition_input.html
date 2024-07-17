@@ -1,50 +1,60 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>体調観察表入力</title>
-    <link rel="stylesheet" href="../static/style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="../static/style.css" />
+  </head>
+  <body>
     <h1>体調観察表入力</h1>
     <form method="POST" action="/condition_output">
-        <label for="date">日付:</label>
-        <input type="date" id="date" name="date" required><br>
+      <label for="date">日付:</label>
+      <input type="date" id="date" name="date" required /><br />
 
-        <label for="temperature">体温:</label>
-        <input type="text" id="temperature" name="temperature"><br>
+      <label for="temperature">体温:</label>
+      <input type="text" id="temperature" name="temperature" /><br />
 
-        <label>症状:</label><br>
-        <input type="checkbox" id="joint_pain" name="symptoms" value="1">
-        <label for="joint_pain">関節、筋肉痛</label><br>
-        <input type="checkbox" id="fatigue" name="symptoms" value="2">
-        <label for="fatigue">だるさ</label><br>
-        <input type="checkbox" id="headache" name="symptoms" value="3">
-        <label for="headache">頭痛</label><br>
-        <input type="checkbox" id="sore_throat" name="symptoms" value="4">
-        <label for="sore_throat">咽頭痛</label><br>
-        <input type="checkbox" id="shortness_of_breath" name="symptoms" value="5">
-        <label for="shortness_of_breath">息苦しさ</label><br>
-        <input type="checkbox" id="cough_sneeze" name="symptoms" value="6">
-        <label for="cough_sneeze">咳、くしゃみ</label><br>
-        <input type="checkbox" id="nausea_vomiting" name="symptoms" value="7">
-        <label for="nausea_vomiting">吐気、嘔吐</label><br>
-        <input type="checkbox" id="stomach_ache_diarrhea" name="symptoms" value="8">
-        <label for="stomach_ache_diarrhea">腹痛、下痢</label><br>
-        <input type="checkbox" id="taste_disorder" name="symptoms" value="9">
-        <label for="taste_disorder">味覚障害</label><br>
-        <input type="checkbox" id="smell_disorder" name="symptoms" value="10">
-        <label for="smell_disorder">嗅覚障害</label><br>
+      <label>症状:</label><br />
+      <input type="checkbox" id="joint_pain" name="symptoms" value="1" />
+      <label for="joint_pain">関節、筋肉痛</label><br />
+      <input type="checkbox" id="fatigue" name="symptoms" value="2" />
+      <label for="fatigue">だるさ</label><br />
+      <input type="checkbox" id="headache" name="symptoms" value="3" />
+      <label for="headache">頭痛</label><br />
+      <input type="checkbox" id="sore_throat" name="symptoms" value="4" />
+      <label for="sore_throat">咽頭痛</label><br />
+      <input
+        type="checkbox"
+        id="shortness_of_breath"
+        name="symptoms"
+        value="5"
+      />
+      <label for="shortness_of_breath">息苦しさ</label><br />
+      <input type="checkbox" id="cough_sneeze" name="symptoms" value="6" />
+      <label for="cough_sneeze">咳、くしゃみ</label><br />
+      <input type="checkbox" id="nausea_vomiting" name="symptoms" value="7" />
+      <label for="nausea_vomiting">吐気、嘔吐</label><br />
+      <input
+        type="checkbox"
+        id="stomach_ache_diarrhea"
+        name="symptoms"
+        value="8"
+      />
+      <label for="stomach_ache_diarrhea">腹痛、下痢</label><br />
+      <input type="checkbox" id="taste_disorder" name="symptoms" value="9" />
+      <label for="taste_disorder">味覚障害</label><br />
+      <input type="checkbox" id="smell_disorder" name="symptoms" value="10" />
+      <label for="smell_disorder">嗅覚障害</label><br />
 
-        <label for="status">出席停止:</label>
-        <select id="status" name="status" required>
-            <option value="0">健康</option>
-            <option value="1">濃厚接触者</option>
-            <option value="2">感染者</option>
-        </select><br>
+      <label for="status">出席停止:</label>
+      <select id="status" name="status" required>
+        <option value="0">健康</option>
+        <option value="1">濃厚接触者</option>
+        <option value="2">感染者</option></select
+      ><br />
 
-        <button type="submit">送信</button>
+      <button type="submit">送信</button>
     </form>
-</body>
+  </body>
 </html>

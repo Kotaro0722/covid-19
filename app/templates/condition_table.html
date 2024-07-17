@@ -1,70 +1,71 @@
 <!DOCTYPE html>
 <html lang="ja">
-
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>行動記録表</title>
-    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="../static/style.css" />
     <style>
-        main {
-            width: 100%;
-            justify-content: center;
-        }
+      main {
+        width: 100%;
+        justify-content: center;
+      }
 
-        h1 {
-            text-align: center;
-        }
+      h1 {
+        text-align: center;
+      }
 
-        form {
-            display: flex;
-            justify-content: center;
-            margin: 16px 0px;
-        }
+      form {
+        display: flex;
+        justify-content: center;
+        margin: 16px 0px;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <header>
-        <h1>COVID-19状況管理システム</h1>
+      <p>{{userName}}</p>
+      <h1>COVID-19状況管理システム</h1>
+      <form action="/logout" method="post" id="logout">
+        <button type="submit">ログアウト</button>
+      </form>
     </header>
     <main>
-        <div>
-            <h1>体調観察表</h1>
-            <table border="1">
-                <thead>
-                    <tr>
-                        <!-- <th>condition_details_tableID</th> -->
-                        <!--<th>User ID</th>-->
-                        <th>ユーザーID</th>
-                        <th>ユーザー名</th>
-                        <th>日付</th>
-                        <th>体温</th>
-                        <th>症状</th>
-                        <th>最終更新日時</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in data %}
-                    <tr>
-                        <td>{{ row.userID }}</td>
-                        <td>{{ row.user_name }}</td>
-                        <td>{{ row.condition_date }}</td>
-                        <td>{{ row.body_temp }}</td>
-                        <td>{{ row.symptomID }}</td>
-                        <td>{{ row.lastupdate}}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <form action={{ main_link }} method="post">
-                <button type="submit">メイン画面に戻る</button>
-        </div>
-
-
+      <div>
+        <h1>体調観察表</h1>
+        <table border="1">
+          <thead>
+            <tr>
+              <!-- <th>condition_details_tableID</th> -->
+              <!--<th>User ID</th>-->
+              <th>ユーザーID</th>
+              <th>ユーザー名</th>
+              <th>日付</th>
+              <th>体温</th>
+              <th>症状</th>
+              <th>最終更新日時</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in data %}
+            <tr>
+              <td>{{ row.userID }}</td>
+              <td>{{ row.user_name }}</td>
+              <td>{{ row.condition_date }}</td>
+              <td>{{ row.body_temp }}</td>
+              <td>{{ row.symptomID }}</td>
+              <td>{{ row.lastupdate}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <form action="{{ main_link }}" method="post">
+          <button type="submit">メイン画面に戻る</button>
+        </form>
+      </div>
     </main>
     <footer>
-        <p>2024 DB論 第4班 rights reserved.</p>
+      <p>2024 DB論 第4班 rights reserved.</p>
     </footer>
-</body>
-
+  </body>
 </html>
