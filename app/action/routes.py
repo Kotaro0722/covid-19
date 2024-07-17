@@ -396,7 +396,7 @@ def action_output_details():
         WHERE 
             action_table.userID = {userID} AND action_table.action_tableID = {actionID};
     """
-    my_query(sqlstring,cur)
+    my_query(sql_string,cur)
     recset=pd.DataFrame(cur.fetchall())
 
     # データベース接続を閉じる
