@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>体調観察表表示</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <h1>体調観察表表示</h1>
+    <table border="1">
+        <tr>
+            <th>日付</th>
+            <td>{{ date }}</td>
+        </tr>
+        <tr>
+            <th>体温</th>
+            <td>{{ temperature }}</td>
+        </tr>
+        <tr>
+            <th>症状</th>
+            <td>
+                {% for symptom_id in symptoms %}
+                    {% if symptom_id == '1' %}
+                        関節、筋肉痛
+                    {% elif symptom_id == '2' %}
+                        だるさ
+                    {% elif symptom_id == '3' %}
+                        頭痛
+                    {% elif symptom_id == '4' %}
+                        咽頭痛
+                    {% elif symptom_id == '5' %}
+                        息苦しさ
+                    {% elif symptom_id == '6' %}
+                        咳、くしゃみ
+                    {% elif symptom_id == '7' %}
+                        吐気、嘔吐
+                    {% elif symptom_id == '8' %}
+                        腹痛、下痢
+                    {% elif symptom_id == '9' %}
+                        味覚障害
+                    {% elif symptom_id == '10' %}
+                        嗅覚障害
+                    {% endif %}
+                    {% if not loop.last %}, {% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+        <tr>
+            <th>状態</th>
+            <td>
+                {% if status == '0' %}
+                    健康
+                {% elif status == '1' %}
+                    濃厚接触者
+                {% elif status == '2' %}
+                    感染者
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>出席停止解除日</th>
+            <td>{{ release_date }}</td>
+        </tr>
+    </table>
+    <form action="/main_user">
+        <button type="submit">戻る</button>
+    </form>
+</body>
+</html>
+
