@@ -40,14 +40,13 @@ def login_config():
             if user["username"] == username and user["password"] == password:
                 is_admin=True
         if not recset.empty:
-            print("empty")
             is_user=True
         
         my_close(dbcon,cur)
         if is_admin:
             session["username"]=username
             return redirect(url_for("main.main_admin"))
-        if is_user:
+        elif is_user:
             session["username"]=username
             return redirect(url_for("main.main_user"))        
         else:
@@ -57,11 +56,8 @@ def login_config():
     
 @main.route("/main_admin",methods=["POST","GET"])
 def main_admin():
-    if "username" in session:
-        
-        return render_template("main_admin.html"
-                            #    ,userName=user_name
-                               )
+    if "username" in session:       
+        return render_template("main_admin.html",userName=session["username"])
     else:
         return redirect(url_for("login.login_"))
     
