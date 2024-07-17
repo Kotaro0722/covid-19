@@ -40,5 +40,11 @@ def create_app():
 
     from .vaccine import vaccine as vaccine_blueprint
     app.register_blueprint(vaccine_blueprint)
-
+    from .condition import condition as condition_blueprint
+    app.register_blueprint(condition_blueprint)
+    from .condition import condition_output as condition_output_blueprint
+    app.register_blueprint(condition_output_blueprint)
+    from .condition import condition_table as condition_table_blueprint
+    app.register_blueprint(condition_table_blueprint)
+    
     return app
