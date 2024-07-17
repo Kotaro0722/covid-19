@@ -33,48 +33,38 @@ def login_config():
         """
         my_query(sql_string,cur)
         recset=pd.DataFrame(cur.fetchall())
-        print(recset)
+        print(recset.empty)
         
         
         for user in admin_list:
             if user["username"] == username and user["password"] == password:
                 is_admin=True
         if not recset.empty:
+            print("empty")
             is_user=True
-            
-    
-    if is_admin:
-         # データベース接続
-        dbcon,cur = my_open( **dsn )
         
-        # 管理者用データ取得クエリ
-        sqlstring = """
-        SELECT student_id, name, status, latest_temp, latest_record_time
-        FROM student_conditions
-        ;
-        """
-        
-        data = my_query(sqlstring,cur)
-        
-        # データベース接続を閉じる
-        my_close(dbcon,cur)
-        
-        # 管理者メインページを表示
-        return render_template("main_admin.html", data=data)
-
-    elif is_user:
-        return render_template("main_user.html")
-
         my_close(dbcon,cur)
         if is_admin:
-            return render_template("main_admin.html")
-        elif is_user:
             session["username"]=username
-            return redirect(url_for("main.main_user"))
+            return redirect(url_for("main.main_admin"))
+        if is_user:
+            session["username"]=username
+            return redirect(url_for("main.main_user"))        
         else:
             return redirect(url_for("login.login_"))
     else:
         return redirect(url_for("login.login_"))
+    
+@main.route("/main_admin",methods=["POST","GET"])
+def main_admin():
+    if "username" in session:
+        
+        return render_template("main_admin.html"
+                            #    ,userName=user_name
+                               )
+    else:
+        return redirect(url_for("login.login_"))
+    
 @main.route("/main_user",methods=["POST","GET"])
 def main_user():
     if "username" in session:
