@@ -52,6 +52,10 @@ h2 {
   text-align: center;
 }
 
+tr, th, td {
+  text-align: center;
+}
+
 .login-form h2 {
   margin-bottom: 1rem;
 }

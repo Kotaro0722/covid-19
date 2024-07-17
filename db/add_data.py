@@ -166,7 +166,6 @@ sqlstring = """
     CREATE TABLE action_table (
         action_tableID INT NOT NULL AUTO_INCREMENT,   -- アクションID
         userID INT,                                   -- 個人番号
-        action_number INT,                            -- 番号
         action_date_start DATETIME,                   -- 日付と時間
         action_date_end DATETIME,                     -- 日付と時間
         lastupdate DATETIME DEFAULT NOW(),            -- 最終更新日時
@@ -242,7 +241,7 @@ sqlstring = """
         action_tableID INT,                           -- アクションID
         place_tableID INT,                            -- place_tableのID
         crowd_level INT,                              -- 混み具合
-        place_type_tableID INT,                       -- 出発地・中継地・到着地の区別
+        place_type_tableID VARCHAR(32),                       -- 出発地・中継地・到着地の区別
         lastupdate DATETIME DEFAULT NOW(),            -- 最終更新日時
         delflag BOOLEAN DEFAULT FALSE,                -- 削除フラグ
         PRIMARY KEY (crowd_tableID),                  -- 主キーの設定

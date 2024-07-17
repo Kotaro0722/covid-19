@@ -54,6 +54,7 @@
       }
     </style>
   </head>
+
   <body>
     <header>
       <p>{{userName}}</p>
@@ -67,10 +68,10 @@
       <section>
         <h2>体調観察表</h2>
         <div>
-          <form action="/condition_input" method="post" class="input">
+          <form action="" method="post" class="input">
             <button type="submit">入力</button>
           </form>
-          <form action="/condition_table_output" method="post" class="show">
+          <form action="" method="post" class="show">
             <button type="submit">表示</button>
           </form>
         </div>
@@ -78,10 +79,10 @@
       <section>
         <h2>行動記録表</h2>
         <div>
-          <form action="" method="post" class="input">
+          <form action="/action" method="post" class="input">
             <button type="submit">入力</button>
           </form>
-          <form action="" method="post" class="show">
+          <form action="/action_output" method="post" class="show">
             <button type="submit">表示</button>
           </form>
         </div>
