@@ -19,9 +19,19 @@ dsn = {
 
 @action.route("/action",methods=["POST"])
 def action():
-    return render_template( "action_input.html",
-         
-    )
+    dbcon,cur=my_open(**dsn)
+    
+    sqlstring=f"""
+        SELECT *
+        FROM move_method_table
+    """
+    my_query(sqlstring,cur)
+    recset=pd.DataFrame(cur.fetchall())
+    print(recset["move_method"])
+    
+    my_close(dbcon,cur)
+    return render_template("action_input.html",data=recset.to_dict(orient="records"))
+
 @action_config.route("/action_input", methods=["POST"])
 def action_input():
     dbcon,cur = my_open( **dsn )
@@ -29,17 +39,18 @@ def action_input():
     new_place=0
 
     #userID = 3
-    sql_string=f"""
+    sqlstring=f"""
         SELECT userID FROM user_table
         WHERE user_num='{session["username"]}'
     """
-    my_query(sql_string,cur)
+    my_query(sqlstring,cur)
     recset=pd.DataFrame(cur.fetchall())
     userID=recset["userID"][0]
     
     start_date_time = request.form["start_date_time"]
     end_date_time = request.form["end_date_time"]
-    method = request.form["method"]
+    method = request.form["move_method"]
+    new_method=request.form["new-method"]
     place_of_departure1 = request.form["place_of_departure1"]
     place_of_departure2 = request.form["place_of_departure2"]
     departure_crowd = request.form["departure_crowd"]
@@ -72,16 +83,38 @@ def action_input():
             mask = mask_option == "yes"
             companion_data.append((companion_name, mask))
     
+    #move_method_tableへの挿入
+    if method=="other":
+        sqlstring = f"""
+            INSERT INTO move_method_table
+                (move_method,lastupdate)
+                VALUES
+                ('{new_method}','{dt_now}')
+                ;
+            """
+        my_query(sqlstring,cur)
+        dbcon.commit()
+    
     #action_tableへの挿入
-    sqlstring = f"""
-        INSERT INTO action_table
-            (userID,action_date_start,action_date_end,lastupdate)
-            VALUES
-            ({userID},'{start_date_time}','{end_date_time}','{dt_now}')
-            ;
+    methodID=cur.lastrowid
+    if method=="other":
+        sqlstring = f"""
+            INSERT INTO action_table
+                (userID,action_date_start,action_date_end,move_method,lastupdate)
+                VALUES
+                ({userID},'{start_date_time}','{end_date_time}',{methodID},'{dt_now}')
+                ;
+            """
+    else:
+        sqlstring=f"""
+            INSERT INTO action_table
+                (userID,action_date_start,action_date_end,move_method,lastupdate)
+                VALUES
+                ({userID},'{start_date_time}','{end_date_time}',{method},'{dt_now}')
+                ;
         """
     my_query(sqlstring,cur)
-    dbcon.commit()
+    
     #最後の挿入したaction_tableのactionIDを取得
     actionID = cur.lastrowid
     # 同行者名をcompanion_tableに挿入
@@ -93,17 +126,7 @@ def action_input():
                 ('{companion_name}',{actionID}, {mask}, '{dt_now}');
             """
     my_query(sqlstring, cur)
-    dbcon.commit()
-    #move_method_tableへの挿入
-    sqlstring = f"""
-        INSERT INTO move_method_table
-            (action_tableID,move_method,lastupdate)
-            VALUES
-            ({actionID},'{method}','{dt_now}')
-            ;
-        """
-    my_query(sqlstring,cur)
-    dbcon.commit()
+    
     # 出発地の処理
     if place_of_departure1 == "other":
         new_place = place_of_departure2
@@ -117,7 +140,6 @@ def action_input():
         ;
         """
         my_query(sqlstring,cur)
-        dbcon.commit()
 
     # 最後に挿入したplace_tableのplace_tableIDを取得
     departureID = cur.lastrowid
@@ -140,7 +162,6 @@ def action_input():
         ;
     """
     my_query(sqlstring,cur)
-    dbcon.commit()
     
     #中継地1の処理
     waypoint1_type = "中継地1"
@@ -156,7 +177,6 @@ def action_input():
         ;
         """
         my_query(sqlstring,cur)
-        dbcon.commit()
          # 最後に挿入したplace_tableのplace_tableIDを取得
         waypoint1ID = cur.lastrowid
         
@@ -165,7 +185,7 @@ def action_input():
         sqlstring = f"""
         SELECT place FROM place_table WHERE place_tableID = {waypoint1ID};
         """
-        cur.execute(sqlstring)
+        my_query(sqlstring,cur)
         waypoint1 = cur.fetchone()#[0]
        
     if waypoint1 == "no"  :
@@ -181,7 +201,6 @@ def action_input():
             ;
         """
         my_query(sqlstring,cur)
-        dbcon.commit()
         
     #変更点
     if waypoint1_crowd == 6:
@@ -201,7 +220,6 @@ def action_input():
         ;
         """
         my_query(sqlstring,cur)
-        dbcon.commit()
          # 最後に挿入したplace_tableのplace_tableIDを取得
         waypoint2ID = cur.lastrowid
 
@@ -210,7 +228,7 @@ def action_input():
         sqlstring = f"""
         SELECT place FROM place_table WHERE place_tableID = {waypoint2ID};
         """
-        cur.execute(sqlstring)
+        my_query(sqlstring,cur)
         waypoint2 = cur.fetchone()#[0] 
 
     #crowd_tableの中継地2への挿入
@@ -226,7 +244,6 @@ def action_input():
             ;
         """
         my_query(sqlstring,cur)
-        dbcon.commit()
     
     
     if waypoint2_crowd == 6:
@@ -245,7 +262,6 @@ def action_input():
         ;
         """
         my_query(sqlstring,cur)
-        dbcon.commit()
          # 最後に挿入したplace_tableのplace_tableIDを取得
         waypoint3ID = cur.lastrowid
 
@@ -270,7 +286,6 @@ def action_input():
             ;
         """
         my_query(sqlstring,cur)
-        dbcon.commit()
     
     if waypoint3_crowd == 6:
         waypoint3_crowd = "なし"
@@ -287,7 +302,6 @@ def action_input():
         ;
         """
         my_query(sqlstring,cur)
-        dbcon.commit()
         # 最後に挿入したplace_tableのplace_tableIDを取得
         arrival1ID = cur.lastrowid
         
@@ -310,20 +324,20 @@ def action_input():
         """
     my_query(sqlstring,cur)
     dbcon.commit()
+    my_close( dbcon,cur )  
     return render_template(
         "result.html"
         )
-    my_close( dbcon,cur )  
 
 @action_config.route("/action_output", methods=["POST"])
 def action_output():
     #外部キーであるuserIDを取得
     dbcon,cur = my_open( **dsn )
-    sql_string=f"""
+    sqlstring=f"""
         SELECT userID FROM user_table
         WHERE user_num='{session["username"]}'
     """
-    my_query(sql_string,cur)
+    my_query(sqlstring,cur)
     recset=pd.DataFrame(cur.fetchall())
     userID=recset["userID"][0]
     #入力されたuserIDのフィールドを表示
@@ -382,7 +396,7 @@ def action_output_details():
         WHERE 
             action_table.userID = {userID} AND action_table.action_tableID = {actionID};
     """
-    my_query(sql_string,cur)
+    my_query(sqlstring,cur)
     recset=pd.DataFrame(cur.fetchall())
 
     # データベース接続を閉じる
