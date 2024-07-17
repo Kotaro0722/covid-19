@@ -39,7 +39,7 @@ def related_table():
 		    FROM condition_details_table
 			GROUP BY userID) s
 		ON c.userID = s.userID AND c.condition_date = DATE(s.last_input_date)
-        INNER JOIN user_table
+        RIGHT JOIN user_table
         ON c.userID = user_table.userID
         LEFT JOIN suspension_table
         ON user_table.userID = suspension_table.userID
@@ -77,12 +77,12 @@ def related_search_table():
     sqlstring = f"""
         SELECT user_table.userID, user_num, user_name, suspension_school, c.body_temp, c.condition_date, v1.vaccination_num, v1.vaccination_date
         FROM condition_details_table c
-	    INNER JOIN(
-            SELECT userID,MAX(condition_date) AS last_input_date
-			FROM condition_details_table
-		    GROUP BY userID) s
-	    ON c.userID = s.userID AND c.condition_date = DATE(s.last_input_date)
-        INNER JOIN user_table
+	        INNER JOIN(
+                SELECT userID,MAX(condition_date) AS last_input_date
+			    FROM condition_details_table
+		        GROUP BY userID) s
+	        ON c.userID = s.userID AND c.condition_date = DATE(s.last_input_date)
+        RIGHT JOIN user_table
         ON c.userID = user_table.userID
         LEFT JOIN suspension_table
         ON user_table.userID = suspension_table.userID
@@ -156,22 +156,34 @@ def admin_action():
     
     #入力されたuserIDのactionIDを参照し，インナージョインで表示
     sql_string=f"""
-        SELECT 
-            action_table.action_tableID AS actionID,
-            action_table.action_date_start AS action_date_start,
-            action_table.action_date_end AS action_date_end,
-            move_method_table.move_method AS move_method,
-            crowd_table.place_type_tableID AS place_type_tableID,
-            crowd_table.crowd_level AS crowd_level,
-            action_table.lastupdate AS lastupdate
+        SELECT DISTINCT
+            userID,
+            action_tableID AS actionID,
+            action_date_start AS action_date_start,
+            action_date_end AS action_date_end,
+            lastupdate AS lastupdate
         FROM action_table
-        INNER JOIN 
-            move_method_table ON action_table.action_tableID = move_method_table.action_tableID
-        INNER JOIN 
-            crowd_table ON move_method_table.action_tableID = crowd_table.action_tableID  
         WHERE 
-            action_table.userID = {userID};
+            userID = {userID};
     """
+    # sql_string=f"""
+    #     SELECT 
+    #         action_table.userID AS userID,
+    #         action_table.action_tableID AS actionID,
+    #         action_table.action_date_start AS action_date_start,
+    #         action_table.action_date_end AS action_date_end,
+    #         move_method_table.move_method AS move_method,
+    #         crowd_table.place_type_tableID AS place_type_tableID,
+    #         crowd_table.crowd_level AS crowd_level,
+    #         action_table.lastupdate AS lastupdate
+    #     FROM action_table
+    #     INNER JOIN 
+    #         move_method_table ON action_table.move_method_tableID = move_method_table.move_method_tableID
+    #     INNER JOIN 
+    #         crowd_table ON action_table.action_tableID = crowd_table.action_tableID  
+    #     WHERE 
+    #         action_table.userID = {userID};
+    # """
     my_query(sql_string,cur)
     #print(sql_string)
     recset=pd.DataFrame(cur.fetchall())

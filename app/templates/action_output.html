@@ -52,6 +52,7 @@
                             <form action="/action_output_details" method="POST">
                                 <!--レコードを特定するために meiboIDをhidden属性で受け渡す-->
                                 <input type="hidden" name="actionID" value={{ row.actionID }}>
+                                <input type="hidden" name="userID" value={{ row.userID }}>
                                 <input type="submit" value="詳細" >
                             </form>                    
                         </td>
