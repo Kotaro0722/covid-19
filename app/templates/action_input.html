@@ -9,6 +9,11 @@
         justify-content: center;
         gap: 25px;
       }
+      #move_method_wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        margin-bottom: 8px;
+      }
       .date-input {
         display: flex;
         flex-direction: column;
@@ -34,6 +39,7 @@
         display: grid;
         grid-template-columns: 250px 1fr 1fr;
         padding: 0px 100px;
+        gap: 10px;
       }
       .companion-label {
         display: flex;
@@ -132,20 +138,48 @@
     <h2>行動記録の入力</h2>
     <form action="/action_input" method="POST" id="action-input">
       <div id="date-wrapper">
-        <div class="date-input">
+        <label for="start_date_time" class="date-input">
           開始日時<input
             type="datetime-local"
             name="start_date_time"
             required
           />
-        </div>
-        <div class="date-input">
+        </label>
+        <label for="end_date_time" class="date-input">
           終了日時<input type="datetime-local" name="end_date_time" required />
+        </label>
+      </div>
+
+      <div id="move_method_wrapper">
+        <label for="move_method">
+          移動方法
+          <select
+            name="move_method"
+            id="move_method"
+            required
+            onchange="checkWaypointSelection('move_method','new-method')"
+          >
+            {% for row in data %}
+            <option value="{{row.move_method_tableID}}">
+              {{row.move_method}}
+            </option>
+            {% endfor %}
+            <option value="other">その他</option>
+          </select>
+        </label>
+        <div style="display: flex; align-items: center">
+          <input
+            type="text"
+            id="new-method"
+            style="display: none; height: 16px; margin: 0px"
+            placeholder="移動方法を入力してください"
+            required
+          />
         </div>
       </div>
-      移動方法<input type="text" name="method" required />
+
       <div class="action-place">
-        <div>
+        <label>
           出発地<select
             id="departure_select"
             name="place_of_departure1"
@@ -160,8 +194,8 @@
             <option value="5">コンビニ</option>
             <option value="other">その他</option>
           </select>
-        </div>
-        <div>
+        </label>
+        <label>
           出発地の混み具合<select name="departure_crowd" required>
             <option value="">選択してください</option>
             <option value="1">1 - 空いている</option>
@@ -170,7 +204,7 @@
             <option value="4">4 - 混んでいる</option>
             <option value="5">5 - 非常に混んでいる</option>
           </select>
-        </div>
+        </label>
       </div>
       <input
         type="text"
@@ -180,7 +214,7 @@
         placeholder="出発地点を入力してください"
       />
       <div class="action-place">
-        <div>
+        <label>
           中継地点1<select
             id="waypoint_select1"
             name="waypoint1"
@@ -195,8 +229,8 @@
             <option value="other">その他</option>
             <option value="no">なし</option>
           </select>
-        </div>
-        <div>
+        </label>
+        <label>
           <input
             type="text"
             id="waypoint_input1"
@@ -213,10 +247,10 @@
             <option value="5">5 - 非常に混んでいる</option>
             <option value="6">6 - なし</option>
           </select>
-        </div>
+        </label>
       </div>
       <div class="action-place">
-        <div>
+        <label>
           中継地点2<select
             id="waypoint_select2"
             name="waypoint2"
@@ -231,8 +265,8 @@
             <option value="other">その他</option>
             <option value="no">なし</option>
           </select>
-        </div>
-        <div>
+        </label>
+        <label>
           <input
             type="text"
             id="waypoint_input2"
@@ -249,10 +283,10 @@
             <option value="5">5 - 非常に混んでいる</option>
             <option value="6">6 - なし</option>
           </select>
-        </div>
+        </label>
       </div>
       <div class="action-place">
-        <div>
+        <label>
           中継地点3<select
             id="waypoint_select3"
             name="waypoint3"
@@ -267,8 +301,8 @@
             <option value="other">その他</option>
             <option value="no">なし</option>
           </select>
-        </div>
-        <div>
+        </label>
+        <label>
           <input
             type="text"
             id="waypoint_input3"
@@ -285,10 +319,10 @@
             <option value="5">5 - 非常に混んでいる</option>
             <option value="6">6 - なし</option>
           </select>
-        </div>
+        </label>
       </div>
       <div class="action-place">
-        <div>
+        <label>
           到着地<select
             id="arrival_select"
             name="place_of_arrival1"
@@ -303,8 +337,8 @@
             <option value="5">コンビニ</option>
             <option value="other">その他</option>
           </select>
-        </div>
-        <div>
+        </label>
+        <label>
           <input
             type="text"
             id="arrival_input"
@@ -321,7 +355,7 @@
             <option value="4">4 - 混んでいる</option>
             <option value="5">5 - 非常に混んでいる</option>
           </select>
-        </div>
+        </label>
       </div>
       <p>同行者名入力フォーム</p>
       <button

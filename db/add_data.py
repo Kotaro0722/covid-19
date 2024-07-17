@@ -75,58 +75,6 @@ print(f"place_tableテーブル{i} レコード追加しました")
 
 
 
-############# テーブルsuspension_tableの新規作成
-sqlstring = """
-    CREATE TABLE suspension_table (
-        suspensionID INT NOT NULL AUTO_INCREMENT,     -- 出席停止ID
-        suspension_school INT,                        -- 健康、感染、濃厚接触の判断
-        suspension_start DATE,                        -- 出席停止開始日
-        acceptance BOOLEAN,                           -- 受理
-        medical VARCHAR(32),                          -- 医療機関
-        doctor VARCHAR(16),                           -- 医師氏名
-        lastupdate DATETIME DEFAULT NOW(),            -- 最終更新日時
-        delflag BOOLEAN DEFAULT FALSE,                -- 削除フラグ
-        PRIMARY KEY (suspensionID)                    -- 主キーの設定
-);
-"""
-my_query( sqlstring )
-
-i=0  #レコード件数カウント
-#ファイルオープン
-df = pd.read_csv("./data/suspension_table.csv",header=0)
-#suspension_table.csvを1行ずつ処理
-for ind,rowdata in df.iterrows():
-    if rowdata.suspension_school == 1:
-        sqlstring = f"""
-            INSERT INTO suspension_table
-            (suspension_school)
-            VALUES
-            ({rowdata.suspension_school})
-        """
-        my_query( sqlstring )   #1レコード挿入
-        i += 1
-    elif rowdata.suspension_school == 2:
-        sqlstring = f"""
-            INSERT INTO suspension_table
-            (suspension_school,suspension_start,acceptance,medical,doctor)
-            VALUES
-            ({rowdata.suspension_school}, '{rowdata.suspension_start}' , {rowdata.acceptance}, '{rowdata.medical}','{rowdata.doctor}')
-        """
-        my_query( sqlstring )   #1レコード挿入
-        i += 1
-    elif rowdata.suspension_school == 3:
-        sqlstring = f"""
-            INSERT INTO suspension_table
-            (suspension_school,suspension_start,acceptance)
-            VALUES
-            ({rowdata.suspension_school}, '{rowdata.suspension_start}' , {rowdata.acceptance})
-        """
-        my_query( sqlstring )   #1レコード挿入
-        i += 1
-
-print(f"suspension_table テーブル{i} レコード追加しました")
-
-
 ############# テーブルuser_tableの新規作成
 sqlstring = """
     CREATE TABLE user_table (
@@ -167,7 +115,7 @@ sqlstring = """
         move_method VARCHAR(50),                            -- 番号
         lastupdate DATETIME DEFAULT NOW(),            -- 最終更新日時
         delflag BOOLEAN DEFAULT FALSE,                -- 削除フラグ
-        PRIMARY KEY (move_method_tableID),                 -- 主キーの設定
+        PRIMARY KEY (move_method_tableID)              -- 主キーの設定
 );
 """
 my_query( sqlstring )
@@ -180,15 +128,52 @@ for ind,rowdata in df.iterrows():
     #data.Month は， data['Month'] とおなじ
     sqlstring = f"""
         INSERT INTO move_method_table
-        (action_tableID,move_method)
+        (move_method)
         VALUES
-        ({rowdata.action_tableID}, '{rowdata.move_method}' )
+        ('{rowdata.move_method}')
     """
     #print( sqlstring )  #for debug
     my_query( sqlstring )   #1レコード挿入
     i += 1
 
 print(f"move_method_table テーブル {i} レコード追加しました")
+
+
+############# テーブルsuspension_tableの新規作成
+sqlstring = """
+    CREATE TABLE suspension_table (
+        suspensionID INT NOT NULL AUTO_INCREMENT,     -- 出席停止ID
+        userID INT,                                   -- ユーザID
+        suspension_school INT,                        -- 健康、感染、濃厚接触の判断
+        suspension_start DATE,                        -- 出席停止開始日
+        acceptance BOOLEAN,                           -- 受理
+        lastupdate DATETIME DEFAULT NOW(),            -- 最終更新日時
+        delflag BOOLEAN DEFAULT FALSE,                -- 削除フラグ
+        PRIMARY KEY (suspensionID),                    -- 主キーの設定
+        FOREIGN KEY (userID)                          -- 外部キー制約
+            REFERENCES user_table(userID)
+            ON DELETE cascade
+            ON UPDATE cascade
+);
+"""
+my_query( sqlstring )
+
+i=0  #レコード件数カウント
+#ファイルオープン
+df = pd.read_csv("./data/suspension_table.csv",header=0)
+#suspension_table.csvを1行ずつ処理
+for ind,rowdata in df.iterrows():
+    sqlstring = f"""
+        INSERT INTO suspension_table
+        (userID,suspension_school,suspension_start,acceptance)
+        VALUES
+        ({rowdata.userID},{rowdata.suspension_school}, '{rowdata.suspension_start}' , {rowdata.acceptance})
+    """
+    my_query( sqlstring )   #1レコード挿入
+    i += 1
+
+print(f"suspension_table テーブル{i} レコード追加しました")
+
 
 
 ############# テーブルaction_tableの新規作成
@@ -198,16 +183,12 @@ sqlstring = """
         userID INT,                                   -- 個人番号
         action_date_start DATETIME,                   -- 日付と時間
         action_date_end DATETIME,                     -- 日付と時間
-        move_method INT                               -- 移動方法
+        move_method INT,                               -- 移動方法
         lastupdate DATETIME DEFAULT NOW(),            -- 最終更新日時
         delflag BOOLEAN DEFAULT FALSE,                -- 削除フラグ
         PRIMARY KEY (action_tableID),                 -- 主キーの設定
         FOREIGN KEY (userID)                          -- 外部キー制約
             REFERENCES user_table(userID)
-            ON DELETE cascade
-            ON UPDATE cascade
-        FOREIGN KEY (move_method)                          -- 外部キー制約
-            REFERENCES move_method_table(move_method_tableID)
             ON DELETE cascade
             ON UPDATE cascade
 );

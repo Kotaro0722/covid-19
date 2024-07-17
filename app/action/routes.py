@@ -19,9 +19,19 @@ dsn = {
 
 @action.route("/action",methods=["POST"])
 def action():
-    return render_template( "action_input.html",
-         
-    )
+    dbcon,cur=my_open(**dsn)
+    
+    sqlstring=f"""
+        SELECT *
+        FROM move_method_table
+    """
+    my_query(sqlstring,cur)
+    recset=pd.DataFrame(cur.fetchall())
+    print(recset["move_method"])
+    
+    my_close(dbcon,cur)
+    return render_template("action_input.html",data=recset.to_dict(orient="records"))
+
 @action_config.route("/action_input", methods=["POST"])
 def action_input():
     dbcon,cur = my_open( **dsn )

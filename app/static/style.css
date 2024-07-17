@@ -64,7 +64,7 @@ td {
 }
 
 .login-form label,
-#action-input {
+#action-input label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: bold;
@@ -72,7 +72,7 @@ td {
 
 .login-form input,
 select,
-#action-input {
+#action-input input {
   width: calc(100% - 18px);
   padding: 0.5rem;
   margin-bottom: 1rem;
@@ -81,7 +81,7 @@ select,
 }
 
 .login-form button,
-#action-input {
+#action-input button {
   width: 100%;
   padding: 0.75rem;
   margin-top: 30px;
@@ -94,7 +94,7 @@ select,
 }
 
 .login-form button:hover,
-#action-input {
+#action-input button:hover {
   background-color: #0056b3;
 }
 
