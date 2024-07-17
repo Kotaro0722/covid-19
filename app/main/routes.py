@@ -33,7 +33,7 @@ def login_config():
         """
         my_query(sql_string,cur)
         recset=pd.DataFrame(cur.fetchall())
-        print(recset)
+        print(recset.empty)
         
         
         for user in admin_list:
@@ -41,17 +41,26 @@ def login_config():
                 is_admin=True
         if not recset.empty:
             is_user=True
-    
+        
+        my_close(dbcon,cur)
         if is_admin:
-            dbcon,cur=my_open(**dsn)
-            sqlstring_related=f"""
-                SELECT * 
-            """
-            return render_template("main_admin.html")
+            session["username"]=username
+            return redirect(url_for("main.main_admin"))
         elif is_user:
-            return render_template("main_user.html")
+            session["username"]=username
+            return redirect(url_for("main.main_user"))        
+        else:
+            return redirect(url_for("login.login_"))
     else:
         return redirect(url_for("login.login_"))
+    
+@main.route("/main_admin",methods=["POST","GET"])
+def main_admin():
+    if "username" in session:       
+        return render_template("main_admin.html",userName=session["username"])
+    else:
+        return redirect(url_for("login.login_"))
+    
 @main.route("/main_user",methods=["POST","GET"])
 def main_user():
     if "username" in session:
