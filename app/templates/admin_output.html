@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <title>{{title}}</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="../static/style.css" />
+        <style>
+            main {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .infected_highlight {
+                background-color: rgb(236, 55, 55);
+            }
+
+            .close_contact_highlight {
+                background-color: rgb(232, 114, 114);
+            }
+
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>COVID-19状況管理システム</h1>
+        </header>
+        <main>
+            <h2>{{title}}</h2>
+            {{message}}
+            <table border>
+                <!--表題を表示-->
+                <tr>
+                    <th>体調観察表</th>
+                    <th>行動記録表</th>
+                    <th>ユーザーID</th>
+                    <th>ユーザー番号</th>
+                    <th>ユーザー名前</th>
+                    <th>出席停止</th>
+                    <th>最新の体温</th>
+                    <th>最新の体調観察表を記録した日時</th>
+                    <th>ワクチンの接種回数</th>
+                    <th>最終のワクチン接種日時</th>
+                </tr>
+                <!--レコードを1行ずつ表示する-->
+                {% for row_data in table_data.values %}
+                <tr>
+                    <!-- このtd部がボタンを表示している-->
+                    <td>
+                        <!--外見上はボタンだけのフォーム-->
+                        <form action="/admin_condition" method="POST">
+                            <!--レコードを特定するために meiboIDをhidden属性で受け渡す-->
+                            <input type="hidden" name="userID" value="{{row_data[0]}}">
+                            <input type="submit" value="詳細" >
+                        </form>                    
+                    </td>
+                    <td>
+                        <!--外見上はボタンだけのフォーム-->
+                        <form action="/admin_action" method="POST">
+                            <!--レコードを特定するために meiboIDをhidden属性で受け渡す-->
+                            <input type="hidden" name="userID" value="{{row_data[0]}}">
+                            <input type="submit" value="詳細" >
+                        </form>                    
+                    </td>
+                    <!-- カラムの数だけ繰り返し処理 -->
+                    {% for item in row_data %}
+                        <td>{{item}}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+
+            </table> 
+            <script>
+                // 全てのセルを取得
+                const cells = document.querySelectorAll('td');
+        
+                // 各セルをチェックして、特定の値に該当するセルにクラスを追加
+                cells.forEach(cell => {
+                    if (cell.textContent === "感染者") {
+                        cell.classList.add('infected_highlight');
+                    }else if(cell.textContent === "濃厚接触者") {
+                        cell.classList.add('close_contact_highlight');
+                    }
+                });
+            </script>
+        </main>
+        <footer>
+            <p>2024 DB論 第4班 rights reserved.</p>
+        </footer>
+    </body>
+</html>
