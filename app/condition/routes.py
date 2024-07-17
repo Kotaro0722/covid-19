@@ -1,21 +1,24 @@
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, session
 from . import condition
+from . import condition_output
+from . import condition_table
 from ..MyDatabase import my_open, my_query, my_close
 from datetime import datetime, timedelta
+import pandas as pd
 
 dsn = {
     'host': '172.30.0.10',  # ホスト名(IPアドレス)
     'port': '3306',         # MySQLの接続ポート番号
     'user': 'root',         # DBアクセスするためのユーザID
     'password': '1234',     # ユーザIDに対応するパスワード
-    'database': 'covid19'  # オープンするデータベース名
+    'database': 'covid19'   # オープンするデータベース名
 }
 
 @condition.route("/condition_input", methods=["GET", "POST"])
 def condition_input():
     return render_template("condition_input.html")
 
-@condition.route("/condition_output", methods=["POST"])
+@condition_output.route("/condition_output", methods=["POST"])
 def condition_output():
     date = request.form.get('date')
     temperature = request.form.get('temperature')
@@ -28,48 +31,81 @@ def condition_output():
 
     release_date = (datetime.strptime(date, '%Y-%m-%d') + timedelta(days=7)).strftime('%Y-%m-%d')
 
+    dt_now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
     dbcon, cur = my_open(**dsn)
+
+    sql_string = f"""
+        SELECT userID FROM user_table
+        WHERE user_num='{session["username"]}'
+    """
+
+    my_query(sql_string, cur)
+    recset = pd.DataFrame(cur.fetchall())
+    userID = recset["userID"][0]
 
     # 体調観察表詳細テーブルへの挿入
     sql_condition_details = f"""
         INSERT INTO condition_details_table
-            (user_tableID, condition_date, body_temp, lastupdate)
+            (userID, condition_date, body_temp, lastupdate)
         VALUES
-            ('{user_tableID}', '{date}', '{temperature}', NOW())
+            ('{userID}', '{date}', '{temperature}', '{dt_now}')
     """
-    
-    print(sql_condition_details)
+    my_query(sql_condition_details, cur)
+    dbcon.commit()
 
     # 出席停止テーブルへの挿入
     sql_suspension = f"""
-        INSERT INTO suspention_table
-            (suspention_school, suspention_start, suspention_end, lastupdate)
+        INSERT INTO suspension_table
+            (suspension_school, suspension_start, lastupdate)
         VALUES
-            ('{status}', '{date}', '{release_date}', NOW())
+            ('{status}', '{date}', '{dt_now}')
     """
-    
-    print(sql_suspension)
-
-
-    # condition_table への挿入（症状IDのマッピング）
-    for symptom in symptoms:
-        sql_condition_symptom = f"""
-            INSERT INTO condition_table
-                (symptomID, lastupdate)
-            VALUES
-                ('{symptom}', NOW())
-        """
-        my_query(sql_condition_symptom, cur)
-        
-        print(sql_condition_symptom)
-
-
+    my_query(sql_suspension, cur)
     dbcon.commit()
     my_close(dbcon, cur)
+    
+    
+
 
     return render_template("condition_output.html", date=date, temperature=temperature, symptoms=symptoms, status=status, release_date=release_date)
+    
+@condition_table.route("/condition_table_output", methods=["POST"])
+def condition_table():
+    dbcon, cur = my_open(**dsn)
+    #外部キーであるuserIDを取得
+    dbcon,cur = my_open( **dsn )
+    sql_string=f"""
+        SELECT userID FROM user_table
+        WHERE user_num='{session["username"]}'
+    """
+    my_query(sql_string,cur)
+    recset=pd.DataFrame(cur.fetchall())
+    userID=recset["userID"][0]
+    sql_string=f"""
+        SELECT
+            user_table.userID,
+            user_table.user_name,
+            condition_details_table.condition_date,
+            condition_details_table.body_temp,
+            condition_table.symptomID,
+            condition_table.lastupdate
+        FROM condition_table
+        INNER JOIN condition_details_table
+        ON condition_table.condition_details_tableID = condition_details_table.condition_details_tableID
+        INNER JOIN user_table
+        ON condition_details_table.userID = user_table.userID
+        WHERE 
+            condition_details_table.userID = {userID};
+    """
+    my_query(sql_string,cur)
+    recset=pd.DataFrame(cur.fetchall())
+    print(recset)
+    
+    return render_template("condition_table.html",
+                           data=recset.to_dict(orient='records')
+                           )
 
 @condition.route("/main_user", methods=["GET"])
 def main_user():
     return render_template("main_user.html")
-
