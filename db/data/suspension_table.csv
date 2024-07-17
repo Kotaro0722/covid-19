@@ -1,4 +1,3 @@
-suspensionID,suspension_school,suspension_start,acceptance,medical,doctor
-1,1,,,,
-2,2,2024/5/15,TRUE,総合病院,田中太郎
-3,3,2024/5/3,TRUE,,
+suspensionID,userID,suspension_school,suspension_start,acceptance,
+1,1,2,2024/5/15,TRUE,
+2,2,3,2024/5/3,TRUE,,
