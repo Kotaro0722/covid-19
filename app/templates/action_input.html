@@ -1,222 +1,306 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
-
-<head>
-    <meta charset="utf-8">
+  <head>
+    <title>行動記録表 入力</title>
+    <meta charset="utf-8" />
     <style>
-        .action-place {
-            display: flex;
-        }
+      #date-wrapper {
+        display: flex;
+        justify-content: center;
+        gap: 25px;
+      }
+      .date-input {
+        display: flex;
+        flex-direction: column;
+        justify-content: left;
+      }
+      .date-input button {
+        margin-bottom: 0;
+      }
+      .action-place {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
 
-        .button-container {
-            display: flex;
-            justify-content: center;
-            margin: 16px 0px;
-        }
+      .button-container {
+        display: flex;
+        justify-content: space-around;
+        margin: 16px 0px;
+        gap: 20px;
+      }
     </style>
     <script>
-        function checkWaypointSelection(selectId, inputId) {
-            var selectElement = document.getElementById(selectId);
-            var inputElement = document.getElementById(inputId);
+      function checkWaypointSelection(selectId, inputId) {
+        var selectElement = document.getElementById(selectId);
+        var inputElement = document.getElementById(inputId);
 
-            if (selectElement.value === "other") {
-                inputElement.style.display = "inline-block";
-                inputElement.required = true;
-            } else {
-                inputElement.style.display = "none";
-                inputElement.required = false;
-            }
+        if (selectElement.value === "other") {
+          inputElement.style.display = "inline-block";
+          inputElement.required = true;
+        } else {
+          inputElement.style.display = "none";
+          inputElement.required = false;
         }
+      }
 
-        // 新しい同行者名の入力フィールドを追加する関数
-        function addCompanionInput() {
-            var container = document.getElementById("companionInputs");
-            var inputCount = container.children.length + 1;
+      // 新しい同行者名の入力フィールドを追加する関数
+      function addCompanionInput() {
+        var container = document.getElementById("companionInputs");
+        var inputCount = container.children.length + 1;
 
-            // 新しい入力フィールドのHTML要素を作成
-            var newInput = document.createElement("input");
-            newInput.type = "text";
-            newInput.name = "companion_person_" + inputCount; // フォームデータ送信時に使用する名前
-            newInput.placeholder = "同行者名";
+        // 新しい入力フィールドのHTML要素を作成
+        var newInput = document.createElement("input");
+        newInput.type = "text";
+        newInput.name = "companion_person_" + inputCount; // フォームデータ送信時に使用する名前
+        newInput.placeholder = "同行者名";
 
-            // 改行を追加してから新しい入力フィールドをコンテナに追加
-            container.appendChild(document.createElement("br"));
-            container.appendChild(newInput);
+        // 改行を追加してから新しい入力フィールドをコンテナに追加
+        container.appendChild(document.createElement("br"));
+        container.appendChild(newInput);
 
-            // 新しいマスクのラジオボタンを作成
-            var newRadioYes = document.createElement("input");
-            newRadioYes.type = "radio";
-            newRadioYes.id = "yes_mask_" + inputCount;
-            newRadioYes.name = "mask_" + inputCount;
-            newRadioYes.value = "yes";
-            var labelYes = document.createElement("label");
-            labelYes.setAttribute("for", "yes_mask_" + inputCount);
-            labelYes.textContent = "マスクあり";
+        // 新しいマスクのラジオボタンを作成
+        var newRadioYes = document.createElement("input");
+        newRadioYes.type = "radio";
+        newRadioYes.id = "yes_mask_" + inputCount;
+        newRadioYes.name = "mask_" + inputCount;
+        newRadioYes.value = "yes";
+        var labelYes = document.createElement("label");
+        labelYes.setAttribute("for", "yes_mask_" + inputCount);
+        labelYes.textContent = "マスクあり";
 
-            var newRadioNo = document.createElement("input");
-            newRadioNo.type = "radio";
-            newRadioNo.id = "no_mask_" + inputCount;
-            newRadioNo.name = "mask_" + inputCount;
-            newRadioNo.value = "no";
-            var labelNo = document.createElement("label");
-            labelNo.setAttribute("for", "no_mask_" + inputCount);
-            labelNo.textContent = "マスクなし";
+        var newRadioNo = document.createElement("input");
+        newRadioNo.type = "radio";
+        newRadioNo.id = "no_mask_" + inputCount;
+        newRadioNo.name = "mask_" + inputCount;
+        newRadioNo.value = "no";
+        var labelNo = document.createElement("label");
+        labelNo.setAttribute("for", "no_mask_" + inputCount);
+        labelNo.textContent = "マスクなし";
 
-            // 改行を追加してから新しい入力フィールドとラジオボタンをコンテナに追加
-            container.appendChild(document.createElement("br"));
-            container.appendChild(newInput);
-            container.appendChild(newRadioYes);
-            container.appendChild(labelYes);
-            container.appendChild(newRadioNo);
-            container.appendChild(labelNo);
-        }
+        // 改行を追加してから新しい入力フィールドとラジオボタンをコンテナに追加
+        container.appendChild(document.createElement("br"));
+        container.appendChild(newInput);
+        container.appendChild(newRadioYes);
+        container.appendChild(labelYes);
+        container.appendChild(newRadioNo);
+        container.appendChild(labelNo);
+      }
     </script>
+    <link rel="stylesheet" href="../static/style.css" />
+  </head>
 
-
-    <link rel="stylesheet" href="../static/style.css">
-</head>
-
-<body>
+  <body>
     <header>
-        <h1>COVID-19状況管理システム</h1>
+      <h1>COVID-19状況管理システム</h1>
     </header>
     <h2>行動記録の入力</h2>
     <form action="/action_input" method="POST">
-        開始日時<input type="datetime-local" name="start_date_time"><br>
-        終了日時<input type="datetime-local" name="end_date_time"><br>
-        移動方法<input type="text" name="method"><br>
-        <div class="action-place">
-            <div>
-                出発地<select id="departure_select" name="place_of_departure1"
-                    onchange="checkWaypointSelection('departure_select', 'departure_input')">
-                    <option value="1">茅野駅</option>
-                    <option value="2">大学</option>
-                    <option value="3">ファミレス</option>
-                    <option value="4">自宅</option>
-                    <option value="5">コンビニ</option>
-                    <option value="other">その他</option>
-                </select></div>
-            <div>
-                出発地の混み具合<select name="departure_crowd">
-                    <option value="1">1 - 空いている</option>
-                    <option value="2">2 - 少し混んでいる</option>
-                    <option value="3">3 - 普通</option>
-                    <option value="4">4 - 混んでいる</option>
-                    <option value="5">5 - 非常に混んでいる</option>
-                </select>
-            </div>
+      <div id="date-wrapper">
+        <div class="date-input">
+          開始日時<input
+            type="datetime-local"
+            name="start_date_time"
+            required
+          />
         </div>
-        <input type="text" id="departure_input" name="place_of_departure2" style="display: none;"
-            placeholder="出発地点を入力してください">
-        <div class="action-place">
-            <div>
-                中継地点1<select id="waypoint_select1" name="waypoint1"
-                    onchange="checkWaypointSelection('waypoint_select1', 'waypoint_input1')">
-                    <option value="1">茅野駅</option>
-                    <option value="2">大学</option>
-                    <option value="3">ファミレス</option>
-                    <option value="4">自宅</option>
-                    <option value="5">コンビニ</option>
-                    <option value="other">その他</option>
-                    <option value="no">なし</option>
-                </select></div>
-            <div>
-                <input type="text" id="waypoint_input1" name="waypoint1_2" style="display: none;"
-                    placeholder="その他の中継地点を入力してください">
-                中継地点1の混み具合<select name="waypoint1_crowd">
-                    <option value="1">1 - 空いている</option>
-                    <option value="2">2 - 少し混んでいる</option>
-                    <option value="3">3 - 普通</option>
-                    <option value="4">4 - 混んでいる</option>
-                    <option value="5">5 - 非常に混んでいる</option>
-                    <option value="6">6 - なし</option>
-                </select>
-            </div>
+        <div class="date-input">
+          終了日時<input type="datetime-local" name="end_date_time" required />
         </div>
-        <div class="action-place">
-            <div>
-                中継地点2<select id="waypoint_select2" name="waypoint2"
-                    onchange="checkWaypointSelection('waypoint_select2', 'waypoint_input2')">
-                    <option value="1">茅野駅</option>
-                    <option value="2">大学</option>
-                    <option value="3">ファミレス</option>
-                    <option value="4">自宅</option>
-                    <option value="5">コンビニ</option>
-                    <option value="other">その他</option>
-                    <option value="no">なし</option>
-                </select></div>
-            <div>
-                <input type="text" id="waypoint_input2" name="waypoint2_2" style="display: none;"
-                    placeholder="その他の中継地点を入力してください">
-                中継地点2の混み具合<select name="waypoint2_crowd">
-                    <option value="1">1 - 空いている</option>
-                    <option value="2">2 - 少し混んでいる</option>
-                    <option value="3">3 - 普通</option>
-                    <option value="4">4 - 混んでいる</option>
-                    <option value="5">5 - 非常に混んでいる</option>
-                    <option value="6">6 - なし</option>
-                </select>
-            </div>
+      </div>
+      移動方法<input type="text" name="method" required />
+      <div class="action-place">
+        <div>
+          出発地<select
+            id="departure_select"
+            name="place_of_departure1"
+            onchange="checkWaypointSelection('departure_select', 'departure_input')"
+            required
+          >
+            <option value="">選択してください</option>
+            <option value="1">茅野駅</option>
+            <option value="2">大学</option>
+            <option value="3">ファミレス</option>
+            <option value="4">自宅</option>
+            <option value="5">コンビニ</option>
+            <option value="other">その他</option>
+          </select>
         </div>
-        <div class="action-place">
-            <div>
-                中継地点3<select id="waypoint_select3" name="waypoint3"
-                    onchange="checkWaypointSelection('waypoint_select3', 'waypoint_input3')">
-                    <option value="1">茅野駅</option>
-                    <option value="2">大学</option>
-                    <option value="3">ファミレス</option>
-                    <option value="4">自宅</option>
-                    <option value="5">コンビニ</option>
-                    <option value="other">その他</option>
-                    <option value="no">なし</option>
-                </select></div>
-            <div>
-                <input type="text" id="waypoint_input3" name="waypoint3_2" style="display: none;"
-                    placeholder="その他の中継地点を入力してください">
-                中継地点3の混み具合<select name="waypoint3_crowd">
-                    <option value="1">1 - 空いている</option>
-                    <option value="2">2 - 少し混んでいる</option>
-                    <option value="3">3 - 普通</option>
-                    <option value="4">4 - 混んでいる</option>
-                    <option value="5">5 - 非常に混んでいる</option>
-                    <option value="6">6 - なし</option>
-                </select>
-            </div>
+        <div>
+          出発地の混み具合<select name="departure_crowd" required>
+            <option value="">選択してください</option>
+            <option value="1">1 - 空いている</option>
+            <option value="2">2 - 少し混んでいる</option>
+            <option value="3">3 - 普通</option>
+            <option value="4">4 - 混んでいる</option>
+            <option value="5">5 - 非常に混んでいる</option>
+          </select>
         </div>
-        <div class="action-place">
-            <div>
-                到着地<select id="arrival_select" name="place_of_arrival1"
-                    onchange="checkWaypointSelection('arrival_select', 'arrival_input')">
-                    <option value="1">茅野駅</option>
-                    <option value="2">大学</option>
-                    <option value="3">ファミレス</option>
-                    <option value="4">自宅</option>
-                    <option value="5">コンビニ</option>
-                    <option value="other">その他</option>
-                </select></div>
-            <div><input type="text" id="arrival_input" name="place_of_arrival2" style="display: none;"
-                    placeholder="その他の到着地点を入力してください">
-                到着地の混み具合<select name="arrival_crowd">
-                    <option value="1">1 - 空いている</option>
-                    <option value="2">2 - 少し混んでいる</option>
-                    <option value="3">3 - 普通</option>
-                    <option value="4">4 - 混んでいる</option>
-                    <option value="5">5 - 非常に混んでいる</option>
-                </select> </div>
+      </div>
+      <input
+        type="text"
+        id="departure_input"
+        name="place_of_departure2"
+        style="display: none"
+        placeholder="出発地点を入力してください"
+      />
+      <div class="action-place">
+        <div>
+          中継地点1<select
+            id="waypoint_select1"
+            name="waypoint1"
+            onchange="checkWaypointSelection('waypoint_select1', 'waypoint_input1')"
+          >
+            <option value="">選択してください</option>
+            <option value="1">茅野駅</option>
+            <option value="2">大学</option>
+            <option value="3">ファミレス</option>
+            <option value="4">自宅</option>
+            <option value="5">コンビニ</option>
+            <option value="other">その他</option>
+            <option value="no">なし</option>
+          </select>
         </div>
-        <p>同行者名入力フォーム</p>
-        <button type="button" onclick="addCompanionInput()">同行者名を入力するテキストボックスを追加</button>
-        <div id="companionInputs">
-            <!-- 動的に追加される同行者名入力フィールドとマスクのラジオボタンのコンテナ -->
+        <div>
+          <input
+            type="text"
+            id="waypoint_input1"
+            name="waypoint1_2"
+            style="display: none"
+            placeholder="その他の中継地点を入力してください"
+          />
+          中継地点1の混み具合<select name="waypoint1_crowd">
+            <option value="">選択してください</option>
+            <option value="1">1 - 空いている</option>
+            <option value="2">2 - 少し混んでいる</option>
+            <option value="3">3 - 普通</option>
+            <option value="4">4 - 混んでいる</option>
+            <option value="5">5 - 非常に混んでいる</option>
+            <option value="6">6 - なし</option>
+          </select>
         </div>
-        <div class="button-container">
-            <input type="submit" value="登録">
-            <input type="reset" value="リセット">
+      </div>
+      <div class="action-place">
+        <div>
+          中継地点2<select
+            id="waypoint_select2"
+            name="waypoint2"
+            onchange="checkWaypointSelection('waypoint_select2', 'waypoint_input2')"
+          >
+            <option value="">選択してください</option>
+            <option value="1">茅野駅</option>
+            <option value="2">大学</option>
+            <option value="3">ファミレス</option>
+            <option value="4">自宅</option>
+            <option value="5">コンビニ</option>
+            <option value="other">その他</option>
+            <option value="no">なし</option>
+          </select>
         </div>
+        <div>
+          <input
+            type="text"
+            id="waypoint_input2"
+            name="waypoint2_2"
+            style="display: none"
+            placeholder="その他の中継地点を入力してください"
+          />
+          中継地点2の混み具合<select name="waypoint2_crowd">
+            <option value="">選択してください</option>
+            <option value="1">1 - 空いている</option>
+            <option value="2">2 - 少し混んでいる</option>
+            <option value="3">3 - 普通</option>
+            <option value="4">4 - 混んでいる</option>
+            <option value="5">5 - 非常に混んでいる</option>
+            <option value="6">6 - なし</option>
+          </select>
+        </div>
+      </div>
+      <div class="action-place">
+        <div>
+          中継地点3<select
+            id="waypoint_select3"
+            name="waypoint3"
+            onchange="checkWaypointSelection('waypoint_select3', 'waypoint_input3')"
+          >
+            <option value="">選択してください</option>
+            <option value="1">茅野駅</option>
+            <option value="2">大学</option>
+            <option value="3">ファミレス</option>
+            <option value="4">自宅</option>
+            <option value="5">コンビニ</option>
+            <option value="other">その他</option>
+            <option value="no">なし</option>
+          </select>
+        </div>
+        <div>
+          <input
+            type="text"
+            id="waypoint_input3"
+            name="waypoint3_2"
+            style="display: none"
+            placeholder="その他の中継地点を入力してください"
+          />
+          中継地点3の混み具合<select name="waypoint3_crowd">
+            <option value="">選択してください</option>
+            <option value="1">1 - 空いている</option>
+            <option value="2">2 - 少し混んでいる</option>
+            <option value="3">3 - 普通</option>
+            <option value="4">4 - 混んでいる</option>
+            <option value="5">5 - 非常に混んでいる</option>
+            <option value="6">6 - なし</option>
+          </select>
+        </div>
+      </div>
+      <div class="action-place">
+        <div>
+          到着地<select
+            id="arrival_select"
+            name="place_of_arrival1"
+            onchange="checkWaypointSelection('arrival_select', 'arrival_input')"
+            required
+          >
+            <option value="">選択してください</option>
+            <option value="1">茅野駅</option>
+            <option value="2">大学</option>
+            <option value="3">ファミレス</option>
+            <option value="4">自宅</option>
+            <option value="5">コンビニ</option>
+            <option value="other">その他</option>
+          </select>
+        </div>
+        <div>
+          <input
+            type="text"
+            id="arrival_input"
+            name="place_of_arrival2"
+            style="display: none"
+            placeholder="その他の到着地点を入力してください"
+            required
+          />
+          到着地の混み具合<select name="arrival_crowd">
+            <option value="">選択してください</option>
+            <option value="1">1 - 空いている</option>
+            <option value="2">2 - 少し混んでいる</option>
+            <option value="3">3 - 普通</option>
+            <option value="4">4 - 混んでいる</option>
+            <option value="5">5 - 非常に混んでいる</option>
+          </select>
+        </div>
+      </div>
+      <p>同行者名入力フォーム</p>
+      <button type="button" onclick="addCompanionInput()">
+        同行者名を入力するテキストボックスを追加
+      </button>
+      <div id="companionInputs">
+        <!-- 動的に追加される同行者名入力フィールドとマスクのラジオボタンのコンテナ -->
+      </div>
+      <div class="button-container">
+        <input type="submit" value="登録" />
+        <input type="reset" value="リセット" />
+      </div>
     </form>
     <footer>
-        <p>2024 DB論 第4班 rights reserved.</p>
+      <p>2024 DB論 第4班 rights reserved.</p>
     </footer>
-</body>
-
+  </body>
 </html>
