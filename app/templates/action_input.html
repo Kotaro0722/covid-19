@@ -9,6 +9,11 @@
         justify-content: center;
         gap: 25px;
       }
+      #move_method_wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        margin-bottom: 8px;
+      }
       .date-input {
         display: flex;
         flex-direction: column;
@@ -21,12 +26,26 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
       }
-
       .button-container {
         display: flex;
         justify-content: space-around;
         margin: 16px 0px;
         gap: 20px;
+      }
+      .companion-button {
+        margin: 0px 0px 20px 0px;
+      }
+      .companion-container {
+        display: grid;
+        grid-template-columns: 250px 1fr 1fr;
+        padding: 0px 100px;
+        gap: 10px;
+      }
+      .companion-label {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
       }
     </style>
     <script>
@@ -45,45 +64,68 @@
 
       // 新しい同行者名の入力フィールドを追加する関数
       function addCompanionInput() {
-        var container = document.getElementById("companionInputs");
-        var inputCount = container.children.length + 1;
+        const wapper = document.getElementById("companion-wrapper");
+        const container = document.createElement("div");
+        container.className = "companion-container";
+        const inputCount = container.children.length + 1;
 
         // 新しい入力フィールドのHTML要素を作成
-        var newInput = document.createElement("input");
+        const newInput = document.createElement("input");
         newInput.type = "text";
         newInput.name = "companion_person_" + inputCount; // フォームデータ送信時に使用する名前
         newInput.placeholder = "同行者名";
 
         // 改行を追加してから新しい入力フィールドをコンテナに追加
-        container.appendChild(document.createElement("br"));
         container.appendChild(newInput);
 
         // 新しいマスクのラジオボタンを作成
-        var newRadioYes = document.createElement("input");
+        const newRadioYes = document.createElement("input");
         newRadioYes.type = "radio";
         newRadioYes.id = "yes_mask_" + inputCount;
         newRadioYes.name = "mask_" + inputCount;
         newRadioYes.value = "yes";
-        var labelYes = document.createElement("label");
+        newRadioYes.required;
+        const labelYes = document.createElement("label");
         labelYes.setAttribute("for", "yes_mask_" + inputCount);
         labelYes.textContent = "マスクあり";
+        labelYes.className = "companion-label";
+        labelYes.appendChild(newRadioYes);
 
-        var newRadioNo = document.createElement("input");
+        const newRadioNo = document.createElement("input");
         newRadioNo.type = "radio";
         newRadioNo.id = "no_mask_" + inputCount;
         newRadioNo.name = "mask_" + inputCount;
         newRadioNo.value = "no";
-        var labelNo = document.createElement("label");
+        newRadioNo.required;
+        const labelNo = document.createElement("label");
         labelNo.setAttribute("for", "no_mask_" + inputCount);
         labelNo.textContent = "マスクなし";
+        labelNo.className = "companion-label";
+        labelNo.appendChild(newRadioNo);
 
         // 改行を追加してから新しい入力フィールドとラジオボタンをコンテナに追加
-        container.appendChild(document.createElement("br"));
         container.appendChild(newInput);
-        container.appendChild(newRadioYes);
         container.appendChild(labelYes);
-        container.appendChild(newRadioNo);
         container.appendChild(labelNo);
+
+        wapper.appendChild(container);
+
+        const deleteButton = document.getElementById("companion-delete-button");
+        deleteButton.style.display = "block";
+      }
+
+      // 同行者入力フォームを削除する関数
+      function deleteCompanionInput() {
+        const companionWrapper = document.getElementById("companion-wrapper");
+        const deleteButton = document.getElementById("companion-delete-button");
+        console.log("delete");
+        if (companionWrapper && companionWrapper.lastElementChild) {
+          // 最後の子要素を削除
+          companionWrapper.removeChild(companionWrapper.lastElementChild);
+        }
+        if (companionWrapper.children.length == 0) {
+          deleteButton.style.display = "none";
+        }
       }
     </script>
     <link rel="stylesheet" href="../static/style.css" />
@@ -94,22 +136,50 @@
       <h1>COVID-19状況管理システム</h1>
     </header>
     <h2>行動記録の入力</h2>
-    <form action="/action_input" method="POST">
+    <form action="/action_input" method="POST" id="action-input">
       <div id="date-wrapper">
-        <div class="date-input">
+        <label for="start_date_time" class="date-input">
           開始日時<input
             type="datetime-local"
             name="start_date_time"
             required
           />
-        </div>
-        <div class="date-input">
+        </label>
+        <label for="end_date_time" class="date-input">
           終了日時<input type="datetime-local" name="end_date_time" required />
+        </label>
+      </div>
+
+      <div id="move_method_wrapper">
+        <label for="move_method">
+          移動方法
+          <select
+            name="move_method"
+            id="move_method"
+            required
+            onchange="checkWaypointSelection('move_method','new-method')"
+          >
+            {% for row in data %}
+            <option value="{{row.move_method_tableID}}">
+              {{row.move_method}}
+            </option>
+            {% endfor %}
+            <option value="other">その他</option>
+          </select>
+        </label>
+        <div style="display: flex; align-items: center">
+          <input
+            type="text"
+            id="new-method"
+            style="display: none; height: 16px; margin: 0px"
+            placeholder="移動方法を入力してください"
+            name="new-method"
+          />
         </div>
       </div>
-      移動方法<input type="text" name="method" required />
+
       <div class="action-place">
-        <div>
+        <label>
           出発地<select
             id="departure_select"
             name="place_of_departure1"
@@ -124,8 +194,8 @@
             <option value="5">コンビニ</option>
             <option value="other">その他</option>
           </select>
-        </div>
-        <div>
+        </label>
+        <label>
           出発地の混み具合<select name="departure_crowd" required>
             <option value="">選択してください</option>
             <option value="1">1 - 空いている</option>
@@ -134,7 +204,7 @@
             <option value="4">4 - 混んでいる</option>
             <option value="5">5 - 非常に混んでいる</option>
           </select>
-        </div>
+        </label>
       </div>
       <input
         type="text"
@@ -144,7 +214,7 @@
         placeholder="出発地点を入力してください"
       />
       <div class="action-place">
-        <div>
+        <label>
           中継地点1<select
             id="waypoint_select1"
             name="waypoint1"
@@ -159,8 +229,8 @@
             <option value="other">その他</option>
             <option value="no">なし</option>
           </select>
-        </div>
-        <div>
+        </label>
+        <label>
           <input
             type="text"
             id="waypoint_input1"
@@ -177,10 +247,10 @@
             <option value="5">5 - 非常に混んでいる</option>
             <option value="6">6 - なし</option>
           </select>
-        </div>
+        </label>
       </div>
       <div class="action-place">
-        <div>
+        <label>
           中継地点2<select
             id="waypoint_select2"
             name="waypoint2"
@@ -195,8 +265,8 @@
             <option value="other">その他</option>
             <option value="no">なし</option>
           </select>
-        </div>
-        <div>
+        </label>
+        <label>
           <input
             type="text"
             id="waypoint_input2"
@@ -213,10 +283,10 @@
             <option value="5">5 - 非常に混んでいる</option>
             <option value="6">6 - なし</option>
           </select>
-        </div>
+        </label>
       </div>
       <div class="action-place">
-        <div>
+        <label>
           中継地点3<select
             id="waypoint_select3"
             name="waypoint3"
@@ -231,8 +301,8 @@
             <option value="other">その他</option>
             <option value="no">なし</option>
           </select>
-        </div>
-        <div>
+        </label>
+        <label>
           <input
             type="text"
             id="waypoint_input3"
@@ -249,10 +319,10 @@
             <option value="5">5 - 非常に混んでいる</option>
             <option value="6">6 - なし</option>
           </select>
-        </div>
+        </label>
       </div>
       <div class="action-place">
-        <div>
+        <label>
           到着地<select
             id="arrival_select"
             name="place_of_arrival1"
@@ -267,8 +337,8 @@
             <option value="5">コンビニ</option>
             <option value="other">その他</option>
           </select>
-        </div>
-        <div>
+        </label>
+        <label>
           <input
             type="text"
             id="arrival_input"
@@ -285,15 +355,28 @@
             <option value="4">4 - 混んでいる</option>
             <option value="5">5 - 非常に混んでいる</option>
           </select>
-        </div>
+        </label>
       </div>
       <p>同行者名入力フォーム</p>
-      <button type="button" onclick="addCompanionInput()">
-        同行者名を入力するテキストボックスを追加
+      <button
+        type="button"
+        onclick="addCompanionInput()"
+        class="companion-button"
+      >
+        同行者を入力するテキストボックスを追加
       </button>
-      <div id="companionInputs">
+      <div id="companion-wrapper">
         <!-- 動的に追加される同行者名入力フィールドとマスクのラジオボタンのコンテナ -->
       </div>
+      <button
+        type="button"
+        id="companion-delete-button"
+        onclick="deleteCompanionInput()"
+        class="companion-button"
+        style="display: none"
+      >
+        同行者を入力するテキストボックスを削除
+      </button>
       <div class="button-container">
         <input type="submit" value="登録" />
         <input type="reset" value="リセット" />
