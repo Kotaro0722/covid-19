@@ -19,18 +19,30 @@ dsn = {
 
 @action.route("/action",methods=["POST"])
 def action():
-    dbcon,cur=my_open(**dsn)
-    
-    sqlstring=f"""
-        SELECT *
-        FROM move_method_table
-    """
-    my_query(sqlstring,cur)
-    recset=pd.DataFrame(cur.fetchall())
-    print(recset["move_method"])
-    
-    my_close(dbcon,cur)
-    return render_template("action_input.html",data=recset.to_dict(orient="records"))
+    if "username" in session:
+        dbcon,cur=my_open(**dsn)
+        
+        sqlstring=f"""
+            SELECT *
+            FROM move_method_table
+        """
+        my_query(sqlstring,cur)
+        recset=pd.DataFrame(cur.fetchall())
+        selectData=recset
+        
+        sql_string=f"""
+            SELECT user_name FROM user_table
+            WHERE user_num='{session["username"]}'
+            ;
+        """
+        my_query(sql_string,cur)
+        recset=pd.DataFrame(cur.fetchall())
+        user_name=recset["user_name"][0]
+        
+        my_close(dbcon,cur)
+        return render_template("action_input.html",data=selectData.to_dict(orient="records"),userName=user_name)
+    else:
+        return redirect(url_for("login.login_"))
 
 @action_config.route("/action_input", methods=["POST"])
 def action_input():
@@ -324,101 +336,142 @@ def action_input():
         """
     my_query(sqlstring,cur)
     dbcon.commit()
-    my_close( dbcon,cur )  
+    
+    sql_string=f"""
+            SELECT user_name FROM user_table
+            WHERE user_num='{session["username"]}'
+            ;
+        """
+    my_query(sql_string,cur)
+    recset=pd.DataFrame(cur.fetchall())
+    user_name=recset["user_name"][0]
+    
+    my_close( dbcon,cur )
     return render_template(
-        "result.html"
-        )
+        "result.html",
+        userName=user_name
+    )
 
 @action_config.route("/action_output", methods=["POST"])
 def action_output():
-    #外部キーであるuserIDを取得
-    dbcon,cur = my_open( **dsn )
-    sqlstring=f"""
-        SELECT userID FROM user_table
-        WHERE user_num='{session["username"]}'
-    """
-    my_query(sqlstring,cur)
-    recset=pd.DataFrame(cur.fetchall())
-    userID=recset["userID"][0]
-    #入力されたuserIDのフィールドを表示
-    #入力されたuserIDのactionIDを参照し，インナージョインで表示
-    sql_string=f"""
-        SELECT DISTINCT
-            action_tableID AS actionID,
-            action_date_start AS action_date_start,
-            action_date_end AS action_date_end,
-            lastupdate AS lastupdate
-        FROM action_table
-        WHERE 
-            action_table.userID = {userID};
-    """
+    if "username" in session:
+        #外部キーであるuserIDを取得
+        dbcon,cur = my_open( **dsn )
+        sqlstring=f"""
+            SELECT userID FROM user_table
+            WHERE user_num='{session["username"]}'
+        """
+        my_query(sqlstring,cur)
+        recset=pd.DataFrame(cur.fetchall())
+        userID=recset["userID"][0]
+        #入力されたuserIDのフィールドを表示
+        #入力されたuserIDのactionIDを参照し，インナージョインで表示
+        sql_string=f"""
+            SELECT DISTINCT
+                action_tableID AS actionID,
+                action_date_start AS action_date_start,
+                action_date_end AS action_date_end,
+                lastupdate AS lastupdate
+            FROM action_table
+            WHERE 
+                action_table.userID = {userID};
+        """
 
-    my_query(sql_string,cur)
-    recset=pd.DataFrame(cur.fetchall())
+        my_query(sql_string,cur)
+        recset=pd.DataFrame(cur.fetchall())
+        tableData=recset
+        
+        sql_string=f"""
+            SELECT user_name FROM user_table
+            WHERE user_num='{session["username"]}'
+            ;
+        """
+        my_query(sql_string,cur)
+        recset=pd.DataFrame(cur.fetchall())
+        user_name=recset["user_name"][0]
 
-    
-    # データベース接続を閉じる
-    my_close( dbcon,cur )
-    
-    return render_template( 
-        "action_output.html",
-        data=recset.to_dict(orient='records'),
-        main_link = "/main_user"         
-    )
+        
+        # データベース接続を閉じる
+        my_close( dbcon,cur )
+        
+        return render_template( 
+            "action_output.html",
+            data=tableData.to_dict(orient='records'),
+            userName=user_name,
+            main_link = "/main_user"         
+        )
+    else:
+        return redirect(url_for("login.login_"))
     
 @action_config.route("/action_output_details", methods=["POST"])
 def action_output_details():
-    #外部キーであるuserIDを取得
-    dbcon,cur = my_open( **dsn )
-    sql_string=f"""
-        SELECT userID FROM user_table
-        WHERE user_num='{session["username"]}'
-    """
-    my_query(sql_string,cur)
-    recset=pd.DataFrame(cur.fetchall())
-    userID=recset["userID"][0]
-    #入力されたuserIDのフィールドを表示
-    #フォームからactionIDの受け取り
-    actionID = request.form["actionID"]
-    #入力されたuserIDのactionIDを参照し，インナージョインで表示
-    sql_string=f"""
-        SELECT 
-            action_table.action_tableID AS actionID,
-            action_table.action_date_start AS action_date_start,
-            action_table.action_date_end AS action_date_end,
-            move_method_table.move_method AS move_method,
-            crowd_table.place_type_tableID AS place_type_tableID,
-            crowd_table.crowd_level AS crowd_level,
-            action_table.lastupdate AS lastupdate
-        FROM action_table
-        INNER JOIN 
-            move_method_table ON action_table.action_tableID = move_method_table.action_tableID
-        INNER JOIN 
-            crowd_table ON move_method_table.action_tableID = crowd_table.action_tableID  
-        WHERE 
-            action_table.userID = {userID} AND action_table.action_tableID = {actionID};
-    """
-    my_query(sql_string,cur)
-    recset=pd.DataFrame(cur.fetchall())
+    if "username" in session:
+        #外部キーであるuserIDを取得
+        dbcon,cur = my_open( **dsn )
+        sql_string=f"""
+            SELECT userID FROM user_table
+            WHERE user_num='{session["username"]}'
+        """
+        my_query(sql_string,cur)
+        recset=pd.DataFrame(cur.fetchall())
+        userID=recset["userID"][0]
+        #入力されたuserIDのフィールドを表示
+        #フォームからactionIDの受け取り
+        actionID = request.form["actionID"]
+        #入力されたuserIDのactionIDを参照し，インナージョインで表示
+        sql_string=f"""
+            SELECT 
+                action_table.action_tableID AS actionID,
+                action_table.action_date_start AS action_date_start,
+                action_table.action_date_end AS action_date_end,
+                move_method_table.move_method AS move_method,
+                crowd_table.place_type_tableID AS place_type_tableID,
+                crowd_table.crowd_level AS crowd_level,
+                action_table.lastupdate AS lastupdate
+            FROM action_table
+            INNER JOIN 
+                move_method_table ON action_table.action_tableID = move_method_table.action_tableID
+            INNER JOIN 
+                crowd_table ON move_method_table.action_tableID = crowd_table.action_tableID  
+            WHERE 
+                action_table.userID = {userID} AND action_table.action_tableID = {actionID};
+        """
+        my_query(sql_string,cur)
+        recset=pd.DataFrame(cur.fetchall())
+        tableData=recset
+        
+        sql_string=f"""
+            SELECT user_name FROM user_table
+            WHERE user_num='{session["username"]}'
+            ;
+        """
+        my_query(sql_string,cur)
+        recset=pd.DataFrame(cur.fetchall())
+        user_name=recset["user_name"][0]
 
-    # データベース接続を閉じる
-    my_close( dbcon,cur )
-    
-    #管理者の場合
-    is_admin = False
-    admin_list=[
-            {"username":"admin"},
-        ]
-    
-    for user in admin_list:
-        if user["username"] == session["username"]:
-            is_admin = True
+        # データベース接続を閉じる
+        my_close( dbcon,cur )
+        
+        #管理者の場合
+        is_admin = False
+        admin_list=[
+                {"username":"admin"},
+            ]
+        
+        for user in admin_list:
+            if user["username"] == session["username"]:
+                is_admin = True
 
-    if is_admin:
-        return render_template( "action_output_details.html",
-            data=recset.to_dict(orient='records'),
-            main_link = "/main_admin")
+        if is_admin:
+            return render_template( "action_output_details.html",
+                data=tableData.to_dict(orient='records'),
+                main_link = "/main_admin",
+                userName=user_name
+                )
+        else:
+            return render_template( "action_output_details.html",
+                data=tableData.to_dict(orient='records'),
+                main_link = "/main_user",
+                userName=user_name)
     else:
-        return render_template( "action_output_details.html",
-            data=recset.to_dict(orient='records'),
-            main_link = "/main_user")
+        return redirect(url_for("login.login_"))

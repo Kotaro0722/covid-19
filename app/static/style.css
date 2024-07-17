@@ -46,6 +46,7 @@ footer {
 
 h1 {
   margin-bottom: 1rem;
+  text-align: center;
 }
 
 h2 {
@@ -102,6 +103,16 @@ select,
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+#logout button {
+  width: 130px;
+  padding: 10px;
+  border-radius: 20px;
+  background-color: gray;
+  border-color: black;
+  color: white;
+  cursor: pointer;
 }
 
 #main_admin_main {

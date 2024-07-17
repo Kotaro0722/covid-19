@@ -14,7 +14,18 @@ dsn = {
 @vaccine.route("/vaccine_input",methods=["POST","GET"])
 def vaccine_input():
     if "username" in session:
-        return render_template("vaccine.html")
+        dbcon,cur=my_open(**dsn)
+        
+        sql_string=f"""
+            SELECT user_name FROM user_table
+            WHERE user_num='{session["username"]}'
+            ;
+        """
+        my_query(sql_string,cur)
+        recset=pd.DataFrame(cur.fetchall())
+        user_name=recset["user_name"][0]
+        
+        return render_template("vaccine.html",userName=user_name)
     else:
         return redirect(url_for("login.login_"))
 
