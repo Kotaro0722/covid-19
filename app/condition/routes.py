@@ -70,7 +70,7 @@ def condition_output():
 
     return render_template("condition_output.html", date=date, temperature=temperature, symptoms=symptoms, status=status, release_date=release_date)
     
-@condition_table.route("/condition_table_output", methods=["POST"])
+@condition_table.route("/condition_table", methods=["POST"])
 def condition_table():
     dbcon, cur = my_open(**dsn)
     #外部キーであるuserIDを取得
@@ -103,7 +103,8 @@ def condition_table():
     print(recset)
     
     return render_template("condition_table.html",
-                           data=recset.to_dict(orient='records')
+                           data=recset.to_dict(orient='records'),
+                           main_link = "/main_user"
                            )
 
 @condition.route("/main_user", methods=["GET"])

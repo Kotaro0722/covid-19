@@ -342,7 +342,44 @@ def action_output():
     userID=recset["userID"][0]
     #入力されたuserIDのフィールドを表示
     #入力されたuserIDのactionIDを参照し，インナージョインで表示
-    sqlstring=f"""
+    sql_string=f"""
+        SELECT DISTINCT
+            action_tableID AS actionID,
+            action_date_start AS action_date_start,
+            action_date_end AS action_date_end,
+            lastupdate AS lastupdate
+        FROM action_table
+        WHERE 
+            action_table.userID = {userID};
+    """
+
+    my_query(sql_string,cur)
+    recset=pd.DataFrame(cur.fetchall())
+
+    
+    # データベース接続を閉じる
+    my_close( dbcon,cur )
+    
+    return render_template( "action_output.html",data=recset.to_dict(orient='records')
+         
+    )
+    
+@action_config.route("/action_output_details", methods=["POST"])
+def action_output_details():
+    #外部キーであるuserIDを取得
+    dbcon,cur = my_open( **dsn )
+    sql_string=f"""
+        SELECT userID FROM user_table
+        WHERE user_num='{session["username"]}'
+    """
+    my_query(sql_string,cur)
+    recset=pd.DataFrame(cur.fetchall())
+    userID=recset["userID"][0]
+    #入力されたuserIDのフィールドを表示
+    #フォームからactionIDの受け取り
+    actionID = request.form["actionID"]
+    #入力されたuserIDのactionIDを参照し，インナージョインで表示
+    sql_string=f"""
         SELECT 
             action_table.action_tableID AS actionID,
             action_table.action_date_start AS action_date_start,
@@ -357,16 +394,29 @@ def action_output():
         INNER JOIN 
             crowd_table ON move_method_table.action_tableID = crowd_table.action_tableID  
         WHERE 
-            action_table.userID = {userID};
+            action_table.userID = {userID} AND action_table.action_tableID = {actionID};
     """
     my_query(sqlstring,cur)
     recset=pd.DataFrame(cur.fetchall())
 
-    
     # データベース接続を閉じる
     my_close( dbcon,cur )
     
-    return render_template( "action_output.html",data=recset.to_dict(orient='records')
-         
-    )
+    #管理者の場合
+    is_admin = False
+    admin_list=[
+            {"username":"admin"},
+        ]
     
+    for user in admin_list:
+        if user["username"] == session["username"]:
+            is_admin = True
+
+    if is_admin:
+        return render_template( "action_output_details.html",
+            data=recset.to_dict(orient='records'),
+            main_link = "/main_admin")
+    else:
+        return render_template( "action_output_details.html",
+            data=recset.to_dict(orient='records'),
+            main_link = "/main_user")

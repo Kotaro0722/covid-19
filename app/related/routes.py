@@ -1,7 +1,8 @@
-from flask import Flask,render_template ,request
+from flask import render_template,request,redirect,url_for,session
 from . import related
 from . import related_table
 from . import related_search_table
+from . import admin_condition
 from . import admin_action
 
 from ..MyDatabase import my_open , my_query , my_close
@@ -16,8 +17,12 @@ dsn = {
     'database' : 'covid19' #オープンするデータベース名
 }
 
-@related.route('/related')
+@related.route('/related', methods=["POST"])
 def related():
+    if "username" in session:       
+        return render_template("related_search.html",userName=session["username"])
+    else:
+        return redirect(url_for("login.login_"))
     return render_template('related_search.html',
         title = "関係者リストページ"
     )
@@ -105,6 +110,43 @@ def related_search_table():
         table_data = recset
     )
 
+@admin_condition.route("/admin_condition", methods=["POST"])
+def admin_condition():
+    #外部キーであるuserIDを取得
+    dbcon,cur = my_open( **dsn )
+    # sql_string=f"""
+    #     SELECT userID FROM user_table
+    #     WHERE user_num='{session["username"]}'
+    # """
+    # my_query(sql_string,cur)
+    # recset=pd.DataFrame(cur.fetchall())
+    # userID=recset["userID"][0]
+    userID = request.form["userID"]
+    sql_string=f"""
+        SELECT
+            user_table.userID,
+            user_table.user_name,
+            condition_details_table.condition_date,
+            condition_details_table.body_temp,
+            condition_table.symptomID,
+            condition_table.lastupdate
+        FROM condition_table
+        INNER JOIN condition_details_table
+        ON condition_table.condition_details_tableID = condition_details_table.condition_details_tableID
+        INNER JOIN user_table
+        ON condition_details_table.userID = user_table.userID
+        WHERE 
+            condition_details_table.userID = {userID};
+    """
+    my_query(sql_string,cur)
+    recset=pd.DataFrame(cur.fetchall())
+    #print(recset)
+    
+    return render_template("condition_table.html",
+                           data=recset.to_dict(orient='records'),
+                           main_link = "/main_admin"
+                           )
+
 @admin_action.route("/admin_action",methods=["POST"])
 def admin_action(): 
     #DBオープン    
@@ -119,7 +161,7 @@ def admin_action():
             action_table.action_date_start AS action_date_start,
             action_table.action_date_end AS action_date_end,
             move_method_table.move_method AS move_method,
-            crowd_table.place_type AS place_type,
+            crowd_table.place_type_tableID AS place_type_tableID,
             crowd_table.crowd_level AS crowd_level,
             action_table.lastupdate AS lastupdate
         FROM action_table
@@ -138,6 +180,8 @@ def admin_action():
     # データベース接続を閉じる
     my_close( dbcon,cur )
     
-    return render_template( "action_output.html",data=recset.to_dict(orient='records')
+    return render_template( "action_output.html",
+        data=recset.to_dict(orient='records'),
+        main_link = "/main_admin"
          
     )
