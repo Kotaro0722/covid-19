@@ -19,9 +19,19 @@ dsn = {
 
 @action.route("/action",methods=["POST"])
 def action():
-    return render_template( "action_input.html",
-         
+    dbcon,cur = my_open( **dsn )
+    sqlstring=f"""
+        SELECT *
+        FROM move_method_table
+    """
+    my_query(sqlstring,cur)
+    recset=pd.DataFrame(cur.fetchall())
+    print(recset["move_method"])
+
+    my_close(dbcon,cur)
+    return render_template("action_input.html",data=recset.to_dict(orient="records")
     )
+
 @action_config.route("/action_input", methods=["POST"])
 def action_input():
     dbcon,cur = my_open( **dsn )
@@ -39,7 +49,8 @@ def action_input():
     
     start_date_time = request.form["start_date_time"]
     end_date_time = request.form["end_date_time"]
-    method = request.form["method"]
+    method = request.form["move_method"]
+    new_method=request.form["new-method"]
     place_of_departure1 = request.form["place_of_departure1"]
     place_of_departure2 = request.form["place_of_departure2"]
     departure_crowd = request.form["departure_crowd"]
@@ -72,19 +83,20 @@ def action_input():
             mask = mask_option == "yes"
             companion_data.append((companion_name, mask))
     
-    #action_tableへの挿入
-    sqlstring = f"""
-        INSERT INTO action_table
-            (userID,action_date_start,action_date_end,lastupdate)
-            VALUES
-            ({userID},'{start_date_time}','{end_date_time}','{dt_now}')
-            ;
-        """
-    my_query(sqlstring,cur)
-    dbcon.commit()
+    # #action_tableへの挿入
+    # sqlstring = f"""
+    #     INSERT INTO action_table
+    #         (userID,action_date_start,action_date_end,lastupdate)
+    #         VALUES
+    #         ({userID},'{start_date_time}','{end_date_time}','{dt_now}')
+    #         ;
+    #     """
+    # my_query(sqlstring,cur)
+    # dbcon.commit()
     #最後の挿入したaction_tableのactionIDを取得
     actionID = cur.lastrowid
     # 同行者名をcompanion_tableに挿入
+    sqlstring = ""
     for companion_name, mask  in companion_data:
         sqlstring = f"""
             INSERT INTO companion_table
@@ -95,13 +107,42 @@ def action_input():
     my_query(sqlstring, cur)
     dbcon.commit()
     #move_method_tableへの挿入
-    sqlstring = f"""
-        INSERT INTO move_method_table
-            (action_tableID,move_method,lastupdate)
-            VALUES
-            ({actionID},'{method}','{dt_now}')
-            ;
-        """
+    if method=="other":
+        sqlstring = f"""
+            INSERT INTO move_method_table
+                (move_method,lastupdate)
+                VALUES
+                ('{new_method}','{dt_now}')
+                ;
+            """
+        my_query(sqlstring,cur)
+        dbcon.commit()
+    #action_tableへの挿入
+    methodID=cur.lastrowid
+    if method=="other":
+        sqlstring = f"""
+            INSERT INTO action_table
+                (userID,action_date_start,action_date_end,move_method_tableID,lastupdate)
+                VALUES
+                ({userID},'{start_date_time}','{end_date_time}',{methodID},'{dt_now}')
+                ;
+            """
+    else:
+        sqlstring=f"""
+            INSERT INTO action_table
+                (userID,action_date_start,action_date_end,move_method_tableID,lastupdate)
+                VALUES
+                ({userID},'{start_date_time}','{end_date_time}',{method},'{dt_now}')
+                ;
+            """
+    # #move_method_tableへの挿入
+    # sqlstring = f"""
+    #     INSERT INTO move_method_table
+    #         (action_tableID,move_method,lastupdate)
+    #         VALUES
+    #         ({actionID},'{method}','{dt_now}')
+    #         ;
+    #     """
     my_query(sqlstring,cur)
     dbcon.commit()
     # 出発地の処理
@@ -210,7 +251,7 @@ def action_input():
         sqlstring = f"""
         SELECT place FROM place_table WHERE place_tableID = {waypoint2ID};
         """
-        cur.execute(sqlstring)
+        my_query(sqlstring,cur)
         waypoint2 = cur.fetchone()#[0] 
 
     #crowd_tableの中継地2への挿入
@@ -310,10 +351,10 @@ def action_input():
         """
     my_query(sqlstring,cur)
     dbcon.commit()
+    my_close( dbcon,cur )  
     return render_template(
         "result.html"
         )
-    my_close( dbcon,cur )  
 
 @action_config.route("/action_output", methods=["POST"])
 def action_output():
