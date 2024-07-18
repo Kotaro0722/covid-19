@@ -3,8 +3,49 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>体調観察表入力</title>
+    <title>体調観察表 入力</title>
     <link rel="stylesheet" href="../static/style.css" />
+    <style>
+      main {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+      }
+      #condition-input {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+      }
+      #symptoms-wrapper {
+        display: grid;
+        grid-template-columns: 2fr 1fr 10px 2fr 1fr;
+        gap: 0px 10px;
+      }
+      #symptoms-wrapper label {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .border {
+        width: 0px;
+        border: 1px solid gray;
+      }
+      #submit {
+        width: 90px;
+        padding: 0.75rem;
+        margin-bottom: 30px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 4px;
+        color: #fff;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
     <header>
@@ -15,54 +56,89 @@
       </form>
     </header>
     <main>
-      <h1>体調観察表入力</h1>
-      <form method="POST" action="/condition_output">
-        <label for="date">日付:</label>
-        <input type="date" id="date" name="date" required /><br />
+      <h2>体調観察表の入力</h2>
+      <form method="POST" action="/condition_output" id="condition-input">
+        <label for="date"
+          >日付 <input type="date" id="date" name="date" required /><br />
+        </label>
+        <label for="temperature"
+          >体温 <input type="text" id="temperature" name="temperature" /><br />
+        </label>
+        <div id="symptoms-wrapper">
+          <label>関節、筋肉痛 </label>
+          <input type="checkbox" id="joint_pain" name="symptoms" value="1" />
 
-        <label for="temperature">体温:</label>
-        <input type="text" id="temperature" name="temperature" /><br />
+          <div class="border"></div>
 
-        <label>症状:</label><br />
-        <input type="checkbox" id="joint_pain" name="symptoms" value="1" />
-        <label for="joint_pain">関節、筋肉痛</label><br />
-        <input type="checkbox" id="fatigue" name="symptoms" value="2" />
-        <label for="fatigue">だるさ</label><br />
-        <input type="checkbox" id="headache" name="symptoms" value="3" />
-        <label for="headache">頭痛</label><br />
-        <input type="checkbox" id="sore_throat" name="symptoms" value="4" />
-        <label for="sore_throat">咽頭痛</label><br />
-        <input
-          type="checkbox"
-          id="shortness_of_breath"
-          name="symptoms"
-          value="5"
-        />
-        <label for="shortness_of_breath">息苦しさ</label><br />
-        <input type="checkbox" id="cough_sneeze" name="symptoms" value="6" />
-        <label for="cough_sneeze">咳、くしゃみ</label><br />
-        <input type="checkbox" id="nausea_vomiting" name="symptoms" value="7" />
-        <label for="nausea_vomiting">吐気、嘔吐</label><br />
-        <input
-          type="checkbox"
-          id="stomach_ache_diarrhea"
-          name="symptoms"
-          value="8"
-        />
-        <label for="stomach_ache_diarrhea">腹痛、下痢</label><br />
-        <input type="checkbox" id="taste_disorder" name="symptoms" value="9" />
-        <label for="taste_disorder">味覚障害</label><br />
-        <input type="checkbox" id="smell_disorder" name="symptoms" value="10" />
-        <label for="smell_disorder">嗅覚障害</label><br />
+          <label for="joint_pain">だるさ </label>
+          <input type="checkbox" id="fatigue" name="symptoms" value="2" />
 
-        <label for="status">出席停止:</label>
-        <select id="status" name="status" required>
-          <option value="0">健康</option>
-          <option value="1">濃厚接触者</option>
-          <option value="2">感染者</option></select
-        ><br />
+          <label for="fatigue">頭痛 </label>
+          <input type="checkbox" id="headache" name="symptoms" value="3" />
 
-        <button type="submit">送信</button>
+          <div class="border"></div>
+
+          <label for="headache">咽頭痛 </label>
+          <input type="checkbox" id="sore_throat" name="symptoms" value="4" />
+
+          <label for="sore_throat">息苦しさ </label>
+          <input
+            type="checkbox"
+            id="shortness_of_breath"
+            name="symptoms"
+            value="5"
+          />
+
+          <div class="border"></div>
+
+          <label for="shortness_of_breath">咳、くしゃみ </label>
+          <input type="checkbox" id="cough_sneeze" name="symptoms" value="6" />
+
+          <label for="cough_sneeze">吐気、嘔吐 </label>
+          <input
+            type="checkbox"
+            id="nausea_vomiting"
+            name="symptoms"
+            value="7"
+          />
+
+          <div class="border"></div>
+
+          <label for="nausea_vomiting">腹痛、下痢 </label>
+          <input
+            type="checkbox"
+            id="stomach_ache_diarrhea"
+            name="symptoms"
+            value="8"
+          />
+
+          <label for="stomach_ache_diarrhea">味覚障害 </label>
+          <input
+            type="checkbox"
+            id="taste_disorder"
+            name="symptoms"
+            value="9"
+          />
+
+          <div class="border"></div>
+
+          <label for="taste_disorder">嗅覚障害 </label>
+          <input
+            type="checkbox"
+            id="smell_disorder"
+            name="symptoms"
+            value="10"
+          />
+        </div>
+        <label for="status"
+          >出席停止
+          <select id="status" name="status" required>
+            <option value="0">健康</option>
+            <option value="1">濃厚接触者</option>
+            <option value="2">感染者</option>
+          </select>
+        </label>
+        <button type="submit" id="submit">送信</button>
       </form>
     </main>
     <footer>
