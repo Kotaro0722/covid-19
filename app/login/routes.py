@@ -12,6 +12,7 @@ dsn = {
 
 @login.route("/login")
 def login_():
+    session.pop("username", None)
     return render_template("login.html")    
 
 @login.route("/signup")

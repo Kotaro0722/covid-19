@@ -133,7 +133,11 @@
 
   <body>
     <header>
+      <p>{{userName}}</p>
       <h1>COVID-19状況管理システム</h1>
+      <form action="/logout" method="post" id="logout">
+        <button type="submit">ログアウト</button>
+      </form>
     </header>
     <h2>行動記録の入力</h2>
     <form action="/action_input" method="POST" id="action-input">
@@ -159,6 +163,7 @@
             required
             onchange="checkWaypointSelection('move_method','new-method')"
           >
+            <option value="">選択してください</option>
             {% for row in data %}
             <option value="{{row.move_method_tableID}}">
               {{row.move_method}}
@@ -219,15 +224,15 @@
             id="waypoint_select1"
             name="waypoint1"
             onchange="checkWaypointSelection('waypoint_select1', 'waypoint_input1')"
+            required
           >
-            <option value="">選択してください</option>
+            <option value="no">なし</option>
             <option value="1">茅野駅</option>
             <option value="2">大学</option>
             <option value="3">ファミレス</option>
             <option value="4">自宅</option>
             <option value="5">コンビニ</option>
             <option value="other">その他</option>
-            <option value="no">なし</option>
           </select>
         </label>
         <label>
@@ -238,14 +243,13 @@
             style="display: none"
             placeholder="その他の中継地点を入力してください"
           />
-          中継地点1の混み具合<select name="waypoint1_crowd">
-            <option value="">選択してください</option>
+          中継地点1の混み具合<select name="waypoint1_crowd" required>
+            <option value="6">6 - なし</option>
             <option value="1">1 - 空いている</option>
             <option value="2">2 - 少し混んでいる</option>
             <option value="3">3 - 普通</option>
             <option value="4">4 - 混んでいる</option>
             <option value="5">5 - 非常に混んでいる</option>
-            <option value="6">6 - なし</option>
           </select>
         </label>
       </div>
@@ -255,15 +259,15 @@
             id="waypoint_select2"
             name="waypoint2"
             onchange="checkWaypointSelection('waypoint_select2', 'waypoint_input2')"
+            required
           >
-            <option value="">選択してください</option>
+            <option value="no">なし</option>
             <option value="1">茅野駅</option>
             <option value="2">大学</option>
             <option value="3">ファミレス</option>
             <option value="4">自宅</option>
             <option value="5">コンビニ</option>
             <option value="other">その他</option>
-            <option value="no">なし</option>
           </select>
         </label>
         <label>
@@ -274,14 +278,13 @@
             style="display: none"
             placeholder="その他の中継地点を入力してください"
           />
-          中継地点2の混み具合<select name="waypoint2_crowd">
-            <option value="">選択してください</option>
+          中継地点2の混み具合<select name="waypoint2_crowd" required>
+            <option value="6">6 - なし</option>
             <option value="1">1 - 空いている</option>
             <option value="2">2 - 少し混んでいる</option>
             <option value="3">3 - 普通</option>
             <option value="4">4 - 混んでいる</option>
             <option value="5">5 - 非常に混んでいる</option>
-            <option value="6">6 - なし</option>
           </select>
         </label>
       </div>
@@ -291,15 +294,15 @@
             id="waypoint_select3"
             name="waypoint3"
             onchange="checkWaypointSelection('waypoint_select3', 'waypoint_input3')"
+            required
           >
-            <option value="">選択してください</option>
+            <option value="no">なし</option>
             <option value="1">茅野駅</option>
             <option value="2">大学</option>
             <option value="3">ファミレス</option>
             <option value="4">自宅</option>
             <option value="5">コンビニ</option>
             <option value="other">その他</option>
-            <option value="no">なし</option>
           </select>
         </label>
         <label>
@@ -310,14 +313,13 @@
             style="display: none"
             placeholder="その他の中継地点を入力してください"
           />
-          中継地点3の混み具合<select name="waypoint3_crowd">
-            <option value="">選択してください</option>
+          中継地点3の混み具合<select name="waypoint3_crowd" required>
+            <option value="6">6 - なし</option>
             <option value="1">1 - 空いている</option>
             <option value="2">2 - 少し混んでいる</option>
             <option value="3">3 - 普通</option>
             <option value="4">4 - 混んでいる</option>
             <option value="5">5 - 非常に混んでいる</option>
-            <option value="6">6 - なし</option>
           </select>
         </label>
       </div>
@@ -347,7 +349,7 @@
             placeholder="その他の到着地点を入力してください"
             required
           />
-          到着地の混み具合<select name="arrival_crowd">
+          到着地の混み具合<select name="arrival_crowd" required>
             <option value="">選択してください</option>
             <option value="1">1 - 空いている</option>
             <option value="2">2 - 少し混んでいる</option>
@@ -381,6 +383,9 @@
         <input type="submit" value="登録" />
         <input type="reset" value="リセット" />
       </div>
+    </form>
+    <form action="{{ main_link }}" method="post" class="to-main">
+      <button type="submit">メイン画面に戻る</button>
     </form>
     <footer>
       <p>2024 DB論 第4班 rights reserved.</p>

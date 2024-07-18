@@ -1,65 +1,68 @@
 <!-- ex0402-1.html -->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
-    <head>
-        <title>{{title}}</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="../static/style.css" />
-        <style>
-            main {
-                flex-direction: column;
-            }
+  <head>
+    <title>{{title}}</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../static/style.css" />
+    <style>
+      main {
+        flex-direction: column;
+      }
 
-            button {
-                width: 100%;
-                padding: 0.75rem;
-                margin-top: 30px;
-                margin-left: 5px;
-                margin-right: 5px;
-                background-color: #007bff;
-                border: none;
-                border-radius: 4px;
-                color: #fff;
-                font-size: 1rem;
-                cursor: pointer;
-            }
+      button {
+        width: 100%;
+        padding: 0.75rem;
+        margin-top: 30px;
+        margin-left: 5px;
+        margin-right: 5px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 4px;
+        color: #fff;
+        font-size: 1rem;
+        cursor: pointer;
+      }
 
-            button:hover {
-                background-color: #0056b3;
-            }
+      button:hover {
+        background-color: #0056b3;
+      }
 
-            .related_search_button {
-                display: flex;
-                flex-direction: row;
-            }
+      .related_search_button {
+        display: flex;
+        flex-direction: row;
+      }
 
-            .related_link {
-                margin-top: 50px;
-            }
-
-        </style>
-    </head>
-    <body>
-        <header>
-            <h1>COVID-19状況管理システム</h1>
-        </header>
-        <main>
-            <h2>{{title}}</h2>
-            <form action="/related_search_table" method="POST">
-                名前or学籍番号
-                <input type="text" name="name_userNum"><br>
-                <div class="related_search_button">
-                    <button type="submit">検索</button>
-                    <button type="reset">リセット</button>
-                </div>
-            </form>
-            <div class="related_link">
-                <a href="/related_table">一覧表示</a>
-            </div>
-        </main>
-        <footer>
-            <p>2024 DB論 第4班 rights reserved.</p>
-        </footer>
-    </body>
+      .related_link {
+        margin-top: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <p>{{userName}}</p>
+      <h1>COVID-19状況管理システム</h1>
+      <form action="/logout" method="post" id="logout">
+        <button type="submit" style="margin-top: 0px">ログアウト</button>
+      </form>
+    </header>
+    <main>
+      <h2>{{title}}</h2>
+      <form action="/related_search_table" method="POST">
+        名前or学籍番号
+        <input type="text" name="name_userNum" /><br />
+        <div class="related_search_button">
+          <button type="submit">検索</button>
+          <button type="reset">リセット</button>
+        </div>
+      </form>
+      <div class="related_link">
+        <a href="/related_table">一覧表示</a>
+      </div>
+    </main>
+    <footer>
+      <p>2024 DB論 第4班 rights reserved.</p>
+    </footer>
+  </body>
 </html>

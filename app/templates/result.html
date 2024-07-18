@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>入力が完了しました</title>
     <link rel="stylesheet" href="../static/style.css" />
     <style>
       main {
@@ -16,7 +16,11 @@
   </head>
   <body>
     <header>
+      <p>{{userName}}</p>
       <h1>COVID-19状況管理システム</h1>
+      <form action="/logout" method="post" id="logout">
+        <button type="submit">ログアウト</button>
+      </form>
     </header>
 
     <main>

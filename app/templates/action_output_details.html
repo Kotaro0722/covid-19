@@ -1,74 +1,61 @@
 <!DOCTYPE html>
 <html lang="ja">
-
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>行動記録表</title>
-    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="../static/style.css" />
     <style>
-        main {
-            width: 100%;
-            justify-content: center;
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        form {
-            display: flex;
-            justify-content: center;
-            margin: 16px 0px;
-        }
+      main {
+        width: 100%;
+        justify-content: center;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <header>
-        <h1>COVID-19状況管理システム</h1>
+      <p>{{userName}}</p>
+      <h2>COVID-19状況管理システム</h2>
+      <form action="/logout" method="post" id="logout">
+        <button type="submit">ログアウト</button>
+      </form>
     </header>
     <main>
-        <div>
-            <h1>行動記録表</h1>
-            <table border="1">
-                <thead>
-                    <tr>
-                        <!--<th>action_tableID</th>-->
-                        <!--<th>User ID</th>-->
-                        <th>開始日時</th>
-                        <th>終了日時</th>
-                        <th>移動手段</th>
-                        <!--<th>出発地</th>-->
-                        <th>場所の種類</th>
-                        <!--<th>中継地1</th>-->
-                        <th>混み具合</th>
-                        <!--<th>中継地2</th>-->
-                        <!--<th>最終更新日時</th>-->
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in data %}
-                    <tr>
-                        <!--<td>{{ row.actionID }}</td>-->
-                        <td>{{ row.action_date_start }}</td>
-                        <td>{{ row.action_date_end }}</td>
-                        <td>{{ row.move_method }}</td>
-                        <td>{{ row.place_type_tableID }}</td>
-                        <td>{{ row.crowd_level }}</td>
-                        <!--<td>{{ row.lastupdate}}</td>-->
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <form action={{ main_link }} method="post">
-                <button type="submit">メイン画面に戻る</button>
-        </div>
-
-
+      <div>
+        <h1>行動記録表</h1>
+        <table border="1">
+          <thead>
+            <tr>
+              <th>開始日時</th>
+              <th>終了日時</th>
+              <th>移動手段</th>
+              <!--<th>出発地</th>-->
+              <th>場所の種類</th>
+              <!--<th>中継地1</th>-->
+              <th>混み具合</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in data %}
+            <tr>
+              <!--<td>{{ row.actionID }}</td>-->
+              <td>{{ row.action_date_start }}</td>
+              <td>{{ row.action_date_end }}</td>
+              <td>{{ row.move_method }}</td>
+              <td>{{ row.place_type_tableID }}</td>
+              <td>{{ row.crowd_level }}</td>
+              <!--<td>{{ row.lastupdate}}</td>-->
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <form action="{{ main_link }}" method="post" class="to-main">
+          <button type="submit">メイン画面に戻る</button>
+        </form>
+      </div>
     </main>
     <footer>
-        <p>2024 DB論 第4班 rights reserved.</p>
+      <p>2024 DB論 第4班 rights reserved.</p>
     </footer>
-</body>
-
+  </body>
 </html>

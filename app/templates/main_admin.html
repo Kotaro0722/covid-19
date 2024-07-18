@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>管理者メインページ</title>
     <link rel="stylesheet" href="../static/style.css" />
     <style>
       main {
@@ -64,7 +64,9 @@
         color: black;
       }
 
-      .related, .infected, .contact {
+      .related,
+      .infected,
+      .contact {
         padding-top: 5px;
         padding-bottom: 5px;
       }
@@ -83,27 +85,27 @@
       <div id="main_admin">
         <section id="related">
           <h2>関係者リスト</h2>
-        <div>
-          <form action="/related" method="post" class="show">
-            <button type="submit">表示</button>
-          </form>
-        </div>
+          <div>
+            <form action="/related" method="post" class="show">
+              <button type="submit">表示</button>
+            </form>
+          </div>
         </section>
         <section id="infected">
           <h2>感染者リスト</h2>
-        <div>
-          <form action="/infected" method="post" class="show">
-            <button type="submit">表示</button>
-          </form>
-        </div>
+          <div>
+            <form action="/infected" method="post" class="show">
+              <button type="submit">表示</button>
+            </form>
+          </div>
         </section>
         <section id="contact">
           <h2>濃厚接触者リスト</h2>
-        <div>
-          <form action="/close_contact" method="post" class="show">
-            <button type="submit">表示</button>
-          </form>
-        </div>
+          <div>
+            <form action="/close_contact" method="post" class="show">
+              <button type="submit">表示</button>
+            </form>
+          </div>
         </section>
       </div>
     </main>

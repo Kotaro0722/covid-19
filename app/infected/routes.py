@@ -18,28 +18,29 @@ def infected():
     dbcon,cur = my_open(**dsn)
 
     #sql
-    sqlstring = f"""
-        SELECT user_table.userID, user_num, user_name, suspension_school, c.body_temp, c.condition_date, v1.vaccination_num, v1.vaccination_date
+    sqlstring = """
+        SELECT DISTINCT user_table.userID, user_num, user_name, suspension_school, c.body_temp, c.condition_date, v1.vaccination_num, v1.vaccination_date
         FROM condition_details_table c
-		INNER JOIN(
-            SELECT userID,MAX(condition_date) AS last_input_date
-			FROM condition_details_table
-			GROUP BY userID) s
-	    ON c.userID = s.userID AND c.condition_date = DATE(s.last_input_date)
+        INNER JOIN (
+            SELECT userID, MAX(condition_date) AS last_input_date
+            FROM condition_details_table
+            GROUP BY userID
+        ) s
+        ON c.userID = s.userID AND c.condition_date = DATE(s.last_input_date)
         INNER JOIN user_table
         ON c.userID = user_table.userID
         LEFT JOIN suspension_table
         ON user_table.userID = suspension_table.userID
-        LEFT JOIN vaccination_table v1
-        INNER JOIN(
+        LEFT JOIN (
             SELECT userID, MAX(vaccination_date) AS last_vaccination_date
             FROM vaccination_table
-            GROUP BY userID) v2
-            ON v1.userID = v2.userID AND v1.vaccination_date = v2.last_vaccination_date
-        ON user_table.userID = v1.userID
-        WHERE suspension_school = 1;
+            GROUP BY userID
+        ) v2
+        ON user_table.userID = v2.userID
+        LEFT JOIN vaccination_table v1
+        ON v1.userID = v2.userID AND v1.vaccination_date = v2.last_vaccination_date
+        WHERE suspension_school = 1
         ORDER BY c.condition_date DESC, user_num
-        ;
     """
 
     #run query
