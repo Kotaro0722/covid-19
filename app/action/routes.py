@@ -88,9 +88,11 @@ def action_input():
         arrival_crowd = int(request.form["arrival_crowd"])  # 混み具合をint型に変換
         place_of_arrival1 = request.form["place_of_arrival1"]
         place_of_arrival2 = request.form["place_of_arrival2"]
+        
         #更新日時取得
         import datetime
         dt_now = datetime.datetime.now()
+        
         # フォームから同行者データを取得
         companion_data = []
         for key, value in request.form.items():
@@ -123,6 +125,7 @@ def action_input():
                     ({userID},'{start_date_time}','{end_date_time}',{methodID},'{dt_now}')
                     ;
                 """
+            print("method is other")
         else:
             sqlstring=f"""
                 INSERT INTO action_table
@@ -131,6 +134,7 @@ def action_input():
                     ({userID},'{start_date_time}','{end_date_time}',{method},'{dt_now}')
                     ;
             """
+            print("method exists")
         my_query(sqlstring,cur)
         
         #最後の挿入したaction_tableのactionIDを取得
@@ -266,6 +270,7 @@ def action_input():
         
         if waypoint2_crowd == 6:
             waypoint2_crowd = "なし"
+            
         #中継地3の処理
         waypoint3_type = "中継地3"
         if waypoint3 == "other":
