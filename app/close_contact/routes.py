@@ -19,7 +19,7 @@ def close_contact():
 
     #sql
     sqlstring = """
-        SELECT 
+        SELECT DISTINCT 
             user_table.userID, 
             user_num, 
             user_name, 

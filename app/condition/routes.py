@@ -68,14 +68,15 @@ def condition_output():
         """
         my_query(sql_condition_details, cur)
         
+        condition_details_rowID=cur.lastrowid
+        
         for symptom in symptoms:
-            condition_details_rowID=cur.lastrowid
             # 体調観察表テーブルへの挿入
             sql_condition_details = f"""
                 INSERT INTO condition_table
                     (condition_details_tableID,symptomID)
                 VALUES
-                    ({condition_details_rowID},{symptom})
+                    ({condition_details_rowID},{int(symptom)})
             """
             my_query(sql_condition_details, cur)
 
@@ -143,6 +144,17 @@ def condition_table():
         my_query(sql_string,cur)
         recset=pd.DataFrame(cur.fetchall())
         tableData=recset
+        if len(tableData) >= 1:
+            tableData["symptomID"].replace(1, "関節・筋肉痛", inplace=True)
+            tableData["symptomID"].replace(2, "だるさ", inplace=True)
+            tableData["symptomID"].replace(3, "頭痛", inplace=True)
+            tableData["symptomID"].replace(4, "咽頭痛", inplace=True)
+            tableData["symptomID"].replace(5, "息苦しさ", inplace=True)
+            tableData["symptomID"].replace(6, "咳・くしゃみ", inplace=True)
+            tableData["symptomID"].replace(7, "吐気・嘔吐", inplace=True)
+            tableData["symptomID"].replace(8, "腹痛・下痢", inplace=True)
+            tableData["symptomID"].replace(9, "味覚障害", inplace=True)
+            tableData["symptomID"].replace(10, "味覚障害", inplace=True)
         
         sql_string=f"""
             SELECT user_name FROM user_table

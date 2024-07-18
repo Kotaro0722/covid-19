@@ -43,11 +43,11 @@
           <th>症状</th>
           <td>
             {% for symptom_id in symptoms %} {% if symptom_id == '1' %}
-            関節、筋肉痛 {% elif symptom_id == '2' %} だるさ {% elif symptom_id
+            関節・筋肉痛 {% elif symptom_id == '2' %} だるさ {% elif symptom_id
             == '3' %} 頭痛 {% elif symptom_id == '4' %} 咽頭痛 {% elif
             symptom_id == '5' %} 息苦しさ {% elif symptom_id == '6' %}
-            咳、くしゃみ {% elif symptom_id == '7' %} 吐気、嘔吐 {% elif
-            symptom_id == '8' %} 腹痛、下痢 {% elif symptom_id == '9' %}
+            咳・くしゃみ {% elif symptom_id == '7' %} 吐気・嘔吐 {% elif
+            symptom_id == '8' %} 腹痛・下痢 {% elif symptom_id == '9' %}
             味覚障害 {% elif symptom_id == '10' %} 嗅覚障害 {% endif %} {% if
             not loop.last %}, {% endif %} {% endfor %}
           </td>

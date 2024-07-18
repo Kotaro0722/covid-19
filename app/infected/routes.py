@@ -19,7 +19,7 @@ def infected():
 
     #sql
     sqlstring = """
-        SELECT user_table.userID, user_num, user_name, suspension_school, c.body_temp, c.condition_date, v1.vaccination_num, v1.vaccination_date
+        SELECT DISTINCT user_table.userID, user_num, user_name, suspension_school, c.body_temp, c.condition_date, v1.vaccination_num, v1.vaccination_date
         FROM condition_details_table c
         INNER JOIN (
             SELECT userID, MAX(condition_date) AS last_input_date
