@@ -163,6 +163,7 @@
             required
             onchange="checkWaypointSelection('move_method','new-method')"
           >
+            <option value="">選択してください</option>
             {% for row in data %}
             <option value="{{row.move_method_tableID}}">
               {{row.move_method}}
@@ -223,6 +224,7 @@
             id="waypoint_select1"
             name="waypoint1"
             onchange="checkWaypointSelection('waypoint_select1', 'waypoint_input1')"
+            required
           >
             <option value="">選択してください</option>
             <option value="1">茅野駅</option>
@@ -242,7 +244,7 @@
             style="display: none"
             placeholder="その他の中継地点を入力してください"
           />
-          中継地点1の混み具合<select name="waypoint1_crowd">
+          中継地点1の混み具合<select name="waypoint1_crowd" required>
             <option value="">選択してください</option>
             <option value="1">1 - 空いている</option>
             <option value="2">2 - 少し混んでいる</option>
@@ -259,6 +261,7 @@
             id="waypoint_select2"
             name="waypoint2"
             onchange="checkWaypointSelection('waypoint_select2', 'waypoint_input2')"
+            required
           >
             <option value="">選択してください</option>
             <option value="1">茅野駅</option>
@@ -278,7 +281,7 @@
             style="display: none"
             placeholder="その他の中継地点を入力してください"
           />
-          中継地点2の混み具合<select name="waypoint2_crowd">
+          中継地点2の混み具合<select name="waypoint2_crowd" required>
             <option value="">選択してください</option>
             <option value="1">1 - 空いている</option>
             <option value="2">2 - 少し混んでいる</option>
@@ -295,6 +298,7 @@
             id="waypoint_select3"
             name="waypoint3"
             onchange="checkWaypointSelection('waypoint_select3', 'waypoint_input3')"
+            required
           >
             <option value="">選択してください</option>
             <option value="1">茅野駅</option>
@@ -314,7 +318,7 @@
             style="display: none"
             placeholder="その他の中継地点を入力してください"
           />
-          中継地点3の混み具合<select name="waypoint3_crowd">
+          中継地点3の混み具合<select name="waypoint3_crowd" required>
             <option value="">選択してください</option>
             <option value="1">1 - 空いている</option>
             <option value="2">2 - 少し混んでいる</option>
@@ -351,7 +355,7 @@
             placeholder="その他の到着地点を入力してください"
             required
           />
-          到着地の混み具合<select name="arrival_crowd">
+          到着地の混み具合<select name="arrival_crowd" required>
             <option value="">選択してください</option>
             <option value="1">1 - 空いている</option>
             <option value="2">2 - 少し混んでいる</option>

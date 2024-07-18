@@ -182,7 +182,7 @@ sqlstring = """
         userID INT,                                   -- 個人番号
         action_date_start DATETIME,                   -- 日付と時間
         action_date_end DATETIME,                     -- 日付と時間
-        move_method INT,                               -- 移動方法
+        move_method_tableID INT,                               -- 移動方法
         lastupdate DATETIME DEFAULT NOW(),            -- 最終更新日時
         delflag BOOLEAN DEFAULT FALSE,                -- 削除フラグ
         PRIMARY KEY (action_tableID),                 -- 主キーの設定
