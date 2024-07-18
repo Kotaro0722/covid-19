@@ -67,14 +67,24 @@ def condition_output():
                 ('{userID}', '{date}', '{temperature}', '{dt_now}')
         """
         my_query(sql_condition_details, cur)
-        dbcon.commit()
+        
+        for symptom in symptoms:
+            condition_details_rowID=cur.lastrowid
+            # 体調観察表テーブルへの挿入
+            sql_condition_details = f"""
+                INSERT INTO condition_table
+                    (condition_details_tableID,symptomID)
+                VALUES
+                    ({condition_details_rowID},{symptom})
+            """
+            my_query(sql_condition_details, cur)
 
         # 出席停止テーブルへの挿入
         sql_suspension = f"""
             INSERT INTO suspension_table
-                (suspension_school, suspension_start, lastupdate)
+                (userId,suspension_school, suspension_start, lastupdate)
             VALUES
-                ('{status}', '{date}', '{dt_now}')
+                ({userID},'{status}', '{date}', '{dt_now}')
         """
         my_query(sql_suspension, cur)
         
