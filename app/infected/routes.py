@@ -13,7 +13,7 @@ dsn = {
     'database' : 'covid19' #オープンするデータベース名
 }
 
-@infected.route('/infected')
+@infected.route('/infected', methods=["POST"])
 def infected():
     dbcon,cur = my_open(**dsn)
 
@@ -45,17 +45,21 @@ def infected():
     #run query
     my_query(sqlstring, cur)
     recset = pd.DataFrame(cur.fetchall())
+    print(recset)
 
-    #型変換
-    recset["suspension_school"].fillna("健康", inplace=True)
-    recset["suspension_school"].replace(1, '感染者', inplace=True)
-    recset["suspension_school"].replace(2, '濃厚接触者', inplace=True)
+    #感染者がいる場合
+    if len(recset) >= 1:
+        #型変換
+        recset["suspension_school"].fillna("健康", inplace=True)
+        recset["suspension_school"].replace(1, '感染者', inplace=True)
+        recset["suspension_school"].replace(2, '濃厚接触者', inplace=True)
+    
 
     #close db
     my_close(dbcon, cur)
 
     return render_template(  "admin_output.html",
-        title = "濃厚接触者のレコード一覧",
+        title = "感染者のレコード一覧",
         message = f"感染者数：{len(recset)}人",
         table_data = recset
     )

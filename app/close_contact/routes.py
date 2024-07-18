@@ -13,7 +13,7 @@ dsn = {
     'database' : 'covid19' #オープンするデータベース名
 }
 
-@close_contact.route('/close_contact')
+@close_contact.route('/close_contact', methods=["POST"])
 def close_contact():
     dbcon,cur = my_open(**dsn)
 
@@ -46,10 +46,12 @@ def close_contact():
     my_query(sqlstring, cur)
     recset = pd.DataFrame(cur.fetchall())
 
-    #型変換
-    recset["suspension_school"].fillna("健康", inplace=True)
-    recset["suspension_school"].replace(1, '感染者', inplace=True)
-    recset["suspension_school"].replace(2, '濃厚接触者', inplace=True)
+    #濃厚接触者がいる場合
+    if len(recset) >= 1:
+        #型変換
+        recset["suspension_school"].fillna("健康", inplace=True)
+        recset["suspension_school"].replace(1, '感染者', inplace=True)
+        recset["suspension_school"].replace(2, '濃厚接触者', inplace=True)
 
     #close db
     my_close(dbcon, cur)
