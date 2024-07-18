@@ -422,13 +422,27 @@ def action_output_details():
     if "username" in session:
         #外部キーであるuserIDを取得
         dbcon,cur = my_open( **dsn )
-        sqlstring=f"""
-            SELECT userID FROM user_table
-            WHERE user_num='{session["username"]}'
-        """
-        my_query(sqlstring,cur)
-        recset=pd.DataFrame(cur.fetchall())
-        userID=recset["userID"][0]
+        is_admin = False
+        admin_list=[
+                {"username":"admin"},
+            ]
+        
+        for user in admin_list:
+            if user["username"] == session["username"]:
+                is_admin = True
+        
+        if is_admin:
+            userID = request.form["userID"]
+        else:
+            #外部キーであるuserIDを取得
+            sql_string=f"""
+                SELECT userID FROM user_table
+                WHERE user_num='{session["username"]}'
+            """
+            my_query(sql_string,cur)
+            recset=pd.DataFrame(cur.fetchall())
+            userID=recset["userID"][0]
+        
         #入力されたuserIDのフィールドを表示
         #フォームからactionIDの受け取り
         actionID = request.form["actionID"]
@@ -467,26 +481,6 @@ def action_output_details():
         
         
         #管理者の判定
-        is_admin = False
-        admin_list=[
-                {"username":"admin"},
-            ]
-        
-        for user in admin_list:
-            if user["username"] == session["username"]:
-                is_admin = True
-        
-        if is_admin:
-            userID = request.form["userID"]
-        else:
-            #外部キーであるuserIDを取得
-            sql_string=f"""
-                SELECT userID FROM user_table
-                WHERE user_num='{session["username"]}'
-            """
-            my_query(sql_string,cur)
-            recset=pd.DataFrame(cur.fetchall())
-            userID=recset["userID"][0]
         
         #入力されたuserIDのフィールドを表示
         #フォームからactionIDの受け取り
