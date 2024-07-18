@@ -464,11 +464,9 @@ def action_output_details():
         my_query(sqlstring,cur)
         recset=pd.DataFrame(cur.fetchall())
         user_name=recset["user_name"][0]
-
-        # データベース接続を閉じる
-        my_close( dbcon,cur )
         
-        #管理者の場合
+        
+        #管理者の判定
         is_admin = False
         admin_list=[
                 {"username":"admin"},
@@ -477,6 +475,45 @@ def action_output_details():
         for user in admin_list:
             if user["username"] == session["username"]:
                 is_admin = True
+        
+        if is_admin:
+            userID = request.form["userID"]
+        else:
+            #外部キーであるuserIDを取得
+            sql_string=f"""
+                SELECT userID FROM user_table
+                WHERE user_num='{session["username"]}'
+            """
+            my_query(sql_string,cur)
+            recset=pd.DataFrame(cur.fetchall())
+            userID=recset["userID"][0]
+        
+        #入力されたuserIDのフィールドを表示
+        #フォームからactionIDの受け取り
+        actionID = request.form["actionID"]
+        #入力されたuserIDのactionIDを参照し，インナージョインで表示
+        sql_string=f"""
+            SELECT 
+                action_table.action_tableID AS actionID,
+                action_table.action_date_start AS action_date_start,
+                action_table.action_date_end AS action_date_end,
+                move_method_table.move_method AS move_method,
+                crowd_table.place_type_tableID AS place_type_tableID,
+                crowd_table.crowd_level AS crowd_level,
+                action_table.lastupdate AS lastupdate
+            FROM action_table
+            INNER JOIN 
+                move_method_table ON action_table.move_method_tableID = move_method_table.move_method_tableID
+            INNER JOIN 
+                crowd_table ON action_table.action_tableID = crowd_table.action_tableID  
+            WHERE 
+                action_table.userID = {userID} AND action_table.action_tableID = {actionID};
+        """
+        my_query(sql_string,cur)
+        recset=pd.DataFrame(cur.fetchall())
+
+        # データベース接続を閉じる
+        my_close( dbcon,cur )
 
         if is_admin:
             return render_template( "action_output_details.html",

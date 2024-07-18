@@ -182,12 +182,16 @@ sqlstring = """
         userID INT,                                   -- 個人番号
         action_date_start DATETIME,                   -- 日付と時間
         action_date_end DATETIME,                     -- 日付と時間
-        move_method_tableID INT,                               -- 移動方法
+        move_method_tableID INT,                      -- 移動方法
         lastupdate DATETIME DEFAULT NOW(),            -- 最終更新日時
         delflag BOOLEAN DEFAULT FALSE,                -- 削除フラグ
         PRIMARY KEY (action_tableID),                 -- 主キーの設定
         FOREIGN KEY (userID)                          -- 外部キー制約
             REFERENCES user_table(userID)
+            ON DELETE cascade
+            ON UPDATE cascade,
+        FOREIGN KEY (move_method_tableID)                          -- 外部キー制約
+            REFERENCES move_method_table(move_method_tableID)
             ON DELETE cascade
             ON UPDATE cascade
 );
@@ -202,9 +206,9 @@ for ind,rowdata in df.iterrows():
     #data.Month は， data['Month'] とおなじ
     sqlstring = f"""
         INSERT INTO action_table
-        (userID,action_date_start,action_date_end)
+        (userID,action_date_start,action_date_end,move_method_tableID)
         VALUES
-        ({rowdata.userID}, '{rowdata.action_date_start}' ,' {rowdata.action_date_end}' )
+        ({rowdata.userID}, '{rowdata.action_date_start}' ,' {rowdata.action_date_end}' ,{rowdata.move_method_tableID})
     """
     #print( sqlstring )  #for debug
     my_query( sqlstring )   #1レコード挿入
@@ -367,7 +371,7 @@ for ind,rowdata in df.iterrows():
 print(f"condition_table テーブル{i} レコード追加しました")
 
 
-############# テーブルcondition_taleの新規作成
+############# テーブルcondition_tableの新規作成
 sqlstring = """
     CREATE TABLE vaccination_table(
         vaccination_tableID INT NOT NULL AUTO_INCREMENT,     -- ワクチン接種ID
