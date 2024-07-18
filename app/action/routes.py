@@ -30,12 +30,12 @@ def action():
         recset=pd.DataFrame(cur.fetchall())
         selectData=recset
         
-        sql_string=f"""
+        sqlstring=f"""
             SELECT user_name FROM user_table
             WHERE user_num='{session["username"]}'
             ;
         """
-        my_query(sql_string,cur)
+        my_query(sqlstring,cur)
         recset=pd.DataFrame(cur.fetchall())
         user_name=recset["user_name"][0]
         
@@ -125,7 +125,7 @@ def action_input():
                     ({userID},'{start_date_time}','{end_date_time}',{methodID},'{dt_now}')
                     ;
                 """
-            print("method is other")
+            print(sqlstring)
         else:
             sqlstring=f"""
                 INSERT INTO action_table
@@ -134,7 +134,7 @@ def action_input():
                     ({userID},'{start_date_time}','{end_date_time}',{method},'{dt_now}')
                     ;
             """
-            print("method exists")
+            print(sqlstring)
         my_query(sqlstring,cur)
         
         #最後の挿入したaction_tableのactionIDを取得
@@ -348,12 +348,12 @@ def action_input():
         my_query(sqlstring,cur)
         dbcon.commit()
         
-        sql_string=f"""
+        sqlstring=f"""
                 SELECT user_name FROM user_table
                 WHERE user_num='{session["username"]}'
                 ;
             """
-        my_query(sql_string,cur)
+        my_query(sqlstring,cur)
         recset=pd.DataFrame(cur.fetchall())
         user_name=recset["user_name"][0]
         
@@ -380,7 +380,7 @@ def action_output():
         userID=recset["userID"][0]
         #入力されたuserIDのフィールドを表示
         #入力されたuserIDのactionIDを参照し，インナージョインで表示
-        sql_string=f"""
+        sqlstring=f"""
             SELECT DISTINCT
                 action_tableID AS actionID,
                 action_date_start AS action_date_start,
@@ -391,16 +391,16 @@ def action_output():
                 action_table.userID = {userID};
         """
 
-        my_query(sql_string,cur)
+        my_query(sqlstring,cur)
         recset=pd.DataFrame(cur.fetchall())
         tableData=recset
         
-        sql_string=f"""
+        sqlstring=f"""
             SELECT user_name FROM user_table
             WHERE user_num='{session["username"]}'
             ;
         """
-        my_query(sql_string,cur)
+        my_query(sqlstring,cur)
         recset=pd.DataFrame(cur.fetchall())
         user_name=recset["user_name"][0]
 
@@ -422,18 +422,18 @@ def action_output_details():
     if "username" in session:
         #外部キーであるuserIDを取得
         dbcon,cur = my_open( **dsn )
-        sql_string=f"""
+        sqlstring=f"""
             SELECT userID FROM user_table
             WHERE user_num='{session["username"]}'
         """
-        my_query(sql_string,cur)
+        my_query(sqlstring,cur)
         recset=pd.DataFrame(cur.fetchall())
         userID=recset["userID"][0]
         #入力されたuserIDのフィールドを表示
         #フォームからactionIDの受け取り
         actionID = request.form["actionID"]
         #入力されたuserIDのactionIDを参照し，インナージョインで表示
-        sql_string=f"""
+        sqlstring=f"""
             SELECT 
                 action_table.action_tableID AS actionID,
                 action_table.action_date_start AS action_date_start,
@@ -452,16 +452,16 @@ def action_output_details():
             WHERE 
                 action_table.userID = {userID} AND action_table.action_tableID = {actionID};
         """
-        my_query(sql_string,cur)
+        my_query(sqlstring,cur)
         recset=pd.DataFrame(cur.fetchall())
         tableData=recset
         
-        sql_string=f"""
+        sqlstring=f"""
             SELECT user_name FROM user_table
             WHERE user_num='{session["username"]}'
             ;
         """
-        my_query(sql_string,cur)
+        my_query(sqlstring,cur)
         recset=pd.DataFrame(cur.fetchall())
         user_name=recset["user_name"][0]
 
