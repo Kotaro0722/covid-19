@@ -434,7 +434,7 @@ def action_output_details():
         actionID = request.form["actionID"]
         #入力されたuserIDのactionIDを参照し，インナージョインで表示
         sqlstring=f"""
-            SELECT 
+            SELECT DISTINCT
                 action_table.action_tableID AS actionID,
                 action_table.action_date_start AS action_date_start,
                 action_table.action_date_end AS action_date_end,
