@@ -40,7 +40,12 @@ def action():
         user_name=recset["user_name"][0]
         
         my_close(dbcon,cur)
-        return render_template("action_input.html",data=selectData.to_dict(orient="records"),userName=user_name)
+        return render_template(
+            "action_input.html",
+            data=selectData.to_dict(orient="records"),
+            userName=user_name,
+            main_link = "/main_user"
+        )
     else:
         return redirect(url_for("login.login_"))
 
@@ -350,7 +355,7 @@ def action_input():
         my_close( dbcon,cur )
         return render_template(
             "result.html",
-            userName=user_name
+            userName=user_name,
         )
     except :
         return redirect(url_for("/action"))

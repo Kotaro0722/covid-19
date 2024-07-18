@@ -154,3 +154,9 @@ select,
   grid-column: 2/3;
   grid-row: 2/3;
 }
+
+.to-main {
+  display: flex;
+  justify-content: center;
+  margin: 16px 0px;
+}
