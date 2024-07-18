@@ -5,17 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>体調観察表表示</title>
     <link rel="stylesheet" href="../static/style.css" />
+    <style>
+      main {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+      }
+      form:not(#logout) {
+        display: flex;
+        justify-content: center;
+        margin: 16px 0px;
+      }
+    </style>
   </head>
   <body>
     <header>
       <p>{{userName}}</p>
-      <h1>COVID-19状況管理システム</h1>
+      <h2>COVID-19状況管理システム</h2>
       <form action="/logout" method="post" id="logout">
         <button type="submit">ログアウト</button>
       </form>
     </header>
     <main>
-      <h1>体調観察表表示</h1>
+      <h2>体調観察表表示</h2>
       <table border="1">
         <tr>
           <th>日付</th>
@@ -51,7 +65,7 @@
         </tr>
       </table>
       <form action="/main_user">
-        <button type="submit">戻る</button>
+        <button type="submit">メイン画面に戻る</button>
       </form>
     </main>
     <footer>
